@@ -1,6 +1,6 @@
 # Nathan Zimmerman - Portfolio Website
 
-A modern, responsive portfolio website built with React, TypeScript, and Vite. This site showcases my journey as a full-stack engineer and features a clean, professional design with smooth animations and modern UI components.
+A modern portfolio website built with React, TypeScript, and Vite. This site showcases my journey as a full-stack engineer and features a clean, professional design with smooth animations and modern UI components.
 
 ## 🛠️ Tech Stack
 
