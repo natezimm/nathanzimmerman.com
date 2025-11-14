@@ -10,7 +10,7 @@ const About = () => {
     {
       icon: Database,
       title: "Backend & Databases",
-      description: "Developing robust APIs and services with C# (.NET) and Node.js; experienced with SQL, DynamoDB, and MongoDB",
+      description: "Developing APIs and services with C# and Node.js; experienced with SQL, DynamoDB, and MongoDB",
     },
     {
       icon: Rocket,
@@ -41,7 +41,7 @@ const About = () => {
             <div className="space-y-6 animate-slide-in">
               <p className="text-lg leading-relaxed">
                 I started my career teaching preschoolers with special needs — 
-                work that taught me patience, empathy, and how to communicate complex ideas simply. 
+                work that taught me patience, empathy, and how to communicate ideas simply. 
                 That perspective now shapes how I approach engineering: building software that’s reliable, 
                 thoughtful, and easy to use.
               </p>
