@@ -1,6 +1,7 @@
 import { Mail, MapPin, Phone } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
+import emailjs from '@emailjs/browser';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'default' | 'lg';
@@ -42,11 +43,49 @@ const Contact = () => {
     email: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Message sent! I'll get back to you soon.");
-    setFormData({ name: "", email: "", message: "" });
+    setIsSubmitting(true);
+
+    try {
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+      if (!serviceId || !templateId || !publicKey) {
+        throw new Error("EmailJS configuration missing");
+      }
+
+      const currentDate = new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZoneName: 'short'
+      });
+
+      const templateParams = {
+        fname: formData.name,
+        femail: formData.email,
+        message: formData.message,
+        to_name: "Nathan Zimmerman",
+        date: currentDate,
+      };
+
+      // EmailJS will automatically send the auto-reply if configured in the template
+      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+
+      toast.success("Message sent! You'll receive a confirmation email shortly.");
+      setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      console.error("Form submission error:", error);
+      toast.error("Failed to send message. Please try again or email me directly.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (
@@ -163,9 +202,10 @@ const Contact = () => {
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full bg-primary hover:bg-primary/90"
+                  disabled={isSubmitting}
+                  className="w-full bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Send Message
+                  {isSubmitting ? "Sending..." : "Send Message"}
                 </Button>
               </form>
             </div>
