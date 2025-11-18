@@ -75,7 +75,7 @@ const Projects = () => {
       description: "Browser-based game built with Phaser.js. The game dynamically generates bricks from the content of a .docx resume file, allowing players to break bricks while interacting with the text of the resume.",
       image: brickbreakerImg,
       github: "https://github.com/natezimm/brick-breaker-resume",
-      demo: "#",
+      demo: "https://resume.nathanzimmerman.com",
       tags: ["JavaScript", "Phaser.js", "Mammoth.js"],
     },
     {
@@ -83,7 +83,7 @@ const Projects = () => {
       description: "Word puzzle game inspired by Wordle, with a focus on technology-related words. Gameplay is similar to Wordle by allowing players to guess a 5-letter word in 6 attempts.",
       image: nerdleImg,
       github: "https://github.com/natezimm/nerdle",
-      demo: "#",
+      demo: "https://nerdle.nathanzimmerman.com",
       tags: ["React", "Axios", "Node.js"],
     },
     {
@@ -91,7 +91,7 @@ const Projects = () => {
       description: "Classic blackjack game built with React, Java, and Spring Boot. Players can play against a dealer with various customizable settings such as the number of decks, whether the dealer hits on soft 17, and whether insurance is available.",
       image: blackjackImg,
       github: "https://github.com/natezimm/blackjack",
-      demo: "#",
+      demo: "https://blackjack.nathanzimmerman.com",
       tags: ["React", "Java", "Spring Boot"],
     },
     {
@@ -99,7 +99,7 @@ const Projects = () => {
       description: "Interactive Sudoku puzzle game. Features puzzle generation, validation, and step-by-step solution visualization.",
       image: sudokuImg,
       github: "https://github.com/natezimm/sudoku",
-      demo: "#",
+      demo: "https://sudoku.nathanzimmerman.com",
       tags: ["Angular", "ASP.NET", "C#"],
     },
   ];
