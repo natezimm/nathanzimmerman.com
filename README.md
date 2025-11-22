@@ -4,9 +4,15 @@ A modern portfolio website built with React, TypeScript, and Vite. This site sho
 
 ## 🛠️ Tech Stack
 
-**Core**: React 18 + TypeScript + Vite for modern, type-safe development
-**Styling**: Tailwind CSS + shadcn/ui components for design
-**User Experience**: Smooth animations, theme switching, and responsive layouts
+### **Frontend Framework**
+- **React 18** – Modern, component‑driven UI architecture
+- **TypeScript** – Type‑safe development for reliability and maintainability
+- **Vite** – High‑performance bundler and dev environment
+
+### **Architecture & Deployment**
+- **GitHub Actions CI/CD** – Automatic deployment to Lightsail on every push
+- **Nginx** reverse proxy with HTTPS routing
+- **AWS Lightsail** hosting (static site)
 
 ## 📄 License
 
