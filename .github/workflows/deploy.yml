@@ -1,0 +1,35 @@
+name: Deploy to Lightsail
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout code
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      # 2. Setup SSH into Lightsail
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.LIGHTSAIL_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+          # Create SSH config entry called "lightsail"
+          cat <<EOF > ~/.ssh/config
+          Host lightsail
+            HostName ${{ secrets.LIGHTSAIL_HOST }}
+            User ${{ secrets.LIGHTSAIL_USER }}
+            IdentityFile ~/.ssh/id_rsa
+            StrictHostKeyChecking=no
+          EOF
+
+      # 3. Trigger the appropriate deploy script on Lightsail
+      - name: Run remote deploy script
+        run: |
+          ssh lightsail "bash ~/deploy-scripts/deploy-${{ github.event.repository.name }}.sh"
