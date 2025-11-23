@@ -2,7 +2,7 @@
 
 A modern portfolio website built with React, TypeScript, and Vite. This site showcases my journey as a full-stack engineer and features a clean, professional design with smooth animations and modern UI components.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### **Frontend Framework**
 - **React 18** – Modern, component‑driven UI architecture
@@ -14,10 +14,6 @@ A modern portfolio website built with React, TypeScript, and Vite. This site sho
 - **Nginx** reverse proxy with HTTPS routing
 - **AWS Lightsail** hosting (static site)
 
-## 📄 License
+## License
 
 This project is open source and available under the [MIT License](LICENSE).
-
----
-
-Built with ❤️ by Nathan Zimmerman
