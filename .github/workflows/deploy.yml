@@ -14,11 +14,13 @@ jobs:
         uses: actions/checkout@v4
 
       # 2. Setup SSH into Lightsail
-      - name: Setup SSH
+      - name: Add SSH key
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.LIGHTSAIL_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          ssh-keyscan ${{ secrets.LIGHTSAIL_HOST }} >> ~/.ssh/known_hosts
 
           # Create SSH config entry called "lightsail"
           cat <<EOF > ~/.ssh/config
