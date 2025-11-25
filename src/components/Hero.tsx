@@ -40,13 +40,21 @@ const Hero = () => {
       id="home" 
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
       style={{
-        background: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(${heroBg})`,
+        backgroundImage: `url(${heroBg})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
     >
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/80 to-background" />
+      
+      {/* Colorful blue/green overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-transparent to-emerald-500/20 mix-blend-overlay pointer-events-none" />
+
+      {/* Radial center glow */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="w-[600px] h-[600px] rounded-full bg-gradient-radial from-cyan-400/25 via-blue-500/20 to-transparent blur-3xl" />
+      </div>
       
       {/* Content */}
       <div className="relative z-10 container px-4 mx-auto text-center animate-fade-in">
