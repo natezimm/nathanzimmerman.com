@@ -33,6 +33,7 @@ const Button = ({ variant = 'default', size = 'default', className = '', childre
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isWide, setIsWide] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,6 +42,13 @@ const Navigation = () => {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => setIsWide(window.innerWidth >= 600);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const scrollToSection = (id: string) => {
@@ -58,9 +66,11 @@ const Navigation = () => {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-background/95 backdrop-blur-md shadow-lg border-b border-border"
-          : "bg-transparent"
+        isWide
+          ? (isScrolled
+              ? "bg-background/95 backdrop-blur-md shadow-lg border-b border-border"
+              : "bg-transparent")
+          : "bg-background shadow-md"
       }`}
     >
       <div className="container mx-auto px-4">
