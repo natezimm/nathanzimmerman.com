@@ -1,34 +1,5 @@
 import { Github, Linkedin, Mail, ArrowDown } from "lucide-react";
-import heroBg from "@/assets/hero-bg.jpg";
-
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'default' | 'outline';
-  size?: 'default' | 'lg';
-  children: React.ReactNode;
-}
-
-const Button = ({ variant = 'default', size = 'default', className = '', children, ...props }: ButtonProps) => {
-  const baseClasses = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50';
-  
-  const variantClasses = {
-    default: 'bg-primary text-primary-foreground hover:bg-primary/90',
-    outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground'
-  };
-  
-  const sizeClasses = {
-    default: 'h-10 px-4 py-2',
-    lg: 'h-11 rounded-md px-8'
-  };
-  
-  return (
-    <button 
-      className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-};
+import { Button } from "@/components/ui/button";
 
 const Hero = () => {
   const scrollToSection = (id: string) => {
@@ -36,90 +7,82 @@ const Hero = () => {
   };
 
   return (
-    <section 
-      id="home" 
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
-      style={{
-        backgroundImage: `url(${heroBg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
+    <section
+      id="home"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background"
     >
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/80 to-background" />
-      
-      {/* Colorful blue/green overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-transparent to-emerald-500/20 mix-blend-overlay pointer-events-none" />
+      {/* Dynamic Background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-purple-500/20 blur-[120px] animate-pulse" />
+        <div className="absolute top-[20%] right-[-10%] w-[30%] h-[30%] rounded-full bg-blue-500/20 blur-[100px] animate-pulse delay-1000" />
+        <div className="absolute bottom-[-10%] left-[20%] w-[50%] h-[50%] rounded-full bg-cyan-500/10 blur-[140px] animate-pulse delay-2000" />
+      </div>
+
+      {/* Grid Pattern Overlay */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
 
       {/* Radial center glow */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[600px] h-[600px] rounded-full bg-gradient-radial from-cyan-400/25 via-blue-500/20 to-transparent blur-3xl" />
+        <div className="w-[800px] h-[800px] rounded-full bg-gradient-radial from-primary/5 via-transparent to-transparent blur-3xl" />
       </div>
-      
+
       {/* Content */}
       <div className="relative z-10 container px-4 mx-auto text-center animate-fade-in">
         <div className="max-w-4xl mx-auto space-y-8">
-          <h1 className="text-5xl md:text-7xl font-bold">
-            Hi, I'm <span className="gradient-text">Nathan</span> <span className="inline-block animate-wave">👋</span>
+
+          <h1 className="text-6xl md:text-8xl font-bold tracking-tight">
+            Hi, I'm <span className="gradient-text">Nathan</span> <span className="inline-block animate-wave origin-bottom-right">👋</span>
           </h1>
-          
-          <p className="text-xl md:text-2xl text-muted-foreground">
-            Full-Stack Engineer • Builder • Lifelong Learner          
-          </p>
-          
-          <p className="text-lg text-foreground/80 max-w-2xl mx-auto">
-            Former special education teacher turned software engineer. I love creating clean, intuitive web applications with modern tools like Angular, C#, and AWS.
 
-            Always learning, building, and finding new ways to make technology more human.
+          <p className="text-2xl md:text-3xl text-muted-foreground font-light">
+            Full-Stack Engineer • Builder • Lifelong Learner
           </p>
 
-          <div className="flex items-center justify-center gap-4 flex-wrap">
-            <Button 
-              size="lg" 
-              className="bg-primary hover:bg-primary/90"
+          <p className="text-lg md:text-xl text-foreground/80 max-w-2xl mx-auto leading-relaxed">
+            Former special education teacher turned software engineer, bringing a human-centered approach to full-stack development. I build clean, intuitive applications using Angular, C#, and AWS, bridging the gap between complex code and user needs.
+          </p>
+
+          <div className="flex items-center justify-center gap-4 flex-wrap pt-4">
+            <Button
+              size="lg"
+              className="h-12 px-8 text-lg rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all duration-300 hover:-translate-y-1"
               onClick={() => scrollToSection("projects")}
             >
               View My Work
             </Button>
-            <Button 
-              size="lg" 
+            <Button
+              size="lg"
               variant="outline"
-              className="border-primary/50 hover:bg-primary/10"
+              className="h-12 px-8 text-lg rounded-full border-white/10 bg-white/5 hover:bg-white/10 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1"
               onClick={() => scrollToSection("contact")}
             >
               Get In Touch
             </Button>
           </div>
 
-          <div className="flex items-center justify-center gap-6 pt-4">
-            <a 
-              href="https://github.com/natezimm" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-foreground/70 hover:text-accent transition-colors"
-            >
-              <Github className="w-6 h-6" />
-            </a>
-            <a 
-              href="https://www.linkedin.com/in/zimmermannathan" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-foreground/70 hover:text-accent transition-colors"
-            >
-              <Linkedin className="w-6 h-6" />
-            </a>
-            <a 
-              href="mailto:nathan.a.zimmerman@gmail.com"
-              className="text-foreground/70 hover:text-accent transition-colors"
-            >
-              <Mail className="w-6 h-6" />
-            </a>
+          <div className="flex items-center justify-center gap-8 pt-8">
+            {[
+              { href: "https://github.com/natezimm", icon: Github, label: "GitHub" },
+              { href: "https://www.linkedin.com/in/zimmermannathan", icon: Linkedin, label: "LinkedIn" },
+              { href: "mailto:nathan.a.zimmerman@gmail.com", icon: Mail, label: "Email" }
+            ].map(({ href, icon: Icon, label }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-110"
+                aria-label={label}
+              >
+                <Icon className="w-8 h-8" />
+              </a>
+            ))}
           </div>
         </div>
 
         <button
           onClick={() => scrollToSection("about")}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-accent animate-bounce"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-muted-foreground hover:text-primary transition-colors animate-bounce"
           aria-label="Scroll to about section"
         >
           <ArrowDown className="w-8 h-8" />

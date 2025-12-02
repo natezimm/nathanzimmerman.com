@@ -1,41 +1,11 @@
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
 import emailjs from '@emailjs/browser';
-
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  size?: 'default' | 'lg';
-  children: React.ReactNode;
-}
-
-const Button = ({ size = 'default', className = '', children, ...props }: ButtonProps) => {
-  const baseClasses = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50';
-  const sizeClasses = size === 'lg' ? 'h-11 rounded-md px-8' : 'h-10 px-4 py-2';
-  
-  return (
-    <button className={`${baseClasses} ${sizeClasses} ${className}`} {...props}>
-      {children}
-    </button>
-  );
-};
-
-const Input = ({ className = '', ...props }: React.InputHTMLAttributes<HTMLInputElement>) => {
-  return (
-    <input 
-      className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
-      {...props}
-    />
-  );
-};
-
-const Textarea = ({ className = '', ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement>) => {
-  return (
-    <textarea 
-      className={`flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
-      {...props}
-    />
-  );
-};
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -75,7 +45,6 @@ const Contact = () => {
         date: currentDate,
       };
 
-      // EmailJS will automatically send the auto-reply if configured in the template
       await emailjs.send(serviceId, templateId, templateParams, publicKey);
 
       toast.success("Message sent! You'll receive a confirmation email shortly.");
@@ -98,16 +67,18 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-24 bg-secondary/30">
-      <div className="container px-4 mx-auto">
+    <section id="contact" className="py-24 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px] -translate-x-1/2 translate-y-1/2 pointer-events-none" />
+
+      <div className="container px-4 mx-auto relative z-10">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
               Get In <span className="gradient-text">Touch</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              I'm always open to discussing new opportunities, projects, or just connecting. 
-              Feel free to reach out!
+              I enjoy meeting new people and chatting about engineering or creative projects. Always happy to connect.
             </p>
           </div>
 
@@ -115,99 +86,98 @@ const Contact = () => {
             <div className="space-y-8 animate-slide-in">
               <div>
                 <h3 className="text-2xl font-semibold mb-6">Let's Connect</h3>
-                <p className="text-muted-foreground mb-8">
-                  Whether you want to chat about software, share ideas, or Philly sports, I’d love to hear from you.
+                <p className="text-muted-foreground mb-8 text-lg leading-relaxed">
+                  Have an idea or just want to say hello? Send a message — I’d love to hear from you.
                 </p>
               </div>
 
               <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-1">Email</h4>
-                    <a
-                      href="mailto:nathan.a.zimmerman@gmail.com"
-                      className="text-muted-foreground hover:text-accent transition-colors"
-                    >
-                      nathan.a.zimmerman@gmail.com
-                    </a>
-                  </div>
-                </div>
+                <Card className="glass-card border-white/5">
+                  <CardContent className="flex items-center gap-4 p-6">
+                    <Mail className="w-8 h-8 text-cyan-400 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-semibold mb-1">Email</h4>
+                      <p className="text-muted-foreground">
+                        nathan.a.zimmerman@gmail.com
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
 
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-6 h-6 text-primary" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-1">Location</h4>
-                    <p className="text-muted-foreground">
-                      New Jersey
-                    </p>
-                  </div>
-                </div>
+                <Card className="glass-card border-white/5">
+                  <CardContent className="flex items-center gap-4 p-6">
+                    <MapPin className="w-8 h-8 text-cyan-400 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-semibold mb-1">Location</h4>
+                      <p className="text-muted-foreground">
+                        New Jersey
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </div>
 
-            <div className="animate-fade-in">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium mb-2">
-                    Name
-                  </label>
-                  <Input
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="Your name"
-                    required
-                    className="bg-card border-border"
-                  />
-                </div>
+            <div className="animate-fade-in delay-200">
+              <Card className="glass-card border-white/5 p-6 md:p-8">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="space-y-2">
+                    <label htmlFor="name" className="text-sm font-medium">
+                      Name
+                    </label>
+                    <Input
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      placeholder="Your name"
+                      required
+                      className="bg-background/50 border-white/10 focus:border-primary/50"
+                    />
+                  </div>
 
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium mb-2">
-                    Email
-                  </label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="your.email@example.com"
-                    required
-                    className="bg-card border-border"
-                  />
-                </div>
+                  <div className="space-y-2">
+                    <label htmlFor="email" className="text-sm font-medium">
+                      Email
+                    </label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="your.email@example.com"
+                      required
+                      className="bg-background/50 border-white/10 focus:border-primary/50"
+                    />
+                  </div>
 
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium mb-2">
-                    Message
-                  </label>
-                  <Textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    placeholder="Tell me what you’re working on or say hello!"
-                    rows={6}
-                    required
-                    className="bg-card border-border resize-none"
-                  />
-                </div>
+                  <div className="space-y-2">
+                    <label htmlFor="message" className="text-sm font-medium">
+                      Message
+                    </label>
+                    <Textarea
+                      id="message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      placeholder="Tell me what you’re working on or say hello!"
+                      rows={6}
+                      required
+                      className="bg-background/50 border-white/10 focus:border-primary/50 resize-none"
+                    />
+                  </div>
 
-                <Button
-                  type="submit"
-                  size="lg"
-                  disabled={isSubmitting}
-                  className="w-full bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? "Sending..." : "Send Message"}
-                </Button>
-              </form>
+                  <Button
+                    type="submit"
+                    size="lg"
+                    disabled={isSubmitting}
+                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20"
+                  >
+                    {isSubmitting ? "Sending..." : "Send Message"}
+                  </Button>
+                </form>
+              </Card>
             </div>
           </div>
         </div>

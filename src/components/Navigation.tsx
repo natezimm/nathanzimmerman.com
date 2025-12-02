@@ -1,34 +1,7 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
-
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'default' | 'ghost';
-  size?: 'default' | 'icon';
-  children: React.ReactNode;
-}
-
-const Button = ({ variant = 'default', size = 'default', className = '', children, ...props }: ButtonProps) => {
-  const baseClasses = 'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50';
-  
-  const variantClasses = {
-    default: 'bg-primary text-primary-foreground hover:bg-primary/90',
-    ghost: 'hover:bg-accent hover:text-accent-foreground'
-  };
-  
-  const sizeClasses = {
-    default: 'h-10 px-4 py-2',
-    icon: 'h-10 w-10'
-  };
-  
-  return (
-    <button 
-      className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-};
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -37,7 +10,7 @@ const Navigation = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 20);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -45,7 +18,7 @@ const Navigation = () => {
   }, []);
 
   useEffect(() => {
-    const handleResize = () => setIsWide(window.innerWidth >= 600);
+    const handleResize = () => setIsWide(window.innerWidth >= 768);
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -65,19 +38,16 @@ const Navigation = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isWide
-          ? (isScrolled
-              ? "bg-background/95 backdrop-blur-md shadow-lg border-b border-border"
-              : "bg-transparent")
-          : "bg-background shadow-md"
-      }`}
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        isScrolled ? "glass shadow-lg py-2" : "bg-transparent py-4"
+      )}
     >
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between">
           <button
             onClick={() => scrollToSection("home")}
-            className="text-xl font-bold gradient-text hover:opacity-80 transition-opacity"
+            className="text-2xl font-bold gradient-text hover:opacity-80 transition-opacity font-heading"
           >
             NZ
           </button>
@@ -88,9 +58,10 @@ const Navigation = () => {
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className="text-foreground/70 hover:text-accent transition-colors font-medium"
+                className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors relative group"
               >
                 {item.label}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" />
               </button>
             ))}
           </div>
@@ -102,19 +73,19 @@ const Navigation = () => {
             className="md:hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
-            {isMobileMenuOpen ? <X /> : <Menu />}
+            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </Button>
         </div>
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border animate-fade-in">
-            <div className="flex flex-col gap-4">
+          <div className="md:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-lg border-t border-white/10 shadow-xl animate-fade-in">
+            <div className="flex flex-col p-4 gap-2">
               {navItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className="text-foreground/70 hover:text-accent transition-colors font-medium text-left py-2"
+                  className="text-foreground/70 hover:text-primary hover:bg-white/5 transition-all font-medium text-left px-4 py-3 rounded-md"
                 >
                   {item.label}
                 </button>
