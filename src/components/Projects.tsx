@@ -32,7 +32,7 @@ const Projects = () => {
     },
     {
       title: "Blackjack",
-      description: "Full-stack blackjack game built with React and Spring Boot, featuring realistic dealer logic and configurable rule sets (decks, soft 17, and insurance). Supports fast, responsive gameplay with client–server communication.",
+      description: "Full-stack blackjack game built with React and Spring Boot, featuring dealer logic, real-time gameplay, and a responsive interface.",
       image: blackjackImg,
       github: "https://github.com/natezimm/blackjack",
       demo: "https://blackjack.nathanzimmerman.com",
