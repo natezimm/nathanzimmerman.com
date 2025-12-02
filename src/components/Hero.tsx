@@ -39,7 +39,7 @@ const Hero = () => {
           </p>
 
           <p className="text-lg md:text-xl text-foreground/80 max-w-2xl mx-auto leading-relaxed">
-            Former special education teacher turned software engineer, bringing a human-centered approach to full-stack development. I build clean, intuitive applications using Angular, C#, and AWS, bridging the gap between complex code and user needs.
+            Former special education teacher turned software engineer, bringing a people-first mindset to development. I build clean, intuitive applications and enjoy working across the stack to make things simple and useful for real people.
           </p>
 
           <div className="flex items-center justify-center gap-4 flex-wrap pt-4">

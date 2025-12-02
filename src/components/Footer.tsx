@@ -6,7 +6,7 @@ const Footer = () => {
       <div className="container px-4 mx-auto">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Nathan Zimmerman. Built with React & Tailwind.
+            © {new Date().getFullYear()} Nathan Zimmerman. Built with React & Tailwind. Thanks for stopping by.
           </p>
 
           <div className="flex items-center gap-6">

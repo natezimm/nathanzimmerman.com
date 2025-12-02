@@ -6,22 +6,22 @@ const About = () => {
     {
       icon: Code2,
       title: "Full-Stack Development",
-      description: "Building modern, responsive applications with Angular, React, and TypeScript. Experienced in SPA architectures.",
+      description: "Building modern, responsive apps with Angular, React, and TypeScript. I enjoy creating smooth, fast experiences for users.",
     },
     {
       icon: Database,
       title: "Backend & Architecture",
-      description: "Designing robust APIs and microservices using C# (.NET), Node.js, and Java. Proficient with SQL and NoSQL databases.",
+      description: "Creating solid backend APIs and services with C#, Node, and Java. Comfortable working with both SQL and NoSQL databases.",
     },
     {
       icon: Rocket,
       title: "Cloud & DevOps",
-      description: "Building and deploying scalable cloud applications on AWS and Azure. Leveraging CI/CD pipelines to accelerate release cycles and improve reliability.",
+      description: "Deploying apps to AWS and Azure, and keeping things running smoothly with CI/CD pipelines.",
     },
     {
       icon: Users,
       title: "Team Collaboration",
-      description: "Strong communicator with a background in education. Collaborative contributor familiar with Agile workflows and cross‑functional teamwork.",
+      description: "Easy to work with and big on communication. My teaching background helps me explain things clearly and work well with any team.",
     },
   ];
 
@@ -37,20 +37,20 @@ const About = () => {
               About <span className="gradient-text">Me</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              A former teacher turned software engineer passionate about building meaningful products and learning something new every day.
+              Former teacher turned software engineer who loves building useful things and learning something new every day.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
             <div className="space-y-6 animate-slide-in">
               <p className="text-lg leading-relaxed text-foreground/90">
-                I originally studied psychology to understand how people work, then transitioned into programming to understand how computers work. My background teaching preschoolers with special needs taught me patience, empathy, and how to communicate complex ideas simply—skills I now use to build software that is reliable, thoughtful, and human-centered.
+                I first studied psychology to understand how people think, then got into programming to understand how computers think. Teaching preschoolers with special needs taught me patience, empathy, and how to break down complex ideas—skills I bring into the way I write code and build software.
               </p>
               <p className="text-lg leading-relaxed text-foreground/90">
-                As a Full-Stack Engineer, I specialize in building scalable applications with Angular, C#, .NET, and AWS. I enjoy working across the entire stack, from crafting intuitive UIs with React to designing robust backend systems with SQL and DynamoDB.
+                As a full‑stack engineer, I’ve worked with Angular, React, C#, .NET, Node, AWS, and more. I like bouncing between frontend and backend—whatever helps bring an idea to life.
               </p>
               <p className="text-lg leading-relaxed text-foreground/90">
-                When I'm not coding, you can find me cheering on Philly sports teams, playing acoustic guitar, or getting lost in a good fantasy novel.
+                When I’m not coding, I’m probably watching Philly sports, playing guitar, or getting into a good fantasy book.
               </p>
             </div>
 
