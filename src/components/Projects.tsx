@@ -16,7 +16,7 @@ const Projects = () => {
   const projects = [
     {
       title: "Brick Breaker Resume",
-      description: "Browser-based game built with Phaser.js that transforms the content of a .docx resume into interactive brick elements. Dynamically parses text and renders it into gameplay for a unique, gamified résumé experience.",
+      description: "Browser-based game built with Phaser.js that transforms the content of a .docx resume into interactive brick elements. Dynamically parses text and renders it into gameplay for a unique, gamified resume experience.",
       image: brickbreakerImg,
       github: "https://github.com/natezimm/brick-breaker-resume",
       demo: "https://resume.nathanzimmerman.com",
