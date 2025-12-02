@@ -78,39 +78,6 @@ const Projects = () => {
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500" />
-
-                  <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-2 group-hover:translate-y-0">
-                    <Button
-                      size="icon"
-                      variant="secondary"
-                      className="rounded-full h-10 w-10 bg-background/80 backdrop-blur-sm hover:bg-primary hover:text-primary-foreground text-cyan-400"
-                      asChild
-                    >
-                      <a
-                        href={project.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="View Code"
-                      >
-                        <Github className="w-5 h-5" />
-                      </a>
-                    </Button>
-                    <Button
-                      size="icon"
-                      variant="secondary"
-                      className="rounded-full h-10 w-10 bg-background/80 backdrop-blur-sm hover:bg-primary hover:text-primary-foreground text-cyan-400"
-                      asChild
-                    >
-                      <a
-                        href={project.demo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label="View Live Demo"
-                      >
-                        <ExternalLink className="w-5 h-5" />
-                      </a>
-                    </Button>
-                  </div>
                 </div>
 
                 <CardHeader>
@@ -120,16 +87,52 @@ const Projects = () => {
                   </CardDescription>
                 </CardHeader>
 
-                <CardContent className="space-y-4">
-                  <div className="flex flex-wrap gap-2">
-                    {project.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="px-3 py-1 text-xs font-medium bg-primary/5 text-primary border border-primary/10 rounded-full"
+                <CardContent className="space-y-3">
+                  <div className="flex items-center justify-between flex-wrap gap-4">
+                    <div className="flex flex-wrap gap-2">
+                      {project.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-3 py-1 text-xs font-medium bg-primary/5 text-primary border border-primary/20 rounded-full"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="border-primary/50 hover:bg-primary/10"
+                        asChild
                       >
-                        {tag}
-                      </span>
-                    ))}
+                        <a
+                          href={project.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="View Code"
+                        >
+                          <Github className="w-4 h-4 mr-2" />
+                          Code
+                        </a>
+                      </Button>
+                      <Button
+                        size="sm"
+                        className="bg-primary hover:bg-primary/90"
+                        asChild
+                      >
+                        <a
+                          href={project.demo}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label="View Live Demo"
+                        >
+                          <ExternalLink className="w-4 h-4 mr-2" />
+                          Live Demo
+                        </a>
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
