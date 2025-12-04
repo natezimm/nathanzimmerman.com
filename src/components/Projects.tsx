@@ -71,13 +71,13 @@ const Projects = () => {
                 className="glass-card overflow-hidden group border-white/5 card-glow"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="relative overflow-hidden aspect-video">
+                <div className="relative overflow-hidden bg-muted/20 rounded-t-2xl">
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500 rounded-t-2xl" />
                 </div>
 
                 <CardHeader>
