@@ -75,9 +75,9 @@ const Projects = () => {
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="w-full h-auto object-contain transition-transform duration-700 group-hover:scale-105"
+                    className="w-full h-auto object-contain"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500 rounded-t-2xl" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-80 rounded-t-2xl" />
                 </div>
 
                 <CardHeader>
