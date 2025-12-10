@@ -132,7 +132,7 @@ const Contact = () => {
                       onChange={handleChange}
                       placeholder="Your name"
                       required
-                      className="bg-background/50 border-white/10 focus:border-primary/50"
+                      className="bg-background/60 border border-slate-300 dark:border-white/15 focus-visible:border-primary focus-visible:ring-primary/30 transition-colors"
                     />
                   </div>
 
@@ -148,7 +148,7 @@ const Contact = () => {
                       onChange={handleChange}
                       placeholder="your.email@example.com"
                       required
-                      className="bg-background/50 border-white/10 focus:border-primary/50"
+                      className="bg-background/60 border border-slate-300 dark:border-white/15 focus-visible:border-primary focus-visible:ring-primary/30 transition-colors"
                     />
                   </div>
 
@@ -164,7 +164,7 @@ const Contact = () => {
                       placeholder="Tell me what you’re working on or say hello!"
                       rows={6}
                       required
-                      className="bg-background/50 border-white/10 focus:border-primary/50 resize-none"
+                      className="bg-background/60 border border-slate-300 dark:border-white/15 focus-visible:border-primary focus-visible:ring-primary/30 transition-colors resize-none"
                     />
                   </div>
 
