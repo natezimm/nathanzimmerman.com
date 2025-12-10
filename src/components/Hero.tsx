@@ -53,7 +53,7 @@ const Hero = () => {
             <Button
               size="lg"
               variant="outline"
-              className="h-12 px-8 text-lg rounded-full border border-slate-300 dark:border-white/15 bg-white/80 dark:bg-white/5 hover:bg-white/90 dark:hover:bg-white/10 text-foreground backdrop-blur-sm transition-all duration-300 hover:-translate-y-1"
+              className="h-12 px-8 text-lg rounded-full border border-slate-300 dark:border-white/25 bg-white/80 dark:bg-white/12 hover:bg-white/90 dark:hover:bg-white/18 text-foreground backdrop-blur-sm transition-all duration-300 hover:-translate-y-1"
               onClick={() => scrollToSection("contact")}
             >
               Get In Touch
