@@ -17,7 +17,7 @@ jobs:
         run: npm ci
 
       - name: Run tests with coverage
-        run: npm run test -- --run
+        run: npm run test:coverage
 
       # 2. Setup SSH into Lightsail
       - name: Add SSH key
