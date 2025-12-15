@@ -40,8 +40,17 @@ Personal portfolio built with React, TypeScript, and Vite. The single‑page exp
 
 ## Testing & quality
 
-- Vitest + Testing Library power the component and context tests in `src/components/` and `src/contexts/`.
-- ESLint enforces the TypeScript + React conventions; run `npm run lint` before submitting changes.
+- CI runs automated tests on every push before deployment
+- Coverage is enforced as part of CI to prevent regressions
+- Coverage thresholds:
+  - Lines ≥ 90%
+  - Statements ≥ 85%
+  - Functions ≥ 85%
+  - Branches ≥ 80%
+
+Tooling:
+- Vitest + Testing Library for component, context, and integration tests
+- ESLint for consistent TypeScript and React conventions
 
 ## Deployment
 
