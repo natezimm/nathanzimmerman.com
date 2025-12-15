@@ -1,5 +1,5 @@
-![CI](https://github.com/natezimm/nathanzimmerman.com/actions/workflows/deploy.yml/badge.svg)
-![Coverage](https://img.shields.io/badge/coverage-checked-brightgreen)
+[![CI](https://github.com/natezimm/nathanzimmerman.com/actions/workflows/deploy.yml/badge.svg)](https://github.com/natezimm/nathanzimmerman.com/actions/workflows/deploy.yml)
+[![Coverage](https://img.shields.io/badge/coverage-checked-brightgreen)](#testing--quality)
 
 # Nathan Zimmerman - Portfolio Website
 
