@@ -1,5 +1,5 @@
 ![CI](https://github.com/natezimm/nathanzimmerman.com/actions/workflows/deploy.yml/badge.svg)
-![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)
+![Coverage](https://img.shields.io/badge/coverage-enforced-brightgreen)
 # Nathan Zimmerman - Portfolio Website
 
 Personal portfolio built with React, TypeScript, and Vite. The single‑page experience ties together navigation, hero, about, projects, and contact sections with responsive layouts, theme persistence, and subtle animation hooks powered by Radix UI primitives, Lucide icons, and Sonner toasts.
