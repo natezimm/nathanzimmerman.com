@@ -1,4 +1,4 @@
-name: CI
+name: CI & Deploy
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Install dependencies
@@ -30,7 +30,7 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: nathanzimmerman-site-build
+          name: dist
           path: dist
           if-no-files-found: error
 
@@ -39,12 +39,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy to Lightsail
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+      - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.LIGHTSAIL_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan ${{ secrets.LIGHTSAIL_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan "${{ secrets.LIGHTSAIL_HOST }}" >> ~/.ssh/known_hosts
 
-          ssh ${{ secrets.LIGHTSAIL_USER }}@${{ secrets.LIGHTSAIL_HOST }} \
-            "bash ~/deploy-scripts/deploy-nathanzimmerman.com.sh"
+      - name: Deploy to Lightsail
+        run: |
+          rsync -avz --delete dist/ \
+            ${{ secrets.LIGHTSAIL_USER }}@${{ secrets.LIGHTSAIL_HOST }}:/var/www/nathanzimmerman.com/
