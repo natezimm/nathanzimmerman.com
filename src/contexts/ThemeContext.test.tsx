@@ -91,6 +91,14 @@ describe("ThemeContext", () => {
   });
 
   it("throws when used outside provider", () => {
-    expect(() => render(<ThemeInspector />)).toThrow("useTheme must be used within a ThemeProvider");
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+
+    expect(() => render(<ThemeInspector />)).toThrow(
+      "useTheme must be used within a ThemeProvider"
+    );
+
+    consoleError.mockRestore();
   });
 });
