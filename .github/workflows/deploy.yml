@@ -25,6 +25,9 @@ jobs:
       - name: Run tests with coverage
         run: npm run test:coverage
 
+      - name: Build production bundle
+        run: npm run build
+
       # 2. Setup SSH into Lightsail
       - name: Add SSH key
         run: |
@@ -43,7 +46,10 @@ jobs:
             StrictHostKeyChecking=no
           EOF
 
-      # 3. Trigger the appropriate deploy script on Lightsail
-      - name: Run remote deploy script
+      - name: Upload build artifacts to Lightsail
         run: |
-          ssh lightsail "bash ~/deploy-scripts/deploy-${{ github.event.repository.name }}.sh"
+          rsync -avz --delete dist/ lightsail:/home/${{ secrets.LIGHTSAIL_USER }}/apps/nathanzimmerman.com/frontend-build/
+
+      - name: Restart frontend service
+        run: |
+          ssh lightsail "sudo systemctl restart nginx"
