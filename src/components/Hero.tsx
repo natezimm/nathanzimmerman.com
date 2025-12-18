@@ -1,4 +1,4 @@
-import { Github, Linkedin, Mail, ArrowDown } from "lucide-react";
+import { Github, Linkedin, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Hero = () => {
@@ -42,51 +42,56 @@ const Hero = () => {
             Former special education teacher turned software engineer, bringing a people-first mindset to development. I build clean, intuitive applications and enjoy working across the stack to make things simple and useful for real people.
           </p>
 
-          <div className="flex items-center justify-center gap-4 flex-wrap pt-4">
-            <Button
-              size="lg"
-              className="h-12 px-8 text-lg rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all duration-300 hover:-translate-y-1"
-              onClick={() => scrollToSection("projects")}
-            >
-              View My Work
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="h-12 px-8 text-lg rounded-full border border-slate-300 dark:border-white/15 bg-white/80 dark:bg-white/5 hover:bg-white/90 dark:hover:bg-white/10 text-foreground backdrop-blur-sm transition-all duration-300 hover:-translate-y-1"
-              onClick={() => scrollToSection("contact")}
-            >
-              Get In Touch
-            </Button>
-          </div>
-
-          <div className="flex items-center justify-center gap-8 pt-8">
-            {[
-              { href: "https://github.com/natezimm", icon: Github, label: "GitHub" },
-              { href: "https://www.linkedin.com/in/zimmermannathan", icon: Linkedin, label: "LinkedIn" },
-              { href: "mailto:nathan.a.zimmerman@gmail.com", icon: Mail, label: "Email" }
-            ].map(({ href, icon: Icon, label }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-110"
-                aria-label={label}
+          <div className="pt-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center justify-items-center">
+              <Button
+                size="lg"
+                className="h-12 px-8 text-lg rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all duration-300 hover:-translate-y-1 sm:justify-self-end"
+                onClick={() => scrollToSection("projects")}
               >
-                <Icon className="w-8 h-8" />
-              </a>
-            ))}
+                View My Work
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="h-12 px-8 text-lg rounded-full border border-slate-300 dark:border-white/15 bg-white/80 dark:bg-white/5 hover:bg-white/90 dark:hover:bg-white/10 text-foreground backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 sm:justify-self-start"
+                onClick={() => scrollToSection("contact")}
+              >
+                Get In Touch
+              </Button>
+            </div>
+
+            <button
+              onClick={() => scrollToSection("about")}
+              className="mt-8 mx-auto block text-muted-foreground hover:text-primary transition-colors animate-bounce"
+              aria-label="Scroll to about section"
+            >
+              <ArrowDown className="w-8 h-8" />
+            </button>
+
+            <div className="flex items-center justify-center gap-8 pt-6">
+              {[
+                { href: "https://github.com/natezimm", icon: Github, label: "GitHub" },
+                {
+                  href: "https://www.linkedin.com/in/zimmermannathan",
+                  icon: Linkedin,
+                  label: "LinkedIn"
+                },
+              ].map(({ href, icon: Icon, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-110"
+                  aria-label={label}
+                >
+                  <Icon className="w-8 h-8" />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
-
-        <button
-          onClick={() => scrollToSection("about")}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-muted-foreground hover:text-primary transition-colors animate-bounce"
-          aria-label="Scroll to about section"
-        >
-          <ArrowDown className="w-8 h-8" />
-        </button>
       </div>
     </section>
   );
