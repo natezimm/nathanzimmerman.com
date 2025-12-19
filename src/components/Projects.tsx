@@ -16,7 +16,7 @@ const Projects = () => {
   const projects = [
     {
       title: "Brick Breaker Resume",
-      description: "Browser-based game built with Phaser.js that transforms the content of a .docx resume into interactive brick elements. Dynamically parses text and renders it into gameplay for a unique, gamified resume experience.",
+      description: "Browser-based game built with Phaser.js that turns a .docx resume into a playable Brick Breaker level. Resume text is parsed into interactive bricks, combining classic arcade gameplay with a gamified take on a résumé.",
       image: brickbreakerImg,
       github: "https://github.com/natezimm/brick-breaker-resume",
       demo: "https://resume.nathanzimmerman.com",
@@ -24,7 +24,7 @@ const Projects = () => {
     },
     {
       title: "Nerdle",
-      description: "Word puzzle game inspired by Wordle, focused on technology-related vocabulary. Built with React and Node.js, allowing players to guess a randomized 5-letter word within 6 attempts with real-time feedback.",
+      description: "Word puzzle game inspired by Wordle, focused on technology-related vocabulary. Built with React and Node.js, featuring animated feedback, server-side validation, and persistent stats across multiple word lengths.",
       image: nerdleImg,
       github: "https://github.com/natezimm/nerdle",
       demo: "https://nerdle.nathanzimmerman.com",
@@ -32,7 +32,7 @@ const Projects = () => {
     },
     {
       title: "Blackjack",
-      description: "Full-stack blackjack game built with React and Spring Boot, featuring dealer logic, real-time gameplay, and a responsive interface.",
+      description: "Full-stack blackjack game built with React and Spring Boot, featuring session-based gameplay, configurable table rules, and support for split hands, insurance, and live betting.",
       image: blackjackImg,
       github: "https://github.com/natezimm/blackjack",
       demo: "https://blackjack.nathanzimmerman.com",
@@ -40,7 +40,7 @@ const Projects = () => {
     },
     {
       title: "Sudoku",
-      description: "Interactive Sudoku puzzle game built with Angular and ASP.NET, including algorithmic puzzle generation, real-time validation, and step-by-step solution visualization.",
+      description: "Interactive Sudoku game built with Angular and ASP.NET, featuring on-demand puzzle generation, real-time input validation, and persistent stats with resume support.",
       image: sudokuImg,
       github: "https://github.com/natezimm/sudoku",
       demo: "https://sudoku.nathanzimmerman.com",
