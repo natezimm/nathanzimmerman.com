@@ -9,12 +9,20 @@ import {
 } from "@/components/ui/card";
 import nerdleImgWebp from "@/assets/project-nerdle.webp";
 import nerdleImgAvif from "@/assets/project-nerdle.avif";
+import nerdleImgSmallWebp from "@/assets/project-nerdle-small.webp";
+import nerdleImgSmallAvif from "@/assets/project-nerdle-small.avif";
 import blackjackImgWebp from "@/assets/project-blackjack.webp";
 import blackjackImgAvif from "@/assets/project-blackjack.avif";
 import sudokuImgWebp from "@/assets/project-sudoku.webp";
 import sudokuImgAvif from "@/assets/project-sudoku.avif";
+import sudokuImgSmallWebp from "@/assets/project-sudoku-small.webp";
+import sudokuImgSmallAvif from "@/assets/project-sudoku-small.avif";
 import brickbreakerImgWebp from "@/assets/project-brickbreaker.webp";
 import brickbreakerImgAvif from "@/assets/project-brickbreaker.avif";
+import brickbreakerImgSmallWebp from "@/assets/project-brickbreaker-small.webp";
+import brickbreakerImgSmallAvif from "@/assets/project-brickbreaker-small.avif";
+import blackjackImgSmallWebp from "@/assets/project-blackjack-small.webp";
+import blackjackImgSmallAvif from "@/assets/project-blackjack-small.avif";
 
 const Projects = () => {
   const projects = [
@@ -23,6 +31,8 @@ const Projects = () => {
       description: "Browser-based game built with Phaser.js that turns a .docx resume into a playable Brick Breaker level. Resume text is parsed into interactive bricks, combining classic arcade gameplay with a gamified take on a résumé.",
       imageAvif: brickbreakerImgAvif,
       imageWebp: brickbreakerImgWebp,
+      imageSmallAvif: brickbreakerImgSmallAvif,
+      imageSmallWebp: brickbreakerImgSmallWebp,
       github: "https://github.com/natezimm/brick-breaker-resume",
       demo: "https://resume.nathanzimmerman.com",
       tags: ["JavaScript", "Phaser.js", "Mammoth.js"],
@@ -32,6 +42,8 @@ const Projects = () => {
       description: "Word puzzle game inspired by Wordle, focused on technology-related vocabulary. Built with React and Node.js, featuring animated feedback, server-side validation, and persistent stats across multiple word lengths.",
       imageAvif: nerdleImgAvif,
       imageWebp: nerdleImgWebp,
+      imageSmallAvif: nerdleImgSmallAvif,
+      imageSmallWebp: nerdleImgSmallWebp,
       github: "https://github.com/natezimm/nerdle",
       demo: "https://nerdle.nathanzimmerman.com",
       tags: ["React", "Axios", "Node.js"],
@@ -41,6 +53,8 @@ const Projects = () => {
       description: "Full-stack blackjack game built with React and Spring Boot, featuring session-based gameplay, configurable table rules, and support for split hands, insurance, and live betting.",
       imageAvif: blackjackImgAvif,
       imageWebp: blackjackImgWebp,
+      imageSmallAvif: blackjackImgSmallAvif,
+      imageSmallWebp: blackjackImgSmallWebp,
       github: "https://github.com/natezimm/blackjack",
       demo: "https://blackjack.nathanzimmerman.com",
       tags: ["React", "Java", "Spring Boot"],
@@ -50,6 +64,8 @@ const Projects = () => {
       description: "Interactive Sudoku game built with Angular and ASP.NET, featuring on-demand puzzle generation, real-time input validation, and persistent stats with resume support.",
       imageAvif: sudokuImgAvif,
       imageWebp: sudokuImgWebp,
+      imageSmallAvif: sudokuImgSmallAvif,
+      imageSmallWebp: sudokuImgSmallWebp,
       github: "https://github.com/natezimm/sudoku",
       demo: "https://sudoku.nathanzimmerman.com",
       tags: ["Angular", "ASP.NET", "C#"],
@@ -81,14 +97,23 @@ const Projects = () => {
               >
                 <div className="relative overflow-hidden bg-muted/20 rounded-t-2xl">
                   <picture>
-                    <source srcSet={project.imageAvif} type="image/avif" />
-                    <source srcSet={project.imageWebp} type="image/webp" />
+                    <source 
+                      srcSet={project.imageSmallAvif ? `${project.imageSmallAvif} 600w, ${project.imageAvif} 1200w` : project.imageAvif}
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      type="image/avif" 
+                    />
+                    <source 
+                      srcSet={project.imageSmallWebp ? `${project.imageSmallWebp} 600w, ${project.imageWebp} 1200w` : project.imageWebp}
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      type="image/webp" 
+                    />
                     <img
-                      src={project.imageWebp}
+                      src={project.imageSmallWebp || project.imageWebp}
                       alt={project.title}
-                      width={1200}
-                      height={675}
+                      width={600}
+                      height={324}
                       className="w-full h-auto object-contain"
+                      loading="lazy"
                     />
                   </picture>
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-80 rounded-t-2xl" />
