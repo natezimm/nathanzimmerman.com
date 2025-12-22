@@ -2,6 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      document.documentElement.classList.add(
+        localStorage.getItem('theme') || 'dark'
+      );
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nathan Zimmerman | Software Engineer</title>
     <meta name="description" content="Nathan Zimmerman – Software Engineer specializing in React, Angular, TypeScript, Java, .NET, Node.js, MongoDB, AWS, and Azure." />

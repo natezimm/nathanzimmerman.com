@@ -21,7 +21,7 @@ describe("ThemeContext", () => {
     document.documentElement.className = "";
   });
 
-  it("defaults to light when no preference exists", async () => {
+  it("defaults to dark when no preference exists", async () => {
     render(
       <ThemeProvider>
         <ThemeInspector />
@@ -29,11 +29,11 @@ describe("ThemeContext", () => {
     );
 
     await waitFor(() => {
-      expect(document.documentElement.classList.contains("light")).toBe(true);
+      expect(document.documentElement.classList.contains("dark")).toBe(true);
     });
 
-    expect(screen.getByTestId("theme")).toHaveTextContent("light");
-    expect(localStorage.getItem("theme")).toBe("light");
+    expect(screen.getByTestId("theme")).toHaveTextContent("dark");
+    expect(localStorage.getItem("theme")).toBe("dark");
   });
 
   it("respects saved theme and toggles value", async () => {
@@ -59,35 +59,21 @@ describe("ThemeContext", () => {
     });
   });
 
-  it("falls back to system preference when no saved theme", async () => {
-    const originalMatchMedia = window.matchMedia;
-    window.matchMedia = vi.fn(() => ({
-      matches: true,
-      media: "(prefers-color-scheme: dark)",
-      onchange: null,
-      addEventListener: vi.fn(),
-      removeEventListener: vi.fn(),
-      addListener: vi.fn(),
-      removeListener: vi.fn(),
-      dispatchEvent: vi.fn(),
-    }));
+  it("respects saved light theme preference", async () => {
+    localStorage.setItem("theme", "light");
 
-    try {
-      render(
-        <ThemeProvider>
-          <ThemeInspector />
-        </ThemeProvider>
-      );
+    render(
+      <ThemeProvider>
+        <ThemeInspector />
+      </ThemeProvider>
+    );
 
-      await waitFor(() => {
-        expect(document.documentElement.classList.contains("dark")).toBe(true);
-      });
+    await waitFor(() => {
+      expect(document.documentElement.classList.contains("light")).toBe(true);
+    });
 
-      expect(screen.getByTestId("theme")).toHaveTextContent("dark");
-      expect(localStorage.getItem("theme")).toBe("dark");
-    } finally {
-      window.matchMedia = originalMatchMedia;
-    }
+    expect(screen.getByTestId("theme")).toHaveTextContent("light");
+    expect(localStorage.getItem("theme")).toBe("light");
   });
 
   it("throws when used outside provider", () => {
