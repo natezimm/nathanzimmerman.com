@@ -7,10 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import nerdleImg from "@/assets/project-nerdle.png";
-import blackjackImg from "@/assets/project-blackjack.png";
-import sudokuImg from "@/assets/project-sudoku.png";
-import brickbreakerImg from "@/assets/project-brickbreaker.png";
+import nerdleImg from "@/assets/project-nerdle.webp";
+import blackjackImg from "@/assets/project-blackjack.webp";
+import sudokuImg from "@/assets/project-sudoku.webp";
+import brickbreakerImg from "@/assets/project-brickbreaker.webp";
 
 const Projects = () => {
   const projects = [
