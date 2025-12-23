@@ -1,10 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import Index from "./Index";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 
 describe("Index page", () => {
-  it("renders the main sections", () => {
+  it("renders the main sections", async () => {
     render(
       <ThemeProvider>
         <Index />
@@ -14,11 +14,17 @@ describe("Index page", () => {
     expect(
       screen.getByRole("heading", { name: /Hi, I'm Nathan/ })
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: /Featured Projects/ })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: /About Me/ })
-    ).toBeInTheDocument();
+    
+    // Lazy-loaded components need to be awaited
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { name: /Featured Projects/ })
+      ).toBeInTheDocument();
+    });
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { name: /About Me/ })
+      ).toBeInTheDocument();
+    });
   });
 });

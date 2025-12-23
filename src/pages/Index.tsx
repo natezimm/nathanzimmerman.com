@@ -1,9 +1,12 @@
+import { lazy, Suspense } from "react";
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
-import About from "@/components/About";
-import Projects from "@/components/Projects";
-import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
+
+// Lazy load components below the fold for better initial load performance
+const About = lazy(() => import("@/components/About"));
+const Projects = lazy(() => import("@/components/Projects"));
+const Contact = lazy(() => import("@/components/Contact"));
+const Footer = lazy(() => import("@/components/Footer"));
 
 const Index = () => {
   return (
@@ -11,11 +14,15 @@ const Index = () => {
       <Navigation />
       <main>
         <Hero />
-        <About />
-        <Projects />
-        <Contact />
+        <Suspense fallback={<div className="min-h-[50vh]" />}>
+          <About />
+          <Projects />
+          <Contact />
+        </Suspense>
       </main>
-      <Footer />
+      <Suspense fallback={null}>
+        <Footer />
+      </Suspense>
     </div>
   );
 };

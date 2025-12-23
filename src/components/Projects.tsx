@@ -99,12 +99,12 @@ const Projects = () => {
                   <picture>
                     <source 
                       srcSet={project.imageSmallAvif ? `${project.imageSmallAvif} 600w, ${project.imageAvif} 1200w` : project.imageAvif}
-                      sizes="(max-width: 768px) 100vw, 50vw"
+                      sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 768px) calc(100vw - 2rem), (max-width: 1280px) calc(50vw - 3rem), 600px"
                       type="image/avif" 
                     />
                     <source 
                       srcSet={project.imageSmallWebp ? `${project.imageSmallWebp} 600w, ${project.imageWebp} 1200w` : project.imageWebp}
-                      sizes="(max-width: 768px) 100vw, 50vw"
+                      sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 768px) calc(100vw - 2rem), (max-width: 1280px) calc(50vw - 3rem), 600px"
                       type="image/webp" 
                     />
                     <img
@@ -114,6 +114,7 @@ const Projects = () => {
                       height={324}
                       className="w-full h-auto object-contain"
                       loading="lazy"
+                      decoding="async"
                     />
                   </picture>
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent opacity-80 rounded-t-2xl" />
