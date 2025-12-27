@@ -53,6 +53,27 @@ Tooling:
 - Vitest + Testing Library for component, context, and integration tests
 - ESLint for consistent TypeScript and React conventions
 
+## Security
+
+The site implements multiple layers of security:
+
+### HTTP Security Headers (`public/_headers`)
+- **Content-Security-Policy (CSP)** – Restricts resource loading to trusted origins, preventing XSS and data injection attacks
+- **X-Content-Type-Options: nosniff** – Prevents MIME type sniffing
+- **X-Frame-Options: DENY** – Blocks clickjacking by preventing iframe embedding
+- **Referrer-Policy: strict-origin-when-cross-origin** – Controls referrer information leakage
+- **Permissions-Policy** – Disables access to camera, microphone, geolocation, and FLoC tracking
+
+### Contact Form Protection
+- **Input sanitization** – Strips potentially dangerous HTML characters to prevent XSS
+- **Length limits** – Enforces maximum lengths (name: 100, email: 254, message: 2000 chars)
+- **Rate limiting** – 30-second cooldown between submissions to prevent spam
+- **Environment variable isolation** – EmailJS credentials stored in env vars, not in code
+
+### Caching Strategy
+- Static assets (JS, CSS, images, fonts) cached for 1 year with content hashing
+- HTML files use `must-revalidate` to ensure users always get the latest version
+
 ## Deployment
 
 Use `npm run build` to generate the production bundle in `dist/` and deploy that folder to any static host (Lightsail, Vercel, etc.). The repo is set up for modern static deployments with HTTPS offloading handled by your environment.
