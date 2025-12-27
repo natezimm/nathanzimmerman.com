@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <script>document.documentElement.classList.add(localStorage.getItem('theme')||'dark')</script>
+    <script>var t=localStorage.getItem('theme');document.documentElement.classList.add(t==='light'?'light':'dark')</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Preconnect to Google Fonts for faster font loading -->

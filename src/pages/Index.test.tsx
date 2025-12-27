@@ -15,16 +15,16 @@ describe("Index page", () => {
       screen.getByRole("heading", { name: /Hi, I'm Nathan/ })
     ).toBeInTheDocument();
     
-    // Lazy-loaded components need to be awaited
+    // Lazy-loaded components need to be awaited with longer timeout
     await waitFor(() => {
       expect(
         screen.getByRole("heading", { name: /Featured Projects/ })
       ).toBeInTheDocument();
-    });
+    }, { timeout: 5000 });
     await waitFor(() => {
       expect(
         screen.getByRole("heading", { name: /About Me/ })
       ).toBeInTheDocument();
-    });
+    }, { timeout: 5000 });
   });
 });

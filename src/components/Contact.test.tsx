@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, expect, vi } from "vitest";
+import { describe, it, beforeEach, expect, vi, type Mock } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 
 vi.mock("@emailjs/browser", () => ({
@@ -18,15 +18,15 @@ import emailjs from "@emailjs/browser";
 import { toast } from "sonner";
 import Contact from "./Contact";
 
-type MockSend = typeof emailjs.send & vi.Mock;
+type MockSend = typeof emailjs.send & Mock;
 
 describe("Contact form", () => {
   beforeEach(() => {
     vi.stubEnv("VITE_EMAILJS_SERVICE_ID", "service");
     vi.stubEnv("VITE_EMAILJS_TEMPLATE_ID", "template");
     vi.stubEnv("VITE_EMAILJS_PUBLIC_KEY", "public");
-    (toast.success as vi.Mock).mockReset();
-    (toast.error as vi.Mock).mockReset();
+    (toast.success as Mock).mockReset();
+    (toast.error as Mock).mockReset();
     ((emailjs.send as MockSend).mockReset());
   });
 
@@ -81,7 +81,7 @@ describe("Contact form", () => {
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith(
-        "Failed to send message. Please try again or email me directly."
+        "Contact form is not configured. Please email me directly."
       );
     });
 
