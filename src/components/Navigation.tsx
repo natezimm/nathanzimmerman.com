@@ -1,6 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import ThemeToggle from "@/components/ThemeToggle";
 
@@ -81,14 +79,36 @@ const Navigation = () => {
           {/* Mobile Menu Button & Theme Toggle */}
           <div className="md:hidden flex items-center gap-2">
             <ThemeToggle />
-            <Button
-              variant="ghost"
-              size="icon"
+            <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
+              aria-expanded={isMobileMenuOpen}
+              className="relative w-10 h-10 flex items-center justify-center rounded-md hover:bg-accent transition-colors"
             >
-              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </Button>
+              <div className="w-6 h-5 flex flex-col justify-between">
+                {/* Top line */}
+                <span
+                  className={cn(
+                    "block h-0.5 bg-foreground rounded-full transition-all duration-300 ease-in-out origin-left",
+                    isMobileMenuOpen ? "rotate-45 translate-x-[3px] -translate-y-[1px] w-[29px]" : "w-full"
+                  )}
+                />
+                {/* Middle line */}
+                <span
+                  className={cn(
+                    "block h-0.5 bg-foreground rounded-full transition-all duration-300 ease-in-out",
+                    isMobileMenuOpen ? "opacity-0 translate-x-4" : "opacity-100 w-full"
+                  )}
+                />
+                {/* Bottom line */}
+                <span
+                  className={cn(
+                    "block h-0.5 bg-foreground rounded-full transition-all duration-300 ease-in-out origin-left",
+                    isMobileMenuOpen ? "-rotate-45 translate-x-[3px] translate-y-[1px] w-[29px]" : "w-full"
+                  )}
+                />
+              </div>
+            </button>
           </div>
         </div>
 

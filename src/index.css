@@ -185,3 +185,9 @@
     transform: translateY(0);
   }
 }
+
+@media (max-width: 575px) {
+  #home {
+    padding-top: 4.5rem !important; /* 72px, matches pt-20 */
+  }
+}
