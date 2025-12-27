@@ -1,11 +1,24 @@
 import { Mail, MapPin } from "lucide-react";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import emailjs from '@emailjs/browser';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
+
+// Input validation constants
+const MAX_NAME_LENGTH = 100;
+const MAX_EMAIL_LENGTH = 254;
+const MAX_MESSAGE_LENGTH = 2000;
+const SUBMIT_COOLDOWN_MS = 30000; // 30 second cooldown between submissions
+
+// Sanitize user input to prevent XSS
+const sanitizeInput = (input: string): string => {
+  return input
+    .replace(/[<>]/g, '') // Remove potential HTML tags
+    .trim();
+};
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -14,9 +27,19 @@ const Contact = () => {
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const lastSubmitTime = useRef<number>(0);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Rate limiting: prevent rapid submissions
+    const now = Date.now();
+    if (now - lastSubmitTime.current < SUBMIT_COOLDOWN_MS) {
+      const remainingSeconds = Math.ceil((SUBMIT_COOLDOWN_MS - (now - lastSubmitTime.current)) / 1000);
+      toast.error(`Please wait ${remainingSeconds} seconds before sending another message.`);
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -25,7 +48,21 @@ const Contact = () => {
       const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
       if (!serviceId || !templateId || !publicKey) {
-        throw new Error("EmailJS configuration missing");
+        toast.error("Contact form is not configured. Please email me directly.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Sanitize inputs before sending
+      const sanitizedName = sanitizeInput(formData.name).slice(0, MAX_NAME_LENGTH);
+      const sanitizedEmail = sanitizeInput(formData.email).slice(0, MAX_EMAIL_LENGTH);
+      const sanitizedMessage = sanitizeInput(formData.message).slice(0, MAX_MESSAGE_LENGTH);
+
+      // Validate sanitized inputs aren't empty
+      if (!sanitizedName || !sanitizedEmail || !sanitizedMessage) {
+        toast.error("Please fill in all fields with valid content.");
+        setIsSubmitting(false);
+        return;
       }
 
       const currentDate = new Date().toLocaleDateString('en-US', {
@@ -38,15 +75,16 @@ const Contact = () => {
       });
 
       const templateParams = {
-        fname: formData.name,
-        femail: formData.email,
-        message: formData.message,
+        fname: sanitizedName,
+        femail: sanitizedEmail,
+        message: sanitizedMessage,
         to_name: "Nathan Zimmerman",
         date: currentDate,
       };
 
       await emailjs.send(serviceId, templateId, templateParams, publicKey);
 
+      lastSubmitTime.current = Date.now(); // Update last submit time on success
       toast.success("Message sent! You'll receive a confirmation email shortly.");
       setFormData({ name: "", email: "", message: "" });
     } catch (error) {
@@ -132,6 +170,7 @@ const Contact = () => {
                       onChange={handleChange}
                       placeholder="Your name"
                       required
+                      maxLength={MAX_NAME_LENGTH}
                       className="bg-background/60 border border-slate-300 dark:border-white/25 focus-visible:border-primary focus-visible:ring-primary/40 transition-colors"
                     />
                   </div>
@@ -148,6 +187,7 @@ const Contact = () => {
                       onChange={handleChange}
                       placeholder="your.email@example.com"
                       required
+                      maxLength={MAX_EMAIL_LENGTH}
                       className="bg-background/60 border border-slate-300 dark:border-white/25 focus-visible:border-primary focus-visible:ring-primary/40 transition-colors"
                     />
                   </div>
@@ -161,9 +201,10 @@ const Contact = () => {
                       name="message"
                       value={formData.message}
                       onChange={handleChange}
-                      placeholder="Tell me what you’re working on or say hello!"
+                      placeholder="Tell me what you're working on or say hello!"
                       rows={6}
                       required
+                      maxLength={MAX_MESSAGE_LENGTH}
                       className="bg-background/60 border border-slate-300 dark:border-white/25 focus-visible:border-primary focus-visible:ring-primary/40 transition-colors resize-none"
                     />
                   </div>
