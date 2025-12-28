@@ -7,16 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 
-// Input validation constants
 const MAX_NAME_LENGTH = 100;
 const MAX_EMAIL_LENGTH = 254;
 const MAX_MESSAGE_LENGTH = 2000;
-const SUBMIT_COOLDOWN_MS = 30000; // 30 second cooldown between submissions
+const SUBMIT_COOLDOWN_MS = 30000;
 
-// Sanitize user input to prevent XSS
 const sanitizeInput = (input: string): string => {
   return input
-    .replace(/[<>]/g, '') // Remove potential HTML tags
+    .replace(/[<>]/g, '')
     .trim();
 };
 
@@ -32,7 +30,6 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Rate limiting: prevent rapid submissions
     const now = Date.now();
     if (now - lastSubmitTime.current < SUBMIT_COOLDOWN_MS) {
       const remainingSeconds = Math.ceil((SUBMIT_COOLDOWN_MS - (now - lastSubmitTime.current)) / 1000);
@@ -53,12 +50,10 @@ const Contact = () => {
         return;
       }
 
-      // Sanitize inputs before sending
       const sanitizedName = sanitizeInput(formData.name).slice(0, MAX_NAME_LENGTH);
       const sanitizedEmail = sanitizeInput(formData.email).slice(0, MAX_EMAIL_LENGTH);
       const sanitizedMessage = sanitizeInput(formData.message).slice(0, MAX_MESSAGE_LENGTH);
 
-      // Validate sanitized inputs aren't empty
       if (!sanitizedName || !sanitizedEmail || !sanitizedMessage) {
         toast.error("Please fill in all fields with valid content.");
         setIsSubmitting(false);
@@ -84,7 +79,7 @@ const Contact = () => {
 
       await emailjs.send(serviceId, templateId, templateParams, publicKey);
 
-      lastSubmitTime.current = Date.now(); // Update last submit time on success
+      lastSubmitTime.current = Date.now();
       toast.success("Message sent! You'll receive a confirmation email shortly.");
       setFormData({ name: "", email: "", message: "" });
     } catch (error) {
