@@ -15,7 +15,6 @@ describe("Index page", () => {
       screen.getByRole("heading", { name: /Hi, I'm Nathan/ })
     ).toBeInTheDocument();
     
-    // Lazy-loaded components need to be awaited with longer timeout
     await waitFor(() => {
       expect(
         screen.getByRole("heading", { name: /Featured Projects/ })

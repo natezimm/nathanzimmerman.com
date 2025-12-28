@@ -16,13 +16,11 @@ describe("ThemeToggle", () => {
       </ThemeProvider>
     );
 
-    // Default is now dark
     expect(document.documentElement.classList.contains("dark")).toBe(true);
 
     const button = screen.getByLabelText("Toggle theme");
     fireEvent.click(button);
 
-    // After toggle, should be light
     expect(document.documentElement.classList.contains("light")).toBe(true);
   });
 });
