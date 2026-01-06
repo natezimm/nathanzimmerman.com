@@ -105,6 +105,12 @@
 @layer utilities {
   .gradient-text {
     @apply bg-gradient-to-r from-cyan-400 to-blue-600 bg-clip-text text-transparent;
+    transition: filter 0.3s ease, transform 0.3s ease;
+  }
+
+  .gradient-text:hover {
+    filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6)) drop-shadow(0 0 20px rgba(59, 130, 246, 0.4));
+    transform: scale(1.02);
   }
 
   .glass {
@@ -189,5 +195,33 @@
 @media (max-width: 575px) {
   #home {
     padding-top: 4.5rem !important;
+  }
+}
+
+@keyframes blink {
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.animate-blink {
+  animation: blink 1s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-blink {
+    animation: none;
+    opacity: 1;
+  }
+
+  .animate-wave {
+    animation: none;
   }
 }

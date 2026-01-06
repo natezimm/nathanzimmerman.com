@@ -1,10 +1,67 @@
 import { Github, Linkedin, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useState, useEffect, useCallback } from "react";
+
+const ROLES = ["Full-Stack Engineer", "Builder", "Lifelong Learner"] as const;
+const TYPING_SPEED = 80;
+const DELETING_SPEED = 50;
+const PAUSE_DURATION = 2000;
 
 const Hero = () => {
+  const [displayText, setDisplayText] = useState("");
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mediaQuery.matches);
+
+    const handleChange = (e: MediaQueryListEvent) => {
+      setPrefersReducedMotion(e.matches);
+    };
+
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
+  }, []);
+
+  const typeEffect = useCallback(() => {
+    const currentRole = ROLES[roleIndex];
+
+    if (isDeleting) {
+      if (displayText.length > 0) {
+        setDisplayText(currentRole.substring(0, displayText.length - 1));
+      } else {
+        setIsDeleting(false);
+        setRoleIndex((prev) => (prev + 1) % ROLES.length);
+      }
+    } else {
+      if (displayText.length < currentRole.length) {
+        setDisplayText(currentRole.substring(0, displayText.length + 1));
+      } else {
+        setTimeout(() => setIsDeleting(true), PAUSE_DURATION);
+        return;
+      }
+    }
+  }, [displayText, roleIndex, isDeleting]);
+
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      setDisplayText(ROLES[roleIndex]);
+      return;
+    }
+
+    const speed = isDeleting ? DELETING_SPEED : TYPING_SPEED;
+    const timer = setTimeout(typeEffect, speed);
+
+    return () => clearTimeout(timer);
+  }, [typeEffect, isDeleting, prefersReducedMotion, roleIndex]);
+
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
+
+  const fullRolesText = ROLES.join(" • ");
 
   return (
     <section
@@ -34,8 +91,20 @@ const Hero = () => {
             Hi, I'm <span className="gradient-text">Nathan</span> <span className="inline-block animate-wave origin-bottom-right">👋</span>
           </h1>
 
-          <p className="text-2xl md:text-3xl text-muted-foreground font-light">
-            Full-Stack Engineer • Builder • Lifelong Learner
+          {/* Accessible typing effect - full text for screen readers, animated text for visual users */}
+          <p
+            className="text-2xl md:text-3xl text-muted-foreground font-light h-[1.5em]"
+            aria-label={fullRolesText}
+          >
+            <span aria-hidden="true" className="inline-flex items-center">
+              {displayText}
+              <span
+                className="inline-block w-[3px] h-[1em] bg-primary ml-1 animate-blink"
+                aria-hidden="true"
+              />
+            </span>
+            {/* Visually hidden text for screen readers */}
+            <span className="sr-only">{fullRolesText}</span>
           </p>
 
           <p className="text-lg md:text-xl text-foreground/80 max-w-2xl mx-auto leading-relaxed">
