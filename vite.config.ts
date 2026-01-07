@@ -12,6 +12,34 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    cssCodeSplit: true,
+    chunkSizeWarningLimit: 500,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "vendor-react": ["react", "react-dom"],
+          "vendor-router": ["react-router-dom"],
+          "vendor-ui": [
+            "@radix-ui/react-slot",
+            "@radix-ui/react-tooltip",
+            "class-variance-authority",
+            "clsx",
+            "tailwind-merge",
+          ],
+          "vendor-forms": ["react-hook-form", "@hookform/resolvers", "zod"],
+          "vendor-query": ["@tanstack/react-query"],
+        },
+      },
+    },
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        drop_console: mode === "production",
+        drop_debugger: mode === "production",
+      },
+    },
+  },
   test: {
     environment: "jsdom",
     globals: true,
