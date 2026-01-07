@@ -125,7 +125,7 @@ const Contact = () => {
               </div>
 
               <div className="space-y-6">
-                <Card className="glass-card border-white/5">
+                <Card className="glass-card border-white/40">
                   <CardContent className="flex items-center gap-4 p-6">
                     <Mail className="w-8 h-8 text-cyan-400 flex-shrink-0" />
                     <div>
@@ -137,7 +137,7 @@ const Contact = () => {
                   </CardContent>
                 </Card>
 
-                <Card className="glass-card border-white/5">
+                <Card className="glass-card border-white/40">
                   <CardContent className="flex items-center gap-4 p-6">
                     <MapPin className="w-8 h-8 text-cyan-400 flex-shrink-0" />
                     <div>

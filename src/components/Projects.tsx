@@ -97,15 +97,15 @@ const Projects = () => {
               >
                 <div className="relative overflow-hidden bg-muted/20 rounded-t-2xl">
                   <picture>
-                    <source 
+                    <source
                       srcSet={project.imageSmallAvif ? `${project.imageSmallAvif} 600w, ${project.imageAvif} 1200w` : project.imageAvif}
                       sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 768px) calc(100vw - 2rem), (max-width: 1280px) calc(50vw - 3rem), 600px"
-                      type="image/avif" 
+                      type="image/avif"
                     />
-                    <source 
+                    <source
                       srcSet={project.imageSmallWebp ? `${project.imageSmallWebp} 600w, ${project.imageWebp} 1200w` : project.imageWebp}
                       sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 768px) calc(100vw - 2rem), (max-width: 1280px) calc(50vw - 3rem), 600px"
-                      type="image/webp" 
+                      type="image/webp"
                     />
                     <img
                       src={project.imageSmallWebp || project.imageWebp}
@@ -133,7 +133,7 @@ const Projects = () => {
                       {project.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="px-3 py-1 text-xs font-medium bg-primary/5 text-primary border border-primary/20 rounded-full"
+                          className="px-3 py-1 text-xs font-medium bg-primary/5 text-primary border border-primary/20 rounded-full transition-all duration-200 hover:bg-primary/10 hover:border-cyan-400/50 hover:shadow-[0_0_12px_rgba(56,189,248,0.3)] cursor-default"
                         >
                           {tag}
                         </span>

@@ -118,7 +118,7 @@
   }
 
   .glass-card {
-    @apply bg-card/50 backdrop-blur-sm border border-white/5 hover:border-white/10 transition-all duration-300;
+    @apply bg-card/50 backdrop-blur-sm border border-white/15 hover:border-white/25 transition-all duration-300;
   }
 
   .card-glow {
