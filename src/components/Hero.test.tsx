@@ -73,7 +73,7 @@ describe("Hero section", () => {
     it("provides accessible text for screen readers", () => {
       render(<Hero />);
 
-      const srOnlyText = screen.getByText("Full-Stack Engineer • Builder • Lifelong Learner");
+      const srOnlyText = screen.getByText("Full-Stack Engineer • Product-Minded Builder • Former Special-Ed Teacher");
       expect(srOnlyText).toBeInTheDocument();
       expect(srOnlyText).toHaveClass("sr-only");
     });
@@ -81,7 +81,7 @@ describe("Hero section", () => {
     it("has aria-label with full roles text", () => {
       render(<Hero />);
 
-      const typingParagraph = screen.getByLabelText("Full-Stack Engineer • Builder • Lifelong Learner");
+      const typingParagraph = screen.getByLabelText("Full-Stack Engineer • Product-Minded Builder • Former Special-Ed Teacher");
       expect(typingParagraph).toBeInTheDocument();
     });
 
@@ -92,7 +92,7 @@ describe("Hero section", () => {
         vi.advanceTimersByTime(80 * 5);
       });
 
-      const typingContainer = screen.getByLabelText("Full-Stack Engineer • Builder • Lifelong Learner");
+      const typingContainer = screen.getByLabelText("Full-Stack Engineer • Product-Minded Builder • Former Special-Ed Teacher");
       expect(typingContainer.textContent).toContain("Full-");
     });
 
@@ -137,7 +137,7 @@ describe("Hero section", () => {
         vi.advanceTimersByTime(100);
       });
 
-      const typingContainer = screen.getByLabelText("Full-Stack Engineer • Builder • Lifelong Learner");
+      const typingContainer = screen.getByLabelText("Full-Stack Engineer • Product-Minded Builder • Former Special-Ed Teacher");
       expect(typingContainer.textContent).toContain("Full-Stack Engineer");
     });
   });

@@ -2,7 +2,7 @@ import { Github, Linkedin, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, useCallback } from "react";
 
-const ROLES = ["Full-Stack Engineer", "Builder", "Lifelong Learner"] as const;
+const ROLES = ["Full-Stack Engineer", "Product-Minded Builder", "Former Special-Ed Teacher"] as const;
 const TYPING_SPEED = 80;
 const DELETING_SPEED = 50;
 const PAUSE_DURATION = 2000;
