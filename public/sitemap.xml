@@ -2,27 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://nathanzimmerman.com/</loc>
-    <lastmod>2025-12-21</lastmod>
+    <lastmod>2026-01-18</lastmod>
     <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://resume.nathanzimmerman.com/</loc>
-    <lastmod>2025-12-21</lastmod>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://nerdle.nathanzimmerman.com/</loc>
-    <lastmod>2025-12-21</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://blackjack.nathanzimmerman.com/</loc>
-    <lastmod>2025-12-21</lastmod>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sudoku.nathanzimmerman.com/</loc>
-    <lastmod>2025-12-21</lastmod>
-    <priority>0.7</priority>
   </url>
 </urlset>
