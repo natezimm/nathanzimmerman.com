@@ -1,78 +1,83 @@
-import { Code2, Database, Rocket, Users } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { type ViewMode } from "@/data/portfolioData";
 
-const About = () => {
-  const skills = [
-    {
-      icon: Code2,
-      title: "Full-Stack Development",
-      description: "Building modern, responsive apps with Angular, React, and TypeScript. I enjoy creating smooth, fast experiences for users.",
-    },
-    {
-      icon: Database,
-      title: "Backend & Architecture",
-      description: "Creating solid backend APIs and services with C#, Node, and Java. Comfortable working with both SQL and NoSQL databases.",
-    },
-    {
-      icon: Rocket,
-      title: "Cloud & DevOps",
-      description: "Deploying apps to AWS and Azure, and keeping things running smoothly with CI/CD pipelines.",
-    },
-    {
-      icon: Users,
-      title: "Team Collaboration",
-      description: "Easy to work with and big on communication. My teaching background helps me explain things clearly and work well with any team.",
-    },
-  ];
+type AboutProps = {
+  viewMode: ViewMode;
+};
 
+const playerStats = [
+  { label: "Problem Solving", value: 92 },
+  { label: "Backend", value: 90 },
+  { label: "Frontend", value: 87 },
+  { label: "Databases", value: 80 },
+  { label: "Cloud & DevOps", value: 82 },
+];
+
+const About = ({ viewMode }: AboutProps) => {
   return (
-    <section id="about" className="py-24 bg-secondary/30 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-purple-500/5 rounded-full blur-[120px] translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-
-      <div className="container px-4 mx-auto relative z-10">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              About <span className="gradient-text">Me</span>
+    <section id="about" className="retro-section about-zone py-16 md:py-20">
+      <div className="container mx-auto px-4">
+        <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[1fr_1.1fr]">
+          <article className="about-card rounded-sm border border-cyan-300/30 bg-slate-950/80 p-5">
+            <h2 className="retro-heading text-2xl text-emerald-300 md:text-3xl">
+              PLAYER PROFILE
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Former teacher turned software engineer who loves building useful things and learning something new every day.
+            <p className="mt-4 text-sm leading-relaxed text-slate-200 md:text-base">
+              Former special education teacher turned software engineer,
+              bringing a people-first mindset to development. I build clean,
+              intuitive applications and enjoy working across the stack to make
+              things simple and useful for real people.
             </p>
-          </div>
+            <p className="mt-3 text-sm leading-relaxed text-slate-300 md:text-base">
+              I first studied psychology to understand how people think, then
+              got into programming to understand how computers think. Teaching
+              preschoolers with special needs taught me patience, empathy, and
+              how to break down complex ideas.
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-slate-300 md:text-base">
+              As a full-stack engineer, I&apos;ve worked with Angular, React,
+              C#, .NET, Node, AWS, and Azure. I like moving between frontend and
+              backend, whatever helps bring an idea to life.
+            </p>
 
-          <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
-            <div className="space-y-6 animate-slide-in">
-              <p className="text-lg leading-relaxed text-foreground/90">
-                I first studied psychology to understand how people think, then got into programming to understand how computers think. Teaching preschoolers with special needs taught me patience, empathy, and how to break down complex ideas—skills I bring into the way I write code and build software.
-              </p>
-              <p className="text-lg leading-relaxed text-foreground/90">
-                As a full‑stack engineer, I’ve worked with Angular, React, C#, .NET, Node, AWS, and more. I like bouncing between frontend and backend—whatever helps bring an idea to life.
-              </p>
-              <p className="text-lg leading-relaxed text-foreground/90">
-                When I’m not coding, I’m probably watching Philly sports, playing guitar, or getting into a good fantasy book.
-              </p>
+            <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
+              <div className="rounded-sm border border-slate-300/20 bg-slate-900/60 p-3">
+                <p className="retro-ui text-xs text-violet-200">CLASS</p>
+                <p className="mt-1 text-slate-50">Software Engineer II</p>
+              </div>
+              <div className="rounded-sm border border-slate-300/20 bg-slate-900/60 p-3">
+                <p className="retro-ui text-xs text-violet-200">
+                  CURRENT STACK
+                </p>
+                <p className="mt-1 text-slate-50">C# / .NET / Angular</p>
+              </div>
             </div>
+          </article>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {skills.map((skill, index) => {
-                const Icon = skill.icon;
-                return (
-                  <Card
-                    key={skill.title}
-                    className="glass-card border-white/5 hover:border-primary/20 transition-all duration-300 card-glow"
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                  >
-                    <CardContent className="p-6">
-                      <Icon className="w-10 h-10 text-cyan-400 mb-4" />
-                      <h3 className="font-semibold mb-2 text-lg">{skill.title}</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{skill.description}</p>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+          <article
+            className={
+              viewMode === "map"
+                ? "about-card rounded-sm border border-emerald-300/28 bg-emerald-600/8 p-5"
+                : "about-card rounded-sm border border-cyan-300/28 bg-slate-900/70 p-5"
+            }
+          >
+            <h3 className="retro-ui text-sm text-amber-200">PLAYER STATS</h3>
+            <div className="mt-4 space-y-3">
+              {playerStats.map((stat) => (
+                <div key={stat.label}>
+                  <div className="flex items-center justify-between text-xs text-slate-200">
+                    <span>{stat.label}</span>
+                    <span>{stat.value}</span>
+                  </div>
+                  <div className="mt-1 h-2 rounded-full bg-slate-800/80">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-violet-400 to-emerald-300"
+                      style={{ width: `${stat.value}%` }}
+                    />
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
+          </article>
         </div>
       </div>
     </section>

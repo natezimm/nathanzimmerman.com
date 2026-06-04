@@ -1,16 +1,21 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import Projects from "./Projects";
 
 describe("Projects section", () => {
-  it("renders featured work and actions", () => {
-    render(<Projects />);
+  it("renders featured project cards", () => {
+    render(
+      <MemoryRouter>
+        <Projects viewMode="map" />
+      </MemoryRouter>
+    );
 
-    expect(screen.getByText("Brick Breaker Resume")).toBeInTheDocument();
-    expect(screen.getByText("Nerdle")).toBeInTheDocument();
-    expect(screen.getByText("Blackjack")).toBeInTheDocument();
-    expect(screen.getByText("Sudoku")).toBeInTheDocument();
-    expect(screen.getAllByText("Code")).toHaveLength(4);
-    expect(screen.getAllByText("Live Demo")).toHaveLength(4);
+    expect(screen.getByRole("heading", { name: /FEATURED PROJECTS/i })).toBeInTheDocument();
+    expect(screen.getByText("BRICK BREAKER")).toBeInTheDocument();
+    expect(screen.getByText("NERDLE")).toBeInTheDocument();
+    expect(screen.getByText("SUDOKU")).toBeInTheDocument();
+    expect(screen.getByText("BLACKJACK")).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: "DETAILS" }).length).toBeGreaterThan(0);
   });
 });

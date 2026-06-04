@@ -1,166 +1,702 @@
-import { Github, Linkedin, ArrowDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useState, useEffect, useCallback } from "react";
+import backgroundMap from "@/assets/background.png";
+import idleFrontSprite from "@/assets/sprites/idle.png";
+import walkDown1Sprite from "@/assets/sprites/walk_down_1.png";
+import walkDown2Sprite from "@/assets/sprites/walk_down_2.png";
+import walkLeft1Sprite from "@/assets/sprites/walk_left_1.png";
+import walkLeft2Sprite from "@/assets/sprites/walk_left_2.png";
+import walkRight1Sprite from "@/assets/sprites/walk_right_1.png";
+import walkRight2Sprite from "@/assets/sprites/walk_right_2.png";
+import walkUp1Sprite from "@/assets/sprites/walk_up_1.png";
+import walkUp2Sprite from "@/assets/sprites/walk_up_2.png";
+import {
+  LOCATION_DESTINATIONS,
+  MAP_HEIGHT,
+  MAP_WIDTH,
+  NAV_GRID_CELL_SIZE,
+  START_POSITION,
+  buildGuidedRoute,
+  type Point,
+} from "@/data/navigationMap";
+import {
+  mapLocations,
+  projectEntries,
+  type ProjectEntry,
+  type SectionId,
+  type ViewMode,
+} from "@/data/portfolioData";
+import { cn } from "@/lib/utils";
+import {
+  ChevronDown,
+  ExternalLink,
+  FileText,
+  Github,
+  MapPin,
+  SkipForward,
+  X,
+} from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
-const ROLES = ["Full-Stack Engineer", "Product-Minded Builder", "Former Special-Ed Teacher"] as const;
-const TYPING_SPEED = 80;
-const DELETING_SPEED = 50;
-const PAUSE_DURATION = 2000;
+type HeroProps = {
+  viewMode: ViewMode;
+};
 
-const Hero = () => {
-  const [displayText, setDisplayText] = useState("");
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+type Direction = "up" | "down" | "left" | "right";
 
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setPrefersReducedMotion(mediaQuery.matches);
+type PlayerState = Point & {
+  direction: Direction;
+  moving: boolean;
+  frame: number;
+};
 
-    const handleChange = (e: MediaQueryListEvent) => {
-      setPrefersReducedMotion(e.matches);
-    };
+type MapPoint = {
+  id: string;
+  kind: "section" | "project";
+  title: string;
+  subtitle: string;
+  left: string;
+  top: string;
+  width: string;
+  height: string;
+  destination: Point;
+};
 
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
+const CENTER_POINT = START_POSITION;
+const PLAYER_SPEED = 420;
+const SPRITE_SIZE = 50;
+const SPRITE_WIDTH_PERCENT = (SPRITE_SIZE / MAP_WIDTH) * 100;
+const SPRITE_HEIGHT_PERCENT = (SPRITE_SIZE / MAP_HEIGHT) * 100;
+const FRAME_TICK_MS = 110;
+const ARRIVAL_DISTANCE = 5;
+const IS_TEST_ENV = import.meta.env.MODE === "test";
+
+const WALK_SPRITES: Record<Direction, string[]> = {
+  up: [walkUp1Sprite, walkUp2Sprite],
+  down: [walkDown1Sprite, walkDown2Sprite],
+  left: [walkLeft1Sprite, walkLeft2Sprite],
+  right: [walkRight1Sprite, walkRight2Sprite],
+};
+
+const sectionPointOverrides: Record<
+  SectionId,
+  Partial<MapPoint> & { destination: Point }
+> = {
+  about: {
+    title: "HOMESTEAD",
+    subtitle: "About Me",
+    left: "16%",
+    top: "29%",
+    width: "18%",
+    height: "20%",
+    destination: LOCATION_DESTINATIONS.about,
+  },
+  projects: {
+    title: "PROJECT CROSSROADS",
+    subtitle: "Featured Projects",
+    left: "50%",
+    top: "45%",
+    width: "14%",
+    height: "13%",
+    destination: CENTER_POINT,
+  },
+  experience: {
+    title: "RESUME KEEP",
+    subtitle: "Experience",
+    left: "79.5%",
+    top: "76%",
+    width: "18%",
+    height: "18%",
+    destination: LOCATION_DESTINATIONS.resume,
+  },
+  skills: {
+    title: "TOWN SQUARE",
+    subtitle: "Skills & Tech",
+    left: "50%",
+    top: "45%",
+    width: "14%",
+    height: "13%",
+    destination: CENTER_POINT,
+  },
+  contact: {
+    title: "RESUME KEEP",
+    subtitle: "Contact",
+    left: "79.5%",
+    top: "76%",
+    width: "18%",
+    height: "18%",
+    destination: LOCATION_DESTINATIONS.resume,
+  },
+};
+
+const projectMapPoints: MapPoint[] = [
+  {
+    id: "blackjack",
+    kind: "project",
+    title: "CASINO OF CHANCE",
+    subtitle: "Blackjack",
+    left: "50%",
+    top: "29%",
+    width: "18%",
+    height: "22%",
+    destination: LOCATION_DESTINATIONS.blackjack,
+  },
+  {
+    id: "sudoku",
+    kind: "project",
+    title: "LOGIC LIGHT TEMPLE",
+    subtitle: "Sudoku",
+    left: "79.5%",
+    top: "32%",
+    width: "17%",
+    height: "21%",
+    destination: LOCATION_DESTINATIONS.sudoku,
+  },
+  {
+    id: "nerdle",
+    kind: "project",
+    title: "LETTER WIZARD TOWER",
+    subtitle: "Nerdle",
+    left: "18.5%",
+    top: "72%",
+    width: "18%",
+    height: "27%",
+    destination: LOCATION_DESTINATIONS.nerdle,
+  },
+  {
+    id: "brick-breaker",
+    kind: "project",
+    title: "ARCADE DISTRICT",
+    subtitle: "Brick Breaker Resume",
+    left: "50%",
+    top: "75%",
+    width: "20%",
+    height: "25%",
+    destination: LOCATION_DESTINATIONS["brick-breaker"],
+  },
+];
+
+const distanceBetween = (a: Point, b: Point) =>
+  Math.hypot(b.x - a.x, b.y - a.y);
+
+const directionFromDelta = (
+  dx: number,
+  dy: number,
+  fallback: Direction,
+): Direction => {
+  if (Math.abs(dx) > Math.abs(dy)) return dx >= 0 ? "right" : "left";
+  if (Math.abs(dy) > 0.001) return dy >= 0 ? "down" : "up";
+  return fallback;
+};
+
+const dedupeRoute = (points: Point[]) =>
+  points.filter(
+    (point, index) =>
+      index === 0 ||
+      distanceBetween(point, points[index - 1]) > ARRIVAL_DISTANCE,
+  );
+
+const buildRoute = (fromId: string, toId: string) => {
+  return dedupeRoute(buildGuidedRoute(fromId, toId));
+};
+
+const Hero = ({ viewMode }: HeroProps) => {
+  const routeRef = useRef<Point[]>([]);
+  const animationFrameRef = useRef<number | null>(null);
+  const lastAnimationTimeRef = useRef<number | null>(null);
+  const frameClockRef = useRef(0);
+  const currentLocationRef = useRef("center");
+  const pendingArrivalRef = useRef<(() => void) | null>(null);
+  const finalDestinationRef = useRef<Point>(START_POSITION);
+
+  const [player, setPlayer] = useState<PlayerState>({
+    ...START_POSITION,
+    direction: "down",
+    moving: false,
+    frame: 0,
+  });
+  const [activeProject, setActiveProject] = useState<ProjectEntry | null>(null);
+  const [travelLabel, setTravelLabel] = useState<string | null>(null);
+  const [hoveredMapPoint, setHoveredMapPoint] = useState<MapPoint | null>(null);
+  const debugNavGridVisible = useMemo(() => {
+    if (typeof window === "undefined") return false;
+    return new URLSearchParams(window.location.search).has("debugNavGrid");
   }, []);
 
-  const typeEffect = useCallback(() => {
-    const currentRole = ROLES[roleIndex];
+  const sectionMapPoints = useMemo<MapPoint[]>(
+    () =>
+      mapLocations.map((location) => {
+        const override = sectionPointOverrides[location.id];
+        return {
+          id: location.id,
+          kind: "section",
+          title: override.title ?? location.title,
+          subtitle: override.subtitle ?? location.subtitle,
+          left: override.left ?? location.position.left,
+          top: override.top ?? location.position.top,
+          width: override.width ?? location.position.width,
+          height: override.height ?? location.position.height,
+          destination: override.destination,
+        };
+      }),
+    [],
+  );
 
-    if (isDeleting) {
-      if (displayText.length > 0) {
-        setDisplayText(currentRole.substring(0, displayText.length - 1));
-      } else {
-        setIsDeleting(false);
-        setRoleIndex((prev) => (prev + 1) % ROLES.length);
-      }
-    } else {
-      if (displayText.length < currentRole.length) {
-        setDisplayText(currentRole.substring(0, displayText.length + 1));
-      } else {
-        setTimeout(() => setIsDeleting(true), PAUSE_DURATION);
+  const mapPoints = useMemo(
+    () => [...sectionMapPoints, ...projectMapPoints],
+    [sectionMapPoints],
+  );
+
+  const scrollToSection = useCallback((id: SectionId) => {
+    document
+      .getElementById(id)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
+  const completeArrival = useCallback(() => {
+    const onArrival = pendingArrivalRef.current;
+    pendingArrivalRef.current = null;
+    setTravelLabel(null);
+
+    if (onArrival) {
+      onArrival();
+    }
+  }, []);
+
+  const startGuidedTravel = useCallback(
+    (point: MapPoint, onArrival: () => void) => {
+      if (IS_TEST_ENV) {
+        currentLocationRef.current = point.id;
+        setPlayer((previous) => ({
+          ...previous,
+          ...point.destination,
+          moving: false,
+          frame: 0,
+        }));
+        onArrival();
         return;
       }
-    }
-  }, [displayText, roleIndex, isDeleting]);
+
+      const route = buildRoute(currentLocationRef.current, point.id);
+
+      currentLocationRef.current = point.id;
+      pendingArrivalRef.current = onArrival;
+      finalDestinationRef.current = point.destination;
+      setTravelLabel(point.title);
+
+      if (route.length === 0) {
+        setPlayer((previous) => ({
+          ...previous,
+          ...point.destination,
+          moving: false,
+          frame: 0,
+        }));
+        completeArrival();
+        return;
+      }
+
+      routeRef.current = route;
+      setActiveProject(null);
+    },
+    [completeArrival],
+  );
+
+  const skipTravel = useCallback(() => {
+    routeRef.current = [];
+    setPlayer((previous) => ({
+      ...previous,
+      ...finalDestinationRef.current,
+      moving: false,
+      frame: 0,
+    }));
+    completeArrival();
+  }, [completeArrival]);
+
+  const activateMapPoint = useCallback(
+    (point: MapPoint) => {
+      if (point.kind === "section") {
+        startGuidedTravel(point, () => scrollToSection(point.id as SectionId));
+        return;
+      }
+
+      const project = projectEntries.find((entry) => entry.slug === point.id);
+      if (project) {
+        startGuidedTravel(point, () => setActiveProject(project));
+      }
+    },
+    [scrollToSection, startGuidedTravel],
+  );
 
   useEffect(() => {
-    if (prefersReducedMotion) {
-      setDisplayText(ROLES[roleIndex]);
-      return;
-    }
+    if (IS_TEST_ENV) return;
 
-    const speed = isDeleting ? DELETING_SPEED : TYPING_SPEED;
-    const timer = setTimeout(typeEffect, speed);
+    const tick = (timestamp: number) => {
+      const last = lastAnimationTimeRef.current ?? timestamp;
+      const deltaSeconds = Math.min((timestamp - last) / 1000, 0.045);
+      lastAnimationTimeRef.current = timestamp;
 
-    return () => clearTimeout(timer);
-  }, [typeEffect, isDeleting, prefersReducedMotion, roleIndex]);
+      setPlayer((previous) => {
+        const target = routeRef.current[0];
 
-  const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  };
+        if (!target) {
+          if (previous.moving) {
+            return { ...previous, moving: false, frame: 0 };
+          }
+          return previous;
+        }
 
-  const fullRolesText = ROLES.join(" • ");
+        const distance = distanceBetween(previous, target);
 
-  return (
-    <section
-      id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background py-20"
-    >
-      {/* Dynamic Background - reduced blur for mobile GPU performance */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-purple-500/20 blur-[60px] md:blur-[120px] animate-pulse" />
-        <div className="absolute top-[20%] right-[-10%] w-[30%] h-[30%] rounded-full bg-blue-500/20 blur-[50px] md:blur-[100px] animate-pulse delay-1000" />
-        <div className="absolute bottom-[-10%] left-[20%] w-[50%] h-[50%] rounded-full bg-cyan-500/10 blur-[70px] md:blur-[140px] animate-pulse delay-2000" />
-      </div>
+        if (distance <= ARRIVAL_DISTANCE) {
+          routeRef.current.shift();
 
-      {/* Grid Pattern Overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
+          if (routeRef.current.length === 0) {
+            window.setTimeout(completeArrival, 0);
+            return {
+              ...previous,
+              ...target,
+              moving: false,
+              frame: 0,
+            };
+          }
 
-      {/* Radial center glow */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[800px] h-[800px] rounded-full bg-gradient-radial from-primary/5 via-transparent to-transparent blur-3xl" />
-      </div>
+          return {
+            ...previous,
+            ...target,
+            moving: true,
+          };
+        }
 
-      {/* Content */}
-      <div className="relative z-10 container px-4 mx-auto text-center animate-fade-in">
-        <div className="max-w-4xl mx-auto space-y-8">
+        const travelDistance = PLAYER_SPEED * deltaSeconds;
+        const ratio = Math.min(1, travelDistance / distance);
+        const nextX = previous.x + (target.x - previous.x) * ratio;
+        const nextY = previous.y + (target.y - previous.y) * ratio;
+        const direction = directionFromDelta(
+          nextX - previous.x,
+          nextY - previous.y,
+          previous.direction,
+        );
+        let frame = previous.frame;
 
-          <h1 className="text-6xl md:text-8xl font-bold tracking-tight">
-            Hi, I'm <span className="gradient-text">Nathan</span> <span className="inline-block animate-wave origin-bottom-right">👋</span>
-          </h1>
+        frameClockRef.current += deltaSeconds * 1000;
+        if (frameClockRef.current >= FRAME_TICK_MS) {
+          frame = (frame + 1) % 2;
+          frameClockRef.current = 0;
+        }
 
-          {/* Accessible typing effect - full text for screen readers, animated text for visual users */}
-          <p
-            className="text-2xl md:text-3xl text-muted-foreground font-light h-[1.5em]"
-            aria-label={fullRolesText}
-          >
-            <span aria-hidden="true" className="inline-flex items-center">
-              {displayText}
-              <span
-                className="inline-block w-[3px] h-[1em] bg-primary ml-1 animate-blink"
-                aria-hidden="true"
-              />
-            </span>
-            {/* Visually hidden text for screen readers */}
-            <span className="sr-only">{fullRolesText}</span>
-          </p>
+        return {
+          x: nextX,
+          y: nextY,
+          direction,
+          moving: true,
+          frame,
+        };
+      });
 
-          <p className="text-lg md:text-xl text-foreground/80 max-w-2xl mx-auto leading-relaxed">
-            Former special education teacher turned software engineer, bringing a people-first mindset to development. I build clean, intuitive applications and enjoy working across the stack to make things simple and useful for real people.
-          </p>
+      animationFrameRef.current = window.requestAnimationFrame(tick);
+    };
 
-          <div className="pt-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center justify-items-center">
-              <Button
-                size="lg"
-                className="h-12 px-8 text-lg rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all duration-300 hover:-translate-y-1 sm:justify-self-end"
-                onClick={() => scrollToSection("projects")}
-              >
-                View My Work
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="h-12 px-8 text-lg rounded-full border border-slate-300 dark:border-white/15 bg-white/80 dark:bg-white/5 hover:bg-white/90 dark:hover:bg-white/10 text-foreground backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 sm:justify-self-start"
-                onClick={() => scrollToSection("contact")}
-              >
-                Get In Touch
-              </Button>
-            </div>
+    animationFrameRef.current = window.requestAnimationFrame(tick);
 
-            <button
-              onClick={() => scrollToSection("about")}
-              className="mt-8 mx-auto block text-muted-foreground hover:text-primary transition-colors animate-bounce"
-              aria-label="Scroll to about section"
-            >
-              <ArrowDown className="w-8 h-8" />
-            </button>
+    return () => {
+      if (animationFrameRef.current) {
+        window.cancelAnimationFrame(animationFrameRef.current);
+      }
+      animationFrameRef.current = null;
+      lastAnimationTimeRef.current = null;
+    };
+  }, [completeArrival]);
 
-            <div className="flex items-center justify-center gap-8 pt-6">
-              {[
-                { href: "https://github.com/natezimm", icon: Github, label: "GitHub" },
-                {
-                  href: "https://www.linkedin.com/in/zimmermannathan",
-                  icon: Linkedin,
-                  label: "LinkedIn"
-                },
-              ].map(({ href, icon: Icon, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-110"
-                  aria-label={label}
+  const currentSprite = player.moving
+    ? WALK_SPRITES[player.direction][player.frame]
+    : idleFrontSprite;
+
+  if (viewMode === "grid") {
+    return (
+      <section
+        id="home"
+        className="retro-section hero-overworld pb-10 pt-24 md:pb-14 md:pt-28"
+      >
+        <div className="container mx-auto px-4">
+          <div className="hero-board rounded-sm border border-cyan-300/35 bg-slate-950/80 p-5">
+            <p className="retro-ui text-xs text-emerald-300 md:text-sm">
+              GRID VIEW
+            </p>
+            <h1 className="retro-heading mt-2 text-2xl text-slate-100 md:text-4xl">
+              Nathan's World
+            </h1>
+
+            <div className="mt-6 grid gap-3 md:grid-cols-3">
+              {mapLocations.map((location) => (
+                <button
+                  key={location.id}
+                  onClick={() => scrollToSection(location.id)}
+                  className="retro-ui rounded-sm border border-cyan-300/30 bg-cyan-500/10 px-3 py-3 text-left text-xs text-cyan-100 hover:bg-cyan-500/20"
                 >
-                  <Icon className="w-8 h-8" />
-                </a>
+                  {location.id.toUpperCase()}
+                </button>
+              ))}
+              {projectEntries.map((project) => (
+                <Link
+                  key={project.slug}
+                  to={`/projects/${project.slug}`}
+                  className="retro-ui rounded-sm border border-amber-300/35 bg-amber-500/10 px-3 py-3 text-xs text-amber-100 hover:bg-amber-500/20"
+                >
+                  {project.title}
+                </Link>
               ))}
             </div>
           </div>
         </div>
+      </section>
+    );
+  }
+
+  return (
+    <section
+      id="home"
+      className="retro-section hero-overworld pb-10 pt-24 md:pb-14 md:pt-28"
+    >
+      <div className="container mx-auto px-4">
+        <header className="mb-6 grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
+          <div>
+            <p className="retro-ui text-xs text-emerald-300 md:text-sm">
+              INTERACTIVE MAP
+            </p>
+            <h1 className="retro-heading mt-2 text-2xl text-slate-100 md:text-4xl">
+              Nathan's World
+            </h1>
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <button
+                onClick={() => scrollToSection("projects")}
+                className="retro-ui inline-flex items-center gap-2 rounded-sm border border-amber-300/50 bg-amber-500/15 px-4 py-2 text-xs text-amber-100 hover:bg-amber-500/25"
+              >
+                <ChevronDown className="h-3.5 w-3.5" />
+                PRESS START
+              </button>
+              <a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="retro-ui inline-flex items-center gap-2 rounded-sm border border-emerald-300/45 bg-emerald-500/12 px-4 py-2 text-xs text-emerald-100 hover:bg-emerald-500/25"
+              >
+                <FileText className="h-3.5 w-3.5" />
+                RESUME
+              </a>
+            </div>
+          </div>
+
+          <aside className="guide-panel w-full max-w-[300px] rounded-sm border border-cyan-300/35 bg-slate-950/80 p-4 md:justify-self-end">
+            <p className="retro-ui text-xs text-emerald-300">
+              CHOOSE DESTINATION
+            </p>
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              {mapLocations.map((location) => (
+                <button
+                  key={location.id}
+                  onClick={() => scrollToSection(location.id)}
+                  className="retro-ui rounded-sm border border-cyan-300/30 bg-cyan-500/10 px-2 py-2 text-[10px] text-cyan-100 hover:bg-cyan-500/20"
+                >
+                  {location.id.toUpperCase()}
+                </button>
+              ))}
+            </div>
+          </aside>
+        </header>
+
+        <div className="hero-board overflow-hidden rounded-sm border border-cyan-300/35 bg-slate-950/80">
+          <div className="world-map relative overflow-hidden rounded-sm image-pixelated outline-none">
+            <img
+              src={backgroundMap}
+              alt="Retro overworld map"
+              className="h-full w-full select-none object-cover image-pixelated"
+            />
+            <div
+              className={cn(
+                "map-nav-grid",
+                debugNavGridVisible && "map-nav-grid-visible",
+              )}
+              style={{
+                backgroundSize: `${NAV_GRID_CELL_SIZE}px ${NAV_GRID_CELL_SIZE}px`,
+              }}
+              aria-hidden
+            />
+
+            {mapPoints.map((point) => (
+              <button
+                key={`${point.kind}-${point.id}`}
+                className="map-hotspot"
+                style={{
+                  left: point.left,
+                  top: point.top,
+                  width: point.width,
+                  height: point.height,
+                }}
+                onClick={() => activateMapPoint(point)}
+                onPointerEnter={() => setHoveredMapPoint(point)}
+                onPointerLeave={() => setHoveredMapPoint(null)}
+                onFocus={() => setHoveredMapPoint(point)}
+                onBlur={() => setHoveredMapPoint(null)}
+                aria-label={`${point.title} ${point.subtitle}`}
+              />
+            ))}
+
+            <div
+              className="map-player"
+              style={{
+                left: `${(player.x / MAP_WIDTH) * 100}%`,
+                top: `${(player.y / MAP_HEIGHT) * 100}%`,
+                width: `${SPRITE_WIDTH_PERCENT}%`,
+                height: `${SPRITE_HEIGHT_PERCENT}%`,
+              }}
+            >
+              <img
+                src={currentSprite}
+                alt=""
+                aria-hidden
+                className="map-player-sprite"
+              />
+            </div>
+
+            {travelLabel && (
+              <div className="absolute bottom-3 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 rounded-sm border border-amber-300/45 bg-slate-950/90 px-3 py-2 text-center">
+                <p className="retro-ui text-[10px] text-amber-100">
+                  WALKING TO {travelLabel}
+                </p>
+                <button
+                  onClick={skipTravel}
+                  className="inline-flex items-center rounded-sm border border-amber-300/40 bg-amber-500/15 p-1 text-amber-100"
+                  aria-label="Skip travel"
+                >
+                  <SkipForward className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            )}
+          </div>
+
+          <div className="grid gap-2 border-t border-cyan-300/25 bg-slate-950/85 p-3 md:grid-cols-[1fr_auto] md:items-center">
+            <p className="text-xs text-slate-300">
+              <span className="retro-ui text-emerald-300">
+                {hoveredMapPoint ? "DESTINATION:" : "WORLD MAP:"}
+              </span>{" "}
+              {hoveredMapPoint
+                ? `${hoveredMapPoint.title} - ${hoveredMapPoint.subtitle}`
+                : "Click a destination. Pixel Nate walks there, then the project panel or section opens."}
+            </p>
+            <div className="flex items-center gap-2 text-[11px] text-slate-200">
+              <MapPin className="h-3.5 w-3.5 text-amber-300" />
+              <span className="retro-ui">MAP VIEW ACTIVE</span>
+            </div>
+          </div>
+        </div>
+
+        {activeProject && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="project-panel-title"
+            className="fixed inset-0 z-[60] grid place-items-center bg-slate-950/78 px-4 py-6 backdrop-blur-sm"
+          >
+            <article className="detail-frame max-h-[90vh] w-full max-w-4xl overflow-auto rounded-sm border border-cyan-300/35 bg-slate-950 p-4 md:p-6">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="retro-ui text-xs text-emerald-300">
+                    {activeProject.regionLabel}
+                  </p>
+                  <h2
+                    id="project-panel-title"
+                    className="retro-heading mt-2 text-2xl text-slate-50 md:text-3xl"
+                  >
+                    {activeProject.title}
+                  </h2>
+                  <p className="mt-2 text-sm text-slate-300">
+                    {activeProject.summary}
+                  </p>
+                </div>
+                <button
+                  onClick={() => setActiveProject(null)}
+                  className="rounded-sm border border-slate-400/40 bg-slate-800/80 p-2 text-slate-100 hover:bg-slate-700"
+                  aria-label="Close project panel"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              <div className="mt-5 grid gap-5 md:grid-cols-[1.2fr_0.8fr]">
+                <div
+                  className={cn(
+                    "flex min-h-[230px] items-center justify-center overflow-hidden rounded-sm border border-slate-300/20",
+                    activeProject.mediaBackground === "dark"
+                      ? "bg-emerald-950/80"
+                      : "bg-white",
+                  )}
+                >
+                  <img
+                    src={activeProject.detailImage ?? activeProject.image}
+                    alt={`${activeProject.title} screenshot`}
+                    className="h-auto max-h-[460px] w-full object-contain"
+                  />
+                </div>
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="retro-ui text-xs text-amber-200">
+                      TECH STACK
+                    </h3>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {activeProject.stack.map((item) => (
+                        <span
+                          key={item}
+                          className="rounded-sm border border-cyan-300/30 bg-cyan-500/10 px-2 py-1 text-xs text-cyan-100"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="retro-ui text-xs text-amber-200">
+                      FEATURES
+                    </h3>
+                    <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-slate-200">
+                      {activeProject.features.slice(0, 4).map((feature) => (
+                        <li key={feature}>{feature}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {activeProject.links.live && (
+                      <a
+                        className="detail-action detail-action-live"
+                        href={activeProject.links.live}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <ExternalLink className="h-3.5 w-3.5" />
+                        LIVE
+                      </a>
+                    )}
+                    {activeProject.links.code && (
+                      <a
+                        className="detail-action detail-action-code"
+                        href={activeProject.links.code}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Github className="h-3.5 w-3.5" />
+                        CODE
+                      </a>
+                    )}
+                    <Link
+                      className="detail-action"
+                      to={`/projects/${activeProject.slug}`}
+                    >
+                      DETAILS
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        )}
       </div>
     </section>
   );
