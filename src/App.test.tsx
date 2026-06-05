@@ -21,6 +21,7 @@ describe("App shell", () => {
     render(<App />);
 
     expect(screen.getByRole("heading", { name: /NERDLE/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /BACK TO NATHAN'S WORLD/i })).toBeInTheDocument();
     expect(screen.getByText(/Word puzzle game inspired by Wordle/i)).toBeInTheDocument();
     expect(window.scrollTo).toHaveBeenCalledWith({ top: 0, left: 0, behavior: "auto" });
   });

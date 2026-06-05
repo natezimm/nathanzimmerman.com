@@ -18,7 +18,7 @@ const ProjectDetail = () => {
         <div className="container mx-auto flex min-h-[66px] items-center justify-between gap-4 px-4">
           <Link to="/" className="retro-ui inline-flex items-center gap-2 text-xs text-cyan-100 hover:text-cyan-50">
             <ArrowLeft className="h-4 w-4" />
-            BACK TO OVERWORLD
+            BACK TO NATHAN&apos;S WORLD
           </Link>
           <a
             href="/resume.pdf"

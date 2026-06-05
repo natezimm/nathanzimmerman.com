@@ -28,32 +28,30 @@ const Experience = ({ viewMode }: ExperienceProps) => {
                       : "rounded-sm border border-cyan-300/18 bg-slate-900/75 p-4"
                   }
                 >
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                      <p className={viewMode === "map" ? "retro-ui text-xs text-emerald-800" : "retro-ui text-xs text-emerald-300"}>
-                        {item.period}
-                      </p>
-                      <h3 className={viewMode === "map" ? "retro-ui mt-1 text-lg text-violet-800" : "retro-ui mt-1 text-lg text-cyan-100"}>
-                        {item.title}
-                      </h3>
-                      <p className={viewMode === "map" ? "text-sm font-semibold text-slate-800" : "text-sm font-semibold text-slate-300"}>
-                        {item.company}
-                      </p>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {item.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className={
-                            viewMode === "map"
-                              ? "retro-ui rounded-sm border border-violet-400/40 bg-violet-500/10 px-2 py-1 text-[11px] text-violet-700"
-                              : "retro-ui rounded-sm border border-cyan-300/35 bg-cyan-500/10 px-2 py-1 text-[11px] text-cyan-100"
-                          }
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
+                  <div>
+                    <p className={viewMode === "map" ? "retro-ui text-xs text-emerald-800" : "retro-ui text-xs text-emerald-300"}>
+                      {item.period}
+                    </p>
+                    <h3 className={viewMode === "map" ? "retro-ui mt-1 text-lg text-violet-800" : "retro-ui mt-1 text-lg text-cyan-100"}>
+                      {item.title}
+                    </h3>
+                    <p className={viewMode === "map" ? "text-sm font-semibold text-slate-800" : "text-sm font-semibold text-slate-300"}>
+                      {item.company}
+                    </p>
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {item.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className={
+                          viewMode === "map"
+                            ? "retro-ui rounded-sm border border-violet-400/40 bg-violet-500/10 px-2 py-1 text-[11px] text-violet-700"
+                            : "retro-ui rounded-sm border border-cyan-300/35 bg-cyan-500/10 px-2 py-1 text-[11px] text-cyan-100"
+                        }
+                      >
+                        {tag}
+                      </span>
+                    ))}
                   </div>
                   <p
                     className={

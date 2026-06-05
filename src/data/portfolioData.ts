@@ -229,7 +229,7 @@ export const skillGroups: SkillGroup[] = [
       { name: "TypeScript", years: "3+ Years" },
       { name: "Node.js", years: "3+ Years" },
       { name: "C#", years: "3+ Years" },
-      { name: "Java", years: "2+ Years" },
+      { name: "Java", years: "3+ Years" },
     ],
   },
   {
