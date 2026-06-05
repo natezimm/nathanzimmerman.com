@@ -68,6 +68,7 @@ const SPRITE_WIDTH_PERCENT = (SPRITE_SIZE / MAP_WIDTH) * 100;
 const SPRITE_HEIGHT_PERCENT = (SPRITE_SIZE / MAP_HEIGHT) * 100;
 const FRAME_TICK_MS = 110;
 const ARRIVAL_DISTANCE = 5;
+const ARRIVAL_PAUSE_MS = 500;
 const IS_TEST_ENV = import.meta.env.MODE === "test";
 
 const WALK_SPRITES: Record<Direction, string[]> = {
@@ -207,6 +208,7 @@ const Hero = ({ viewMode }: HeroProps) => {
   const currentLocationRef = useRef("center");
   const pendingArrivalRef = useRef<(() => void) | null>(null);
   const finalDestinationRef = useRef<Point>(START_POSITION);
+  const arrivalTimeoutRef = useRef<number | null>(null);
 
   const [player, setPlayer] = useState<PlayerState>({
     ...START_POSITION,
@@ -216,6 +218,9 @@ const Hero = ({ viewMode }: HeroProps) => {
   });
   const [activeProject, setActiveProject] = useState<ProjectEntry | null>(null);
   const [travelLabel, setTravelLabel] = useState<string | null>(null);
+  const [travelStatus, setTravelStatus] = useState<"walking" | "arrived">(
+    "walking",
+  );
   const [hoveredMapPoint, setHoveredMapPoint] = useState<MapPoint | null>(null);
   const debugNavGridVisible = useMemo(() => {
     if (typeof window === "undefined") return false;
@@ -253,9 +258,15 @@ const Hero = ({ viewMode }: HeroProps) => {
   }, []);
 
   const completeArrival = useCallback(() => {
+    if (arrivalTimeoutRef.current) {
+      window.clearTimeout(arrivalTimeoutRef.current);
+      arrivalTimeoutRef.current = null;
+    }
+
     const onArrival = pendingArrivalRef.current;
     pendingArrivalRef.current = null;
     setTravelLabel(null);
+    setTravelStatus("walking");
 
     if (onArrival) {
       onArrival();
@@ -278,10 +289,16 @@ const Hero = ({ viewMode }: HeroProps) => {
 
       const route = buildRoute(currentLocationRef.current, point.id);
 
+      if (arrivalTimeoutRef.current) {
+        window.clearTimeout(arrivalTimeoutRef.current);
+        arrivalTimeoutRef.current = null;
+      }
+
       currentLocationRef.current = point.id;
       pendingArrivalRef.current = onArrival;
       finalDestinationRef.current = point.destination;
       setTravelLabel(point.title);
+      setTravelStatus("walking");
 
       if (route.length === 0) {
         setPlayer((previous) => ({
@@ -301,6 +318,11 @@ const Hero = ({ viewMode }: HeroProps) => {
   );
 
   const skipTravel = useCallback(() => {
+    if (arrivalTimeoutRef.current) {
+      window.clearTimeout(arrivalTimeoutRef.current);
+      arrivalTimeoutRef.current = null;
+    }
+
     routeRef.current = [];
     setPlayer((previous) => ({
       ...previous,
@@ -350,7 +372,11 @@ const Hero = ({ viewMode }: HeroProps) => {
           routeRef.current.shift();
 
           if (routeRef.current.length === 0) {
-            window.setTimeout(completeArrival, 0);
+            setTravelStatus("arrived");
+            arrivalTimeoutRef.current = window.setTimeout(
+              completeArrival,
+              ARRIVAL_PAUSE_MS,
+            );
             return {
               ...previous,
               ...target,
@@ -401,7 +427,11 @@ const Hero = ({ viewMode }: HeroProps) => {
       if (animationFrameRef.current) {
         window.cancelAnimationFrame(animationFrameRef.current);
       }
+      if (arrivalTimeoutRef.current) {
+        window.clearTimeout(arrivalTimeoutRef.current);
+      }
       animationFrameRef.current = null;
+      arrivalTimeoutRef.current = null;
       lastAnimationTimeRef.current = null;
     };
   }, [completeArrival]);
@@ -560,7 +590,8 @@ const Hero = ({ viewMode }: HeroProps) => {
             {travelLabel && (
               <div className="absolute bottom-3 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 rounded-sm border border-amber-300/45 bg-slate-950/90 px-3 py-2 text-center">
                 <p className="retro-ui text-[10px] text-amber-100">
-                  WALKING TO {travelLabel}
+                  {travelStatus === "arrived" ? "ARRIVED AT" : "WALKING TO"}{" "}
+                  {travelLabel}
                 </p>
                 <button
                   onClick={skipTravel}
