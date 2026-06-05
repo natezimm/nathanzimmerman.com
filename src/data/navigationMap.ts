@@ -52,7 +52,6 @@ const NAV_POINTS_GRID = {
   sudokuDoor: { col: 312.5, row: 107 },
   nerdlePath: { col: 93.5, row: 218.75 },
   nerdleDoor: { col: 93.5, row: 218.75 },
-  brickDoor: { col: 192, row: 218.75 },
   resumeDoor: { col: 279, row: 218.75 },
 } as const satisfies Record<string, GridPoint>;
 
@@ -73,7 +72,7 @@ const LOCATION_NODES: Record<string, NavNode> = {
   blackjack: "blackjackDoor",
   sudoku: "sudokuDoor",
   nerdle: "nerdleDoor",
-  "brick-breaker": "brickDoor",
+  "brick-breaker": "bottomCenter",
   experience: "resumeDoor",
   contact: "resumeDoor",
 };
@@ -86,8 +85,6 @@ const GRAPH_EDGES: Array<[NavNode, NavNode]> = [
   ["leftBottomSpine", "nerdlePath"],
   ["nerdlePath", "nerdleDoor"],
   ["leftBottomSpine", "bottomCenter"],
-  ["bottomCenter", "center"],
-  ["bottomCenter", "brickDoor"],
   ["bottomCenter", "rightBottomSpine"],
   ["rightBottomSpine", "resumePath"],
   ["resumePath", "resumeDoor"],
@@ -113,7 +110,10 @@ const NAV_GRAPH = GRAPH_EDGES.reduce(
   ),
 );
 
-const shortestNodePath = (from: NavNode, to: NavNode) => {
+const shortestNodePath = (
+  from: NavNode,
+  to: NavNode,
+) => {
   const distances = Object.keys(NAV_POINTS).reduce(
     (next, node) => ({ ...next, [node]: Number.POSITIVE_INFINITY }),
     {} as Record<NavNode, number>,
