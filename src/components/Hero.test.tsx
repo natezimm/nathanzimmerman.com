@@ -65,7 +65,7 @@ describe("Hero section", () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText(/Click a destination/i)).toBeInTheDocument();
+    expect(screen.getByText(/Hover or tap a destination/i)).toBeInTheDocument();
 
     fireEvent.pointerEnter(screen.getByRole("button", { name: /ARCADE DISTRICT/i }));
 

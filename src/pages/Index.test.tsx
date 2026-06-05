@@ -1,9 +1,13 @@
-import { describe, it, expect } from "vitest";
+import { afterEach, describe, it, expect, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Index from "./Index";
 
 describe("Index page", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it("defaults to map view", () => {
     render(
       <MemoryRouter>
@@ -13,6 +17,30 @@ describe("Index page", () => {
 
     const mapToggle = screen.getByRole("button", { name: "MAP VIEW" });
     expect(mapToggle).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it("defaults small screens to resume view", () => {
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn().mockImplementation((query: string) => ({
+        matches: query === "(max-width: 767px)",
+        media: query,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      }))
+    );
+
+    render(
+      <MemoryRouter>
+        <Index />
+      </MemoryRouter>
+    );
+
+    const resumeToggle = screen.getByRole("button", { name: "RESUME VIEW" });
+    expect(resumeToggle).toHaveAttribute("aria-pressed", "true");
   });
 
   it("renders the main sections", async () => {

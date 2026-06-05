@@ -46,7 +46,7 @@ describe("Navigation", () => {
     fireEvent.click(screen.getByRole("button", { name: "PROJECTS" }));
     expect(projectsElement.scrollIntoView).toHaveBeenCalledWith({ behavior: "smooth", block: "start" });
 
-    fireEvent.click(screen.getByRole("button", { name: "GRID VIEW" }));
+    fireEvent.click(screen.getByRole("button", { name: "RESUME VIEW" }));
     expect(onViewModeChange).toHaveBeenCalledWith("grid");
   });
 

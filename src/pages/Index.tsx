@@ -9,8 +9,18 @@ import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import { type ViewMode } from "@/data/portfolioData";
 
+const MOBILE_RESUME_VIEW_QUERY = "(max-width: 767px)";
+
+export const getInitialViewMode = (): ViewMode => {
+  if (typeof window === "undefined" || !window.matchMedia) {
+    return "map";
+  }
+
+  return window.matchMedia(MOBILE_RESUME_VIEW_QUERY).matches ? "grid" : "map";
+};
+
 const Index = () => {
-  const [viewMode, setViewMode] = useState<ViewMode>("map");
+  const [viewMode, setViewMode] = useState<ViewMode>(getInitialViewMode);
 
   return (
     <div className="retro-shell min-h-screen" data-view-mode={viewMode}>

@@ -68,7 +68,7 @@ const SPRITE_WIDTH_PERCENT = (SPRITE_SIZE / MAP_WIDTH) * 100;
 const SPRITE_HEIGHT_PERCENT = (SPRITE_SIZE / MAP_HEIGHT) * 100;
 const FRAME_TICK_MS = 110;
 const ARRIVAL_DISTANCE = 5;
-const ARRIVAL_PAUSE_MS = 500;
+const ARRIVAL_PAUSE_MS = 1000;
 const IS_TEST_ENV = import.meta.env.MODE === "test";
 
 const WALK_SPRITES: Record<Direction, string[]> = {
@@ -218,7 +218,7 @@ const Hero = ({ viewMode }: HeroProps) => {
   });
   const [activeProject, setActiveProject] = useState<ProjectEntry | null>(null);
   const [travelLabel, setTravelLabel] = useState<string | null>(null);
-  const [travelStatus, setTravelStatus] = useState<"walking" | "arrived">(
+  const [travelStatus, setTravelStatus] = useState<"walking" | "opening">(
     "walking",
   );
   const [hoveredMapPoint, setHoveredMapPoint] = useState<MapPoint | null>(null);
@@ -372,7 +372,7 @@ const Hero = ({ viewMode }: HeroProps) => {
           routeRef.current.shift();
 
           if (routeRef.current.length === 0) {
-            setTravelStatus("arrived");
+            setTravelStatus("opening");
             arrivalTimeoutRef.current = window.setTimeout(
               completeArrival,
               ARRIVAL_PAUSE_MS,
@@ -449,7 +449,7 @@ const Hero = ({ viewMode }: HeroProps) => {
         <div className="container mx-auto px-4">
           <div className="hero-board rounded-sm border border-cyan-300/35 bg-slate-950/80 p-5">
             <p className="retro-ui text-xs text-emerald-300 md:text-sm">
-              GRID VIEW
+              RESUME VIEW
             </p>
             <h1 className="retro-heading mt-2 text-2xl text-slate-100 md:text-4xl">
               Nathan's World
@@ -590,7 +590,7 @@ const Hero = ({ viewMode }: HeroProps) => {
             {travelLabel && (
               <div className="absolute bottom-3 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 rounded-sm border border-amber-300/45 bg-slate-950/90 px-3 py-2 text-center">
                 <p className="retro-ui text-[10px] text-amber-100">
-                  {travelStatus === "arrived" ? "ARRIVED AT" : "WALKING TO"}{" "}
+                  {travelStatus === "opening" ? "OPENING" : "WALKING TO"}{" "}
                   {travelLabel}
                 </p>
                 <button
@@ -611,7 +611,7 @@ const Hero = ({ viewMode }: HeroProps) => {
               </span>{" "}
               {hoveredMapPoint
                 ? `${hoveredMapPoint.title} - ${hoveredMapPoint.subtitle}`
-                : "Click a destination. Pixel Nate walks there, then the project panel or section opens."}
+                : "Hover or tap a destination to preview it. Click to travel."}
             </p>
             <div className="flex items-center gap-2 text-[11px] text-slate-200">
               <MapPin className="h-3.5 w-3.5 text-amber-300" />

@@ -71,7 +71,7 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
                     : "bg-slate-900/70 text-slate-200 hover:bg-slate-800/80"
                 )}
               >
-                GRID VIEW
+                RESUME VIEW
               </button>
             </div>
 
@@ -155,7 +155,7 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
                       : "border-slate-500/35 bg-slate-700/20 text-slate-100"
                   )}
                 >
-                  GRID VIEW
+                  RESUME VIEW
                 </button>
               </div>
 
