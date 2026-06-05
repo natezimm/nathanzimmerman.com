@@ -39,6 +39,7 @@ import { Link } from "react-router-dom";
 
 type HeroProps = {
   viewMode: ViewMode;
+  onViewModeChange: (mode: ViewMode) => void;
 };
 
 type Direction = "up" | "down" | "left" | "right";
@@ -200,7 +201,46 @@ const buildRoute = (fromId: string, toId: string) => {
   return dedupeRoute(buildGuidedRoute(fromId, toId));
 };
 
-const Hero = ({ viewMode }: HeroProps) => {
+type MobileViewToggleProps = {
+  viewMode: ViewMode;
+  onViewModeChange: (mode: ViewMode) => void;
+};
+
+const MobileViewToggle = ({
+  viewMode,
+  onViewModeChange,
+}: MobileViewToggleProps) => (
+  <div className="mt-4 inline-flex w-full max-w-sm overflow-hidden rounded-sm border border-cyan-300/35 md:hidden">
+    <button
+      onClick={() => onViewModeChange("map")}
+      aria-label="Switch to map view"
+      aria-pressed={viewMode === "map"}
+      className={cn(
+        "retro-ui flex-1 px-3 py-2 text-[10px] transition",
+        viewMode === "map"
+          ? "bg-emerald-500/25 text-emerald-50"
+          : "bg-slate-900/70 text-slate-200 hover:bg-slate-800/80",
+      )}
+    >
+      MAP VIEW
+    </button>
+    <button
+      onClick={() => onViewModeChange("grid")}
+      aria-label="Switch to resume view"
+      aria-pressed={viewMode === "grid"}
+      className={cn(
+        "retro-ui flex-1 border-l border-cyan-300/35 px-3 py-2 text-[10px] transition",
+        viewMode === "grid"
+          ? "bg-cyan-500/25 text-cyan-50"
+          : "bg-slate-900/70 text-slate-200 hover:bg-slate-800/80",
+      )}
+    >
+      RESUME VIEW
+    </button>
+  </div>
+);
+
+const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
   const routeRef = useRef<Point[]>([]);
   const animationFrameRef = useRef<number | null>(null);
   const lastAnimationTimeRef = useRef<number | null>(null);
@@ -454,6 +494,10 @@ const Hero = ({ viewMode }: HeroProps) => {
             <h1 className="retro-heading mt-2 text-2xl text-slate-100 md:text-4xl">
               Nathan's World
             </h1>
+            <MobileViewToggle
+              viewMode={viewMode}
+              onViewModeChange={onViewModeChange}
+            />
 
             <div className="mt-6 grid gap-3 md:grid-cols-3">
               {mapLocations.map((location) => (
@@ -495,6 +539,10 @@ const Hero = ({ viewMode }: HeroProps) => {
             <h1 className="retro-heading mt-2 text-2xl text-slate-100 md:text-4xl">
               Nathan's World
             </h1>
+            <MobileViewToggle
+              viewMode={viewMode}
+              onViewModeChange={onViewModeChange}
+            />
             <div className="mt-4 flex flex-wrap items-center gap-3">
               <button
                 onClick={() => scrollToSection("projects")}

@@ -26,7 +26,7 @@ const Index = () => {
     <div className="retro-shell min-h-screen" data-view-mode={viewMode}>
       <Navigation viewMode={viewMode} onViewModeChange={setViewMode} />
       <main>
-        <Hero viewMode={viewMode} />
+        <Hero viewMode={viewMode} onViewModeChange={setViewMode} />
         <About viewMode={viewMode} />
         <Projects viewMode={viewMode} />
         <Experience viewMode={viewMode} />

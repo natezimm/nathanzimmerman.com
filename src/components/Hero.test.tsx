@@ -13,9 +13,12 @@ describe("Hero section", () => {
   const projectsElement = createMockElement();
   const contactElement = createMockElement();
   const aboutElement = createMockElement();
+  const onViewModeChange = vi.fn();
   let getElementSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
+    onViewModeChange.mockReset();
+
     getElementSpy = vi.spyOn(document, "getElementById").mockImplementation((id) => {
       if (id === "projects") return projectsElement;
       if (id === "contact") return contactElement;
@@ -34,7 +37,7 @@ describe("Hero section", () => {
   it("renders the overworld hero messaging", () => {
     render(
       <MemoryRouter>
-        <Hero viewMode="map" />
+        <Hero viewMode="map" onViewModeChange={onViewModeChange} />
       </MemoryRouter>
     );
 
@@ -47,7 +50,7 @@ describe("Hero section", () => {
   it("scrolls when press start is clicked", () => {
     render(
       <MemoryRouter>
-        <Hero viewMode="map" />
+        <Hero viewMode="map" onViewModeChange={onViewModeChange} />
       </MemoryRouter>
     );
 
@@ -61,7 +64,7 @@ describe("Hero section", () => {
   it("shows destination details in the bottom status bar on hover", () => {
     render(
       <MemoryRouter>
-        <Hero viewMode="map" />
+        <Hero viewMode="map" onViewModeChange={onViewModeChange} />
       </MemoryRouter>
     );
 
@@ -71,5 +74,17 @@ describe("Hero section", () => {
 
     expect(screen.getByText("DESTINATION:")).toBeInTheDocument();
     expect(screen.getByText(/ARCADE DISTRICT - Brick Breaker Resume/i)).toBeInTheDocument();
+  });
+
+  it("shows a mobile view toggle in the hero", () => {
+    render(
+      <MemoryRouter>
+        <Hero viewMode="map" onViewModeChange={onViewModeChange} />
+      </MemoryRouter>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Switch to resume view" }));
+
+    expect(onViewModeChange).toHaveBeenCalledWith("grid");
   });
 });
