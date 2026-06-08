@@ -3,6 +3,8 @@ export type Point = {
   y: number;
 };
 
+export type NavDirection = "up" | "down" | "left" | "right";
+
 type GridPoint = {
   col: number;
   row: number;
@@ -62,7 +64,7 @@ export const NAV_POINTS = Object.fromEntries(
   ]),
 ) as Record<keyof typeof NAV_POINTS_GRID, Point>;
 
-type NavNode = keyof typeof NAV_POINTS;
+export type NavNode = keyof typeof NAV_POINTS;
 
 const LOCATION_NODES: Record<string, NavNode> = {
   center: "center",
@@ -98,7 +100,7 @@ const GRAPH_EDGES: Array<[NavNode, NavNode]> = [
 const distanceBetween = (a: Point, b: Point) =>
   Math.hypot(b.x - a.x, b.y - a.y);
 
-const NAV_GRAPH = GRAPH_EDGES.reduce(
+export const NAV_GRAPH = GRAPH_EDGES.reduce(
   (graph, [from, to]) => {
     graph[from].push(to);
     graph[to].push(from);
@@ -110,10 +112,7 @@ const NAV_GRAPH = GRAPH_EDGES.reduce(
   ),
 );
 
-const shortestNodePath = (
-  from: NavNode,
-  to: NavNode,
-) => {
+const shortestNodePath = (from: NavNode, to: NavNode) => {
   const distances = Object.keys(NAV_POINTS).reduce(
     (next, node) => ({ ...next, [node]: Number.POSITIVE_INFINITY }),
     {} as Record<NavNode, number>,
@@ -157,10 +156,53 @@ const shortestNodePath = (
 
 export const START_POSITION = NAV_POINTS.center;
 
+export const getLocationNode = (id: string): NavNode =>
+  LOCATION_NODES[id] ?? "center";
+
+export const buildGuidedNodeRoute = (fromNode: NavNode, toId: string) => {
+  const toNode = getLocationNode(toId);
+  return shortestNodePath(fromNode, toNode).slice(1);
+};
+
 export const buildGuidedRoute = (fromId: string, toId: string) => {
-  const fromNode = LOCATION_NODES[fromId] ?? "center";
-  const toNode = LOCATION_NODES[toId] ?? "center";
+  const fromNode = getLocationNode(fromId);
+  const toNode = getLocationNode(toId);
   return shortestNodePath(fromNode, toNode)
     .slice(1)
     .map((node) => NAV_POINTS[node]);
+};
+
+const directionScore = (
+  from: Point,
+  to: Point,
+  direction: NavDirection,
+) => {
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+
+  switch (direction) {
+    case "up":
+      return dy < 0 && Math.abs(dy) >= Math.abs(dx) ? Math.abs(dy) : 0;
+    case "down":
+      return dy > 0 && Math.abs(dy) >= Math.abs(dx) ? Math.abs(dy) : 0;
+    case "left":
+      return dx < 0 && Math.abs(dx) >= Math.abs(dy) ? Math.abs(dx) : 0;
+    case "right":
+      return dx > 0 && Math.abs(dx) >= Math.abs(dy) ? Math.abs(dx) : 0;
+  }
+};
+
+export const getNextNavNode = (
+  fromNode: NavNode,
+  direction: NavDirection,
+) => {
+  const from = NAV_POINTS[fromNode];
+
+  return NAV_GRAPH[fromNode]
+    .map((node) => ({
+      node,
+      score: directionScore(from, NAV_POINTS[node], direction),
+    }))
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score)[0]?.node;
 };

@@ -13,8 +13,13 @@ import {
   MAP_HEIGHT,
   MAP_WIDTH,
   NAV_GRID_CELL_SIZE,
+  NAV_POINTS,
   START_POSITION,
-  buildGuidedRoute,
+  buildGuidedNodeRoute,
+  getLocationNode,
+  getNextNavNode,
+  type NavDirection,
+  type NavNode,
   type Point,
 } from "@/data/navigationMap";
 import {
@@ -26,7 +31,12 @@ import {
 } from "@/data/portfolioData";
 import { cn } from "@/lib/utils";
 import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
   ChevronDown,
+  CornerDownLeft,
   ExternalLink,
   FileText,
   Github,
@@ -42,7 +52,7 @@ type HeroProps = {
   onViewModeChange: (mode: ViewMode) => void;
 };
 
-type Direction = "up" | "down" | "left" | "right";
+type Direction = NavDirection;
 
 type PlayerState = Point & {
   direction: Direction;
@@ -60,6 +70,11 @@ type MapPoint = {
   width: string;
   height: string;
   destination: Point;
+};
+
+type RouteStep = {
+  node: NavNode;
+  point: Point;
 };
 
 const CENTER_POINT = START_POSITION;
@@ -190,15 +205,17 @@ const directionFromDelta = (
   return fallback;
 };
 
-const dedupeRoute = (points: Point[]) =>
-  points.filter(
-    (point, index) =>
-      index === 0 ||
-      distanceBetween(point, points[index - 1]) > ARRIVAL_DISTANCE,
-  );
+const buildRoute = (fromNode: NavNode, toId: string) => {
+  const route = buildGuidedNodeRoute(fromNode, toId).map((node) => ({
+    node,
+    point: NAV_POINTS[node],
+  }));
 
-const buildRoute = (fromId: string, toId: string) => {
-  return dedupeRoute(buildGuidedRoute(fromId, toId));
+  return route.filter(
+    (step, index) =>
+      index === 0 ||
+      distanceBetween(step.point, route[index - 1].point) > ARRIVAL_DISTANCE,
+  );
 };
 
 type MobileViewToggleProps = {
@@ -241,13 +258,14 @@ const MobileViewToggle = ({
 );
 
 const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
-  const routeRef = useRef<Point[]>([]);
+  const routeRef = useRef<RouteStep[]>([]);
   const animationFrameRef = useRef<number | null>(null);
   const lastAnimationTimeRef = useRef<number | null>(null);
   const frameClockRef = useRef(0);
-  const currentLocationRef = useRef("center");
+  const currentNodeRef = useRef<NavNode>("center");
   const pendingArrivalRef = useRef<(() => void) | null>(null);
   const finalDestinationRef = useRef<Point>(START_POSITION);
+  const finalNodeRef = useRef<NavNode>("center");
   const arrivalTimeoutRef = useRef<number | null>(null);
 
   const [player, setPlayer] = useState<PlayerState>({
@@ -262,6 +280,7 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
     "walking",
   );
   const [hoveredMapPoint, setHoveredMapPoint] = useState<MapPoint | null>(null);
+  const [currentNode, setCurrentNode] = useState<NavNode>("center");
   const debugNavGridVisible = useMemo(() => {
     if (typeof window === "undefined") return false;
     return new URLSearchParams(window.location.search).has("debugNavGrid");
@@ -315,8 +334,12 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
 
   const startGuidedTravel = useCallback(
     (point: MapPoint, onArrival: () => void) => {
+      const destinationNode = getLocationNode(point.id);
+
       if (IS_TEST_ENV) {
-        currentLocationRef.current = point.id;
+        currentNodeRef.current = destinationNode;
+        finalNodeRef.current = destinationNode;
+        setCurrentNode(destinationNode);
         setPlayer((previous) => ({
           ...previous,
           ...point.destination,
@@ -327,20 +350,22 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
         return;
       }
 
-      const route = buildRoute(currentLocationRef.current, point.id);
+      const route = buildRoute(currentNodeRef.current, point.id);
 
       if (arrivalTimeoutRef.current) {
         window.clearTimeout(arrivalTimeoutRef.current);
         arrivalTimeoutRef.current = null;
       }
 
-      currentLocationRef.current = point.id;
       pendingArrivalRef.current = onArrival;
       finalDestinationRef.current = point.destination;
+      finalNodeRef.current = destinationNode;
       setTravelLabel(point.title);
       setTravelStatus("walking");
 
       if (route.length === 0) {
+        currentNodeRef.current = destinationNode;
+        setCurrentNode(destinationNode);
         setPlayer((previous) => ({
           ...previous,
           ...point.destination,
@@ -364,6 +389,8 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
     }
 
     routeRef.current = [];
+    currentNodeRef.current = finalNodeRef.current;
+    setCurrentNode(finalNodeRef.current);
     setPlayer((previous) => ({
       ...previous,
       ...finalDestinationRef.current,
@@ -373,20 +400,173 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
     completeArrival();
   }, [completeArrival]);
 
-  const activateMapPoint = useCallback(
+  const openMapPoint = useCallback(
     (point: MapPoint) => {
       if (point.kind === "section") {
-        startGuidedTravel(point, () => scrollToSection(point.id as SectionId));
+        scrollToSection(point.id as SectionId);
         return;
       }
 
       const project = projectEntries.find((entry) => entry.slug === point.id);
       if (project) {
-        startGuidedTravel(point, () => setActiveProject(project));
+        setActiveProject(project);
       }
     },
-    [scrollToSection, startGuidedTravel],
+    [scrollToSection],
   );
+
+  const activateMapPoint = useCallback(
+    (point: MapPoint) => {
+      startGuidedTravel(point, () => openMapPoint(point));
+    },
+    [openMapPoint, startGuidedTravel],
+  );
+
+  const currentMapChoices = useMemo(() => {
+    if (player.moving || travelLabel || activeProject) return [];
+
+    return mapPoints.filter(
+      (point) => {
+        const locationNode = getLocationNode(point.id);
+        const locationPoint = NAV_POINTS[locationNode];
+        const currentPoint = NAV_POINTS[currentNode];
+
+        return (
+          locationNode === currentNode ||
+          distanceBetween(locationPoint, currentPoint) <= 8
+        );
+      },
+    );
+  }, [activeProject, currentNode, mapPoints, player.moving, travelLabel]);
+
+  const canRoam = useMemo(
+    () => !player.moving && !travelLabel && !activeProject,
+    [activeProject, player.moving, travelLabel],
+  );
+
+  const moveToNode = useCallback((node: NavNode) => {
+    if (node === currentNodeRef.current) return;
+
+    if (arrivalTimeoutRef.current) {
+      window.clearTimeout(arrivalTimeoutRef.current);
+      arrivalTimeoutRef.current = null;
+    }
+
+    const point = NAV_POINTS[node];
+    finalDestinationRef.current = point;
+    finalNodeRef.current = node;
+    pendingArrivalRef.current = null;
+    routeRef.current = [{ node, point }];
+    setTravelLabel(null);
+    setTravelStatus("walking");
+    setActiveProject(null);
+    setPlayer((previous) => ({ ...previous, moving: true }));
+  }, []);
+
+  const movePlayer = useCallback(
+    (direction: NavDirection) => {
+      if (!canRoam) return;
+
+      const nextNode = getNextNavNode(currentNodeRef.current, direction);
+      if (!nextNode) return;
+
+      if (IS_TEST_ENV) {
+        currentNodeRef.current = nextNode;
+        finalNodeRef.current = nextNode;
+        setCurrentNode(nextNode);
+        setPlayer((previous) => ({
+          ...previous,
+          ...NAV_POINTS[nextNode],
+          direction,
+          moving: false,
+          frame: 0,
+        }));
+        return;
+      }
+
+      moveToNode(nextNode);
+    },
+    [canRoam, moveToNode],
+  );
+
+  const availableDirections = useMemo(
+    () => ({
+      up: Boolean(getNextNavNode(currentNode, "up")),
+      down: Boolean(getNextNavNode(currentNode, "down")),
+      left: Boolean(getNextNavNode(currentNode, "left")),
+      right: Boolean(getNextNavNode(currentNode, "right")),
+    }),
+    [currentNode],
+  );
+
+  useEffect(() => {
+    if (viewMode !== "map" || activeProject) return;
+
+    const keyDirections: Partial<Record<string, NavDirection>> = {
+      ArrowUp: "up",
+      w: "up",
+      W: "up",
+      ArrowDown: "down",
+      s: "down",
+      S: "down",
+      ArrowLeft: "left",
+      a: "left",
+      A: "left",
+      ArrowRight: "right",
+      d: "right",
+      D: "right",
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target;
+      if (
+        target instanceof HTMLElement &&
+        target.closest("input, textarea, select, button, a") &&
+        !["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(
+          event.key,
+        )
+      ) {
+        return;
+      }
+
+      const direction = keyDirections[event.key];
+
+      if (direction) {
+        event.preventDefault();
+        movePlayer(direction);
+        return;
+      }
+
+      if (event.key === "Enter" && currentMapChoices.length > 0 && canRoam) {
+        event.preventDefault();
+        openMapPoint(currentMapChoices[0]);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [
+    activeProject,
+    canRoam,
+    currentMapChoices,
+    movePlayer,
+    openMapPoint,
+    viewMode,
+  ]);
+
+  useEffect(() => {
+    if (!activeProject) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setActiveProject(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [activeProject]);
 
   useEffect(() => {
     if (IS_TEST_ENV) return;
@@ -406,20 +586,31 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
           return previous;
         }
 
-        const distance = distanceBetween(previous, target);
+        const distance = distanceBetween(previous, target.point);
 
         if (distance <= ARRIVAL_DISTANCE) {
-          routeRef.current.shift();
+          const reachedStep = routeRef.current.shift();
+
+          if (reachedStep) {
+            currentNodeRef.current = reachedStep.node;
+            setCurrentNode(reachedStep.node);
+          }
 
           if (routeRef.current.length === 0) {
-            setTravelStatus("opening");
-            arrivalTimeoutRef.current = window.setTimeout(
-              completeArrival,
-              ARRIVAL_PAUSE_MS,
-            );
+            if (pendingArrivalRef.current) {
+              setTravelStatus("opening");
+              arrivalTimeoutRef.current = window.setTimeout(
+                completeArrival,
+                ARRIVAL_PAUSE_MS,
+              );
+            } else {
+              setTravelLabel(null);
+              setTravelStatus("walking");
+            }
+
             return {
               ...previous,
-              ...target,
+              ...(reachedStep?.point ?? target.point),
               moving: false,
               frame: 0,
             };
@@ -427,15 +618,15 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
 
           return {
             ...previous,
-            ...target,
+            ...(reachedStep?.point ?? target.point),
             moving: true,
           };
         }
 
         const travelDistance = PLAYER_SPEED * deltaSeconds;
         const ratio = Math.min(1, travelDistance / distance);
-        const nextX = previous.x + (target.x - previous.x) * ratio;
-        const nextY = previous.y + (target.y - previous.y) * ratio;
+        const nextX = previous.x + (target.point.x - previous.x) * ratio;
+        const nextY = previous.y + (target.point.y - previous.y) * ratio;
         const direction = directionFromDelta(
           nextX - previous.x,
           nextY - previous.y,
@@ -652,18 +843,90 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
             )}
           </div>
 
-          <div className="grid gap-2 border-t border-cyan-300/25 bg-slate-950/85 p-3 md:grid-cols-[1fr_auto] md:items-center">
-            <p className="text-xs text-slate-300">
-              <span className="retro-ui text-emerald-300">
-                {hoveredMapPoint ? "DESTINATION:" : "WORLD MAP:"}
-              </span>{" "}
-              {hoveredMapPoint
-                ? `${hoveredMapPoint.title} - ${hoveredMapPoint.subtitle}`
-                : "Hover or tap a destination to preview it. Click to travel."}
-            </p>
-            <div className="flex items-center gap-2 text-[11px] text-slate-200">
-              <MapPin className="h-3.5 w-3.5 text-amber-300" />
-              <span className="retro-ui">MAP VIEW ACTIVE</span>
+          <div className="grid gap-3 border-t border-cyan-300/25 bg-slate-950/85 p-3 lg:grid-cols-[1fr_auto] lg:items-center">
+            <div className="space-y-2">
+              <p className="text-xs text-slate-300">
+                <span className="retro-ui text-emerald-300">
+                  {hoveredMapPoint ? "DESTINATION:" : "WORLD MAP:"}
+                </span>{" "}
+                {hoveredMapPoint
+                  ? `${hoveredMapPoint.title} - ${hoveredMapPoint.subtitle}`
+                  : "Use arrows/WASD to roam. Hover or tap a destination to preview."}
+              </p>
+              {currentMapChoices.length > 0 && (
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="retro-ui text-[10px] text-amber-200">
+                    PRESS ENTER OR OPEN:
+                  </span>
+                  {currentMapChoices.map((choice) => (
+                    <button
+                      key={`${choice.kind}-${choice.id}-open`}
+                      onClick={() => openMapPoint(choice)}
+                      className="retro-ui rounded-sm border border-emerald-300/35 bg-emerald-500/15 px-2 py-1.5 text-[10px] text-emerald-100 hover:bg-emerald-500/25"
+                    >
+                      {choice.subtitle.toUpperCase()}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-2 text-[11px] text-slate-200">
+                <MapPin className="h-3.5 w-3.5 text-amber-300" />
+                <span className="retro-ui">PATH LOCKED</span>
+              </div>
+              <div
+                className="grid grid-cols-3 gap-1"
+                aria-label="Path movement controls"
+              >
+                <span />
+                <button
+                  onClick={() => movePlayer("up")}
+                  disabled={!canRoam || !availableDirections.up}
+                  className="map-roam-button"
+                  aria-label="Move up"
+                >
+                  <ArrowUp className="h-3.5 w-3.5" />
+                </button>
+                <span />
+                <button
+                  onClick={() => movePlayer("left")}
+                  disabled={!canRoam || !availableDirections.left}
+                  className="map-roam-button"
+                  aria-label="Move left"
+                >
+                  <ArrowLeft className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  onClick={() => {
+                    if (currentMapChoices[0]) openMapPoint(currentMapChoices[0]);
+                  }}
+                  disabled={!canRoam || currentMapChoices.length === 0}
+                  className="map-roam-button"
+                  aria-label="Open current location"
+                >
+                  <CornerDownLeft className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  onClick={() => movePlayer("right")}
+                  disabled={!canRoam || !availableDirections.right}
+                  className="map-roam-button"
+                  aria-label="Move right"
+                >
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </button>
+                <span />
+                <button
+                  onClick={() => movePlayer("down")}
+                  disabled={!canRoam || !availableDirections.down}
+                  className="map-roam-button"
+                  aria-label="Move down"
+                >
+                  <ArrowDown className="h-3.5 w-3.5" />
+                </button>
+                <span />
+              </div>
             </div>
           </div>
         </div>

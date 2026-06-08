@@ -16,7 +16,7 @@ const maxSkillYears = Math.max(
 const MIN_SKILL_FILL = 58;
 const MAX_SKILL_FILL = 90;
 
-export const skillFillFromYears = (years: string) => {
+const skillFillFromYears = (years: string) => {
   const parsedYears = parseYears(years);
   if (maxSkillYears <= 0) return 0;
   const normalizedYears = Math.min(parsedYears / maxSkillYears, 1);

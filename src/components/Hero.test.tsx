@@ -87,4 +87,66 @@ describe("Hero section", () => {
 
     expect(onViewModeChange).toHaveBeenCalledWith("grid");
   });
+
+  it("locks manual controls to available path directions", () => {
+    render(
+      <MemoryRouter>
+        <Hero viewMode="map" onViewModeChange={onViewModeChange} />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByRole("button", { name: "Move down" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Move left" })).not.toBeDisabled();
+
+    fireEvent.keyDown(window, { key: "ArrowLeft" });
+
+    expect(screen.getByRole("button", { name: "Move down" })).not.toBeDisabled();
+  });
+
+  it("opens Nerdle after keyboard movement reaches its location", () => {
+    render(
+      <MemoryRouter>
+        <Hero viewMode="map" onViewModeChange={onViewModeChange} />
+      </MemoryRouter>
+    );
+
+    fireEvent.keyDown(window, { key: "ArrowLeft" });
+    fireEvent.keyDown(window, { key: "ArrowDown" });
+    fireEvent.keyDown(window, { key: "ArrowLeft" });
+    fireEvent.keyDown(window, { key: "Enter" });
+
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "NERDLE" })).toBeInTheDocument();
+  });
+
+  it("opens Sudoku after keyboard movement reaches its location", () => {
+    render(
+      <MemoryRouter>
+        <Hero viewMode="map" onViewModeChange={onViewModeChange} />
+      </MemoryRouter>
+    );
+
+    fireEvent.keyDown(window, { key: "ArrowRight" });
+    fireEvent.keyDown(window, { key: "ArrowRight" });
+    fireEvent.keyDown(window, { key: "ArrowRight" });
+    fireEvent.keyDown(window, { key: "Enter" });
+
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "SUDOKU" })).toBeInTheDocument();
+  });
+
+  it("closes destination popups with Escape", () => {
+    render(
+      <MemoryRouter>
+        <Hero viewMode="map" onViewModeChange={onViewModeChange} />
+      </MemoryRouter>
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /ARCADE DISTRICT/i }));
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+
+    fireEvent.keyDown(window, { key: "Escape" });
+
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  });
 });

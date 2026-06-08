@@ -175,6 +175,31 @@
     outline: none;
   }
 
+  .map-roam-button {
+    display: inline-flex;
+    width: 2.25rem;
+    height: 2.25rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(125, 211, 252, 0.35);
+    border-radius: 0.125rem;
+    background: rgba(8, 47, 73, 0.44);
+    color: rgb(224 242 254);
+    transition: background-color 0.16s ease, border-color 0.16s ease, opacity 0.16s ease;
+  }
+
+  .map-roam-button:hover:not(:disabled),
+  .map-roam-button:focus-visible:not(:disabled) {
+    border-color: rgba(110, 231, 183, 0.62);
+    background: rgba(16, 185, 129, 0.22);
+    outline: none;
+  }
+
+  .map-roam-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.32;
+  }
+
   .map-start-hotspot {
     position: absolute;
     z-index: 22;
