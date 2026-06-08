@@ -1,5 +1,5 @@
 import blackjackImgWebp from "@/assets/project-blackjack.webp";
-import brickbreakerImgPng from "@/assets/project-brickbreaker.png";
+import brickbreakerDetailImgWebp from "@/assets/project-brickbreaker-detail.webp";
 import brickbreakerImgWebp from "@/assets/project-brickbreaker.webp";
 import nerdleImgWebp from "@/assets/project-nerdle.webp";
 import sudokuImgWebp from "@/assets/project-sudoku.webp";
@@ -53,7 +53,7 @@ export const projectEntries: ProjectEntry[] = [
       code: "https://github.com/natezimm/brick-breaker-resume",
     },
     image: brickbreakerImgWebp,
-    detailImage: brickbreakerImgPng,
+    detailImage: brickbreakerDetailImgWebp,
     mediaBackground: "light",
     accent: "forest",
   },

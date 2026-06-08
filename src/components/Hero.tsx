@@ -1,4 +1,4 @@
-import backgroundMap from "@/assets/background.png";
+import backgroundMap from "@/assets/background.webp";
 import idleFrontSprite from "@/assets/sprites/idle.png";
 import walkDown1Sprite from "@/assets/sprites/walk_down_1.png";
 import walkDown2Sprite from "@/assets/sprites/walk_down_2.png";
@@ -267,6 +267,8 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
   const finalDestinationRef = useRef<Point>(START_POSITION);
   const finalNodeRef = useRef<NavNode>("center");
   const arrivalTimeoutRef = useRef<number | null>(null);
+  const projectDialogRef = useRef<HTMLDivElement | null>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   const [player, setPlayer] = useState<PlayerState>({
     ...START_POSITION,
@@ -557,15 +559,56 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
   useEffect(() => {
     if (!activeProject) return;
 
+    previousFocusRef.current =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+
+    projectDialogRef.current?.focus();
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
         setActiveProject(null);
+        return;
+      }
+
+      if (event.key !== "Tab") {
+        return;
+      }
+
+      const dialog = projectDialogRef.current;
+      if (!dialog) return;
+
+      const focusableElements = [
+        ...dialog.querySelectorAll<HTMLElement>(
+          'a[href], button:not(:disabled), [tabindex]:not([tabindex="-1"])',
+        ),
+      ].filter((element) => !element.hasAttribute("disabled"));
+
+      if (focusableElements.length === 0) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (event.shiftKey && document.activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+      } else if (!event.shiftKey && document.activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      previousFocusRef.current?.focus();
+    };
   }, [activeProject]);
 
   useEffect(() => {
@@ -933,10 +976,13 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
 
         {activeProject && (
           <div
+            ref={projectDialogRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby="project-panel-title"
-            className="fixed inset-0 z-[60] grid place-items-center bg-slate-950/78 px-4 py-6 backdrop-blur-sm"
+            aria-describedby="project-panel-summary"
+            tabIndex={-1}
+            className="fixed inset-0 z-[60] grid place-items-center bg-slate-950/78 px-4 py-6 backdrop-blur-sm focus:outline-none"
           >
             <article className="detail-frame max-h-[90vh] w-full max-w-4xl overflow-auto rounded-sm border border-cyan-300/35 bg-slate-950 p-4 md:p-6">
               <div className="flex items-start justify-between gap-4">
@@ -950,7 +996,10 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
                   >
                     {activeProject.title}
                   </h2>
-                  <p className="mt-2 text-sm text-slate-300">
+                  <p
+                    id="project-panel-summary"
+                    className="mt-2 text-sm text-slate-300"
+                  >
                     {activeProject.summary}
                   </p>
                 </div>
