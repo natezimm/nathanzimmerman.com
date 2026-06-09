@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Github, Linkedin } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { type ViewMode } from "@/data/portfolioData";
+import { trackPortfolioEvent } from "@/lib/analytics";
 
 type NavigationProps = {
   viewMode: ViewMode;
@@ -14,6 +15,11 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
   const scrollToSection = (id: string) => {
     setIsMobileMenuOpen(false);
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const changeViewMode = (mode: ViewMode) => {
+    trackPortfolioEvent("view_mode_change", { mode, source: "navigation" });
+    onViewModeChange(mode);
   };
 
   const navItems = [
@@ -50,7 +56,7 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
           <div className="hidden items-center gap-2 md:flex">
             <div className="inline-flex overflow-hidden rounded-sm border border-cyan-300/35">
               <button
-                onClick={() => onViewModeChange("map")}
+                onClick={() => changeViewMode("map")}
                 aria-pressed={viewMode === "map"}
                 className={cn(
                   "retro-ui px-3 py-2 text-[11px] transition",
@@ -62,7 +68,7 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
                 MAP VIEW
               </button>
               <button
-                onClick={() => onViewModeChange("grid")}
+                onClick={() => changeViewMode("grid")}
                 aria-pressed={viewMode === "grid"}
                 className={cn(
                   "retro-ui border-l border-cyan-300/35 px-3 py-2 text-[11px] transition",
@@ -80,6 +86,7 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
+              onClick={() => trackPortfolioEvent("social_link_click", { destination: "github", source: "nav" })}
               className="rounded-sm border border-slate-400/40 bg-slate-700/35 p-2 text-slate-100 transition hover:bg-slate-700/60"
             >
               <Github className="h-4 w-4" />
@@ -89,6 +96,7 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
+              onClick={() => trackPortfolioEvent("social_link_click", { destination: "linkedin", source: "nav" })}
               className="rounded-sm border border-slate-400/40 bg-slate-700/35 p-2 text-slate-100 transition hover:bg-slate-700/60"
             >
               <Linkedin className="h-4 w-4" />
@@ -97,6 +105,7 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
               href="/resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackPortfolioEvent("resume_click", { source: "nav" })}
               className="retro-ui rounded-sm border border-amber-300/50 bg-amber-400/15 px-3 py-2 text-[11px] text-amber-100 transition-colors hover:bg-amber-400/25"
             >
               RESUME
@@ -131,7 +140,7 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
               <div className="mt-1 grid grid-cols-2 gap-2">
                 <button
                   onClick={() => {
-                    onViewModeChange("map");
+                    changeViewMode("map");
                     setIsMobileMenuOpen(false);
                   }}
                   className={cn(
@@ -145,7 +154,7 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
                 </button>
                 <button
                   onClick={() => {
-                    onViewModeChange("grid");
+                    changeViewMode("grid");
                     setIsMobileMenuOpen(false);
                   }}
                   className={cn(
@@ -163,6 +172,7 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
                 href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackPortfolioEvent("resume_click", { source: "mobile_nav" })}
                 className="retro-ui rounded-sm border border-amber-300/40 bg-amber-400/10 px-3 py-2 text-xs text-amber-100"
               >
                 RESUME

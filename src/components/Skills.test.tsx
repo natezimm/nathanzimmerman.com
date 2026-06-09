@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import Skills, { skillFillFromYears } from "./Skills";
+import Skills from "./Skills";
+import { skillFillFromYears } from "@/lib/skillMetrics";
 
 describe("Skills section", () => {
   it("renders grouped skills", () => {

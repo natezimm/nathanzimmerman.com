@@ -29,6 +29,7 @@ import {
   type SectionId,
   type ViewMode,
 } from "@/data/portfolioData";
+import { trackPortfolioEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import {
   ArrowDown,
@@ -229,7 +230,13 @@ const MobileViewToggle = ({
 }: MobileViewToggleProps) => (
   <div className="mt-4 inline-flex w-full max-w-sm overflow-hidden rounded-sm border border-cyan-300/35 md:hidden">
     <button
-      onClick={() => onViewModeChange("map")}
+      onClick={() => {
+        trackPortfolioEvent("view_mode_change", {
+          mode: "map",
+          source: "mobile_hero",
+        });
+        onViewModeChange("map");
+      }}
       aria-label="Switch to map view"
       aria-pressed={viewMode === "map"}
       className={cn(
@@ -242,7 +249,13 @@ const MobileViewToggle = ({
       MAP VIEW
     </button>
     <button
-      onClick={() => onViewModeChange("grid")}
+      onClick={() => {
+        trackPortfolioEvent("view_mode_change", {
+          mode: "grid",
+          source: "mobile_hero",
+        });
+        onViewModeChange("grid");
+      }}
       aria-label="Switch to resume view"
       aria-pressed={viewMode === "grid"}
       className={cn(
@@ -404,6 +417,11 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
 
   const openMapPoint = useCallback(
     (point: MapPoint) => {
+      trackPortfolioEvent("map_destination_open", {
+        destination: point.id,
+        kind: point.kind,
+      });
+
       if (point.kind === "section") {
         scrollToSection(point.id as SectionId);
         return;
@@ -789,6 +807,7 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
                 href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackPortfolioEvent("resume_click", { source: "hero" })}
                 className="retro-ui inline-flex items-center gap-2 rounded-sm border border-emerald-300/45 bg-emerald-500/12 px-4 py-2 text-xs text-emerald-100 hover:bg-emerald-500/25"
               >
                 <FileText className="h-3.5 w-3.5" />
@@ -1060,6 +1079,12 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
                         href={activeProject.links.live}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() =>
+                          trackPortfolioEvent("project_live_click", {
+                            project: activeProject.slug,
+                            source: "map_modal",
+                          })
+                        }
                       >
                         <ExternalLink className="h-3.5 w-3.5" />
                         LIVE
@@ -1071,6 +1096,12 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
                         href={activeProject.links.code}
                         target="_blank"
                         rel="noopener noreferrer"
+                        onClick={() =>
+                          trackPortfolioEvent("project_code_click", {
+                            project: activeProject.slug,
+                            source: "map_modal",
+                          })
+                        }
                       >
                         <Github className="h-3.5 w-3.5" />
                         CODE
@@ -1079,6 +1110,12 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
                     <Link
                       className="detail-action"
                       to={`/projects/${activeProject.slug}`}
+                      onClick={() =>
+                        trackPortfolioEvent("project_details_click", {
+                          project: activeProject.slug,
+                          source: "map_modal",
+                        })
+                      }
                     >
                       DETAILS
                     </Link>

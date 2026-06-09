@@ -1,6 +1,7 @@
 import { ExternalLink, Github } from "lucide-react";
 import { Link } from "react-router-dom";
 import { projectEntries, type ViewMode } from "@/data/portfolioData";
+import { trackPortfolioEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 const accentClasses: Record<string, string> = {
@@ -65,6 +66,12 @@ const Projects = ({ viewMode }: ProjectsProps) => {
                       href={project.links.live}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() =>
+                        trackPortfolioEvent("project_live_click", {
+                          project: project.slug,
+                          source: "project_card",
+                        })
+                      }
                       className="retro-ui inline-flex items-center justify-center gap-1 rounded-sm border border-emerald-300/45 bg-emerald-500/15 px-2 py-2 text-[10px] text-emerald-100 hover:bg-emerald-500/25"
                     >
                       <ExternalLink className="h-3.5 w-3.5" />
@@ -81,6 +88,12 @@ const Projects = ({ viewMode }: ProjectsProps) => {
                       href={project.links.code}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() =>
+                        trackPortfolioEvent("project_code_click", {
+                          project: project.slug,
+                          source: "project_card",
+                        })
+                      }
                       className="retro-ui inline-flex items-center justify-center gap-1 rounded-sm border border-cyan-300/45 bg-cyan-500/15 px-2 py-2 text-[10px] text-cyan-100 hover:bg-cyan-500/25"
                     >
                       <Github className="h-3.5 w-3.5" />
@@ -94,6 +107,12 @@ const Projects = ({ viewMode }: ProjectsProps) => {
 
                   <Link
                     to={`/projects/${project.slug}`}
+                    onClick={() =>
+                      trackPortfolioEvent("project_details_click", {
+                        project: project.slug,
+                        source: "project_card",
+                      })
+                    }
                     className="retro-ui inline-flex items-center justify-center rounded-sm border border-amber-300/45 bg-amber-500/15 px-2 py-2 text-[10px] text-amber-100 hover:bg-amber-500/25"
                   >
                     DETAILS

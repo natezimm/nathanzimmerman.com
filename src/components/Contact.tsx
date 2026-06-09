@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { type ViewMode } from "@/data/portfolioData";
+import { trackPortfolioEvent } from "@/lib/analytics";
 
 type ContactProps = {
   viewMode?: ViewMode;
@@ -51,6 +52,7 @@ const Contact = ({ viewMode = "map" }: ContactProps) => {
 
       if (!serviceId || !templateId || !publicKey) {
         toast.error("Contact form is not configured. Please email me directly.");
+        trackPortfolioEvent("contact_submit_failure", { reason: "not_configured" });
         setIsSubmitting(false);
         return;
       }
@@ -61,6 +63,7 @@ const Contact = ({ viewMode = "map" }: ContactProps) => {
 
       if (!sanitizedName || !sanitizedEmail || !sanitizedMessage) {
         toast.error("Please fill in all fields with valid content.");
+        trackPortfolioEvent("contact_submit_failure", { reason: "invalid_content" });
         setIsSubmitting(false);
         return;
       }
@@ -89,10 +92,12 @@ const Contact = ({ viewMode = "map" }: ContactProps) => {
 
       lastSubmitTime.current = Date.now();
       toast.success("Message sent! You'll receive a confirmation email shortly.");
+      trackPortfolioEvent("contact_submit_success", { source: "contact_form" });
       setFormData({ name: "", email: "", message: "" });
     } catch (error) {
       console.error("Form submission error:", error);
       toast.error("Failed to send message. Please try again or email me directly.");
+      trackPortfolioEvent("contact_submit_failure", { reason: "send_error" });
     } finally {
       setIsSubmitting(false);
     }
@@ -124,6 +129,7 @@ const Contact = ({ viewMode = "map" }: ContactProps) => {
               rel="noopener noreferrer"
               className={viewMode === "map" ? "retro-contact-btn" : "retro-contact-btn retro-contact-btn-muted"}
               aria-label="GitHub"
+              onClick={() => trackPortfolioEvent("social_link_click", { destination: "github", source: "contact" })}
             >
               <Github className="h-5 w-5" />
               GITHUB
@@ -134,6 +140,7 @@ const Contact = ({ viewMode = "map" }: ContactProps) => {
               rel="noopener noreferrer"
               className={viewMode === "map" ? "retro-contact-btn" : "retro-contact-btn retro-contact-btn-muted"}
               aria-label="LinkedIn"
+              onClick={() => trackPortfolioEvent("social_link_click", { destination: "linkedin", source: "contact" })}
             >
               <Linkedin className="h-5 w-5" />
               LINKEDIN
@@ -142,6 +149,7 @@ const Contact = ({ viewMode = "map" }: ContactProps) => {
               href="mailto:nathan.a.zimmerman@gmail.com"
               className={viewMode === "map" ? "retro-contact-btn" : "retro-contact-btn retro-contact-btn-muted"}
               aria-label="Email"
+              onClick={() => trackPortfolioEvent("contact_link_click", { destination: "email", source: "contact" })}
             >
               <Mail className="h-5 w-5" />
               EMAIL
@@ -152,6 +160,7 @@ const Contact = ({ viewMode = "map" }: ContactProps) => {
               rel="noopener noreferrer"
               className="retro-contact-btn retro-contact-btn-gold"
               aria-label="Resume"
+              onClick={() => trackPortfolioEvent("resume_click", { source: "contact" })}
             >
               <FileText className="h-5 w-5" />
               RESUME

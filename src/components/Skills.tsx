@@ -1,26 +1,8 @@
 import { skillGroups, type ViewMode } from "@/data/portfolioData";
+import { maxSkillYears, parseSkillYears, skillFillFromYears } from "@/lib/skillMetrics";
 
 type SkillsProps = {
   viewMode: ViewMode;
-};
-
-const parseYears = (years: string) => {
-  const parsedYears = Number.parseInt(years, 10);
-  return Number.isFinite(parsedYears) ? parsedYears : 0;
-};
-
-const maxSkillYears = Math.max(
-  ...skillGroups.flatMap((group) => group.items.map((item) => parseYears(item.years)))
-);
-
-const MIN_SKILL_FILL = 58;
-const MAX_SKILL_FILL = 90;
-
-const skillFillFromYears = (years: string) => {
-  const parsedYears = parseYears(years);
-  if (maxSkillYears <= 0) return 0;
-  const normalizedYears = Math.min(parsedYears / maxSkillYears, 1);
-  return Math.round(MIN_SKILL_FILL + normalizedYears * (MAX_SKILL_FILL - MIN_SKILL_FILL));
 };
 
 const Skills = ({ viewMode }: SkillsProps) => {
@@ -54,7 +36,7 @@ const Skills = ({ viewMode }: SkillsProps) => {
                           aria-label={`${item.name} experience`}
                           aria-valuemin={0}
                           aria-valuemax={maxSkillYears}
-                          aria-valuenow={parseYears(item.years)}
+                          aria-valuenow={parseSkillYears(item.years)}
                           className="h-full rounded-full bg-gradient-to-r from-violet-400 to-cyan-300"
                           style={{ width: `${skillFillFromYears(item.years)}%` }}
                         />

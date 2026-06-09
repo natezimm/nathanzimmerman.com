@@ -1,6 +1,7 @@
 import { ArrowLeft, ExternalLink, FileText, Github } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { projectBySlug } from "@/data/portfolioData";
+import { trackPortfolioEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import NotFound from "./NotFound";
 
@@ -24,6 +25,7 @@ const ProjectDetail = () => {
             href="/resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackPortfolioEvent("resume_click", { source: "project_detail" })}
             className="retro-ui inline-flex items-center gap-2 rounded-sm border border-amber-300/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-100 hover:bg-amber-500/20"
           >
             <FileText className="h-4 w-4" />
@@ -63,6 +65,12 @@ const ProjectDetail = () => {
                     href={project.links.live}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() =>
+                      trackPortfolioEvent("project_live_click", {
+                        project: project.slug,
+                        source: "project_detail",
+                      })
+                    }
                     className="detail-action detail-action-live"
                   >
                     <ExternalLink className="h-4 w-4" />
@@ -76,6 +84,12 @@ const ProjectDetail = () => {
                     href={project.links.code}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() =>
+                      trackPortfolioEvent("project_code_click", {
+                        project: project.slug,
+                        source: "project_detail",
+                      })
+                    }
                     className="detail-action detail-action-code"
                   >
                     <Github className="h-4 w-4" />
