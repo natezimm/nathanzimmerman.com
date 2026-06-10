@@ -1,5 +1,5 @@
-import { describe, it, beforeEach, expect, vi, type Mock } from "vitest";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { describe, it, beforeEach, afterEach, expect, vi, type Mock } from "vitest";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 
 vi.mock("@emailjs/browser", () => ({
   default: {
@@ -27,16 +27,36 @@ describe("Contact form", () => {
     vi.stubEnv("VITE_EMAILJS_PUBLIC_KEY", "public");
     (toast.success as Mock).mockReset();
     (toast.error as Mock).mockReset();
-    ((emailjs.send as MockSend).mockReset());
+    (emailjs.send as MockSend).mockReset();
   });
 
-  const fillForm = () => {
-    fireEvent.change(screen.getByLabelText("Name"), { target: { value: "Nathan" } });
-    fireEvent.change(screen.getByLabelText("Email"), { target: { value: "test@example.com" } });
-    fireEvent.change(screen.getByLabelText("Message"), {
-      target: { value: "Hello there" },
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.restoreAllMocks();
+  });
+
+  const fillForm = (data?: { name?: string; email?: string; message?: string }) => {
+    const form = screen.getByRole("button", { name: "Send Message" }).closest("form");
+    if (!form) {
+      throw new Error("Contact form not found");
+    }
+
+    fireEvent.change(within(form).getByLabelText("Name"), { target: { value: data?.name ?? "Nathan" } });
+    fireEvent.change(within(form).getByLabelText("Email"), { target: { value: data?.email ?? "test@example.com" } });
+    fireEvent.change(within(form).getByLabelText("Message"), {
+      target: { value: data?.message ?? "Hello there" },
     });
   };
+
+  it("renders call-to-action links", () => {
+    render(<Contact />);
+
+    expect(screen.getByRole("heading", { name: /LET'S CONNECT!/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "GitHub" })).toHaveAttribute("href", "https://github.com/natezimm");
+    expect(screen.getByRole("link", { name: "LinkedIn" })).toHaveAttribute("href", "https://www.linkedin.com/in/zimmermannathan");
+    expect(screen.getByRole("link", { name: "Email" })).toHaveAttribute("href", "mailto:nathan.a.zimmerman@gmail.com");
+    expect(screen.getByRole("link", { name: "Resume" })).toHaveAttribute("href", "/resume.pdf");
+  });
 
   it("submits successfully and resets fields", async () => {
     (emailjs.send as MockSend).mockResolvedValue({});
@@ -51,9 +71,61 @@ describe("Contact form", () => {
       );
     });
 
-    expect(screen.getByLabelText("Name")).toHaveValue("");
-    expect(screen.getByLabelText("Email")).toHaveValue("");
-    expect(screen.getByLabelText("Message")).toHaveValue("");
+    const form = screen.getByRole("button", { name: "Send Message" }).closest("form");
+    if (!form) {
+      throw new Error("Contact form not found");
+    }
+
+    expect(within(form).getByLabelText("Name")).toHaveValue("");
+    expect(within(form).getByLabelText("Email")).toHaveValue("");
+    expect(within(form).getByLabelText("Message")).toHaveValue("");
+  });
+
+  it("sanitizes angle brackets before submitting", async () => {
+    (emailjs.send as MockSend).mockResolvedValue({});
+    render(<Contact />);
+
+    fillForm({
+      name: "<Nathan>",
+      email: "test@example.com",
+      message: "Hello <world>",
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Send Message" }));
+
+    await waitFor(() => {
+      expect(emailjs.send).toHaveBeenCalled();
+    });
+
+    const call = (emailjs.send as MockSend).mock.calls[0];
+    expect(call[2]).toMatchObject({
+      fname: "Nathan",
+      femail: "test@example.com",
+      message: "Hello world",
+    });
+  });
+
+  it("enforces cooldown between successful submissions", async () => {
+    const nowSpy = vi.spyOn(Date, "now");
+    nowSpy.mockReturnValue(40000);
+    (emailjs.send as MockSend).mockResolvedValue({});
+    render(<Contact />);
+
+    fillForm();
+    fireEvent.click(screen.getByRole("button", { name: "Send Message" }));
+
+    await waitFor(() => {
+      expect(toast.success).toHaveBeenCalled();
+    });
+
+    nowSpy.mockReturnValue(41000);
+    fillForm();
+    fireEvent.click(screen.getByRole("button", { name: "Send Message" }));
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(
+        "Please wait 29 seconds before sending another message."
+      );
+    });
   });
 
   it("shows error toast on failure", async () => {

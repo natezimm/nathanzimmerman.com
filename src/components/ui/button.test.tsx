@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { Button, buttonVariants } from "./button";
+import { Button } from "./button";
+import { buttonVariants } from "./button-variants";
 
 describe("Button primitives", () => {
   it("exports a variant helper", () => {

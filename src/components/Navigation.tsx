@@ -1,133 +1,182 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
+import { Github, Linkedin } from "lucide-react";
 import { cn } from "@/lib/utils";
-import ThemeToggle from "@/components/ThemeToggle";
+import { type ViewMode } from "@/data/portfolioData";
+import { trackPortfolioEvent } from "@/lib/analytics";
 
-const Navigation = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
+type NavigationProps = {
+  viewMode: ViewMode;
+  onViewModeChange: (mode: ViewMode) => void;
+};
+
+const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isWide, setIsWide] = useState(false);
-  const rafRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (rafRef.current) return;
-      rafRef.current = requestAnimationFrame(() => {
-        setIsScrolled(window.scrollY > 20);
-        rafRef.current = null;
-      });
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, []);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(min-width: 768px)");
-    const handleChange = (e: MediaQueryListEvent | MediaQueryList) => setIsWide(e.matches);
-    handleChange(mediaQuery);
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
 
   const scrollToSection = (id: string) => {
     setIsMobileMenuOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const changeViewMode = (mode: ViewMode) => {
+    trackPortfolioEvent("view_mode_change", { mode, source: "navigation" });
+    onViewModeChange(mode);
   };
 
   const navItems = [
-    { label: "Home", id: "home" },
-    { label: "About", id: "about" },
-    { label: "Projects", id: "projects" },
-    { label: "Contact", id: "contact" },
+    { label: "ABOUT", id: "about" },
+    { label: "PROJECTS", id: "projects" },
+    { label: "EXPERIENCE", id: "experience" },
+    { label: "SKILLS", id: "skills" },
+    { label: "CONTACT", id: "contact" },
   ];
 
   return (
-    <nav
-      className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        isScrolled ? "glass shadow-lg py-2" : "bg-transparent py-4"
-      )}
-    >
+    <nav className="retro-nav fixed left-0 right-0 top-0 z-50 border-b border-cyan-300/30 bg-slate-950/92 backdrop-blur-md">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between">
+        <div className="flex min-h-[66px] items-center justify-between gap-4">
           <button
             onClick={() => scrollToSection("home")}
-            className="text-2xl font-bold gradient-text hover:opacity-80 transition-opacity font-heading"
+            className="retro-ui text-xs text-emerald-300 md:text-sm"
           >
-            NZ
+            NATHAN ZIMMERMAN
           </button>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden items-center gap-5 lg:flex">
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors relative group"
+                className="retro-ui text-xs text-foreground/85 transition-colors hover:text-amber-200"
               >
                 {item.label}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full" />
               </button>
             ))}
-            <div className="h-6 w-px bg-border/50" />
-            <ThemeToggle />
           </div>
 
-          {/* Mobile Menu Button & Theme Toggle */}
-          <div className="md:hidden flex items-center gap-2">
-            <ThemeToggle />
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle menu"
-              aria-expanded={isMobileMenuOpen}
-              className="relative w-10 h-10 flex items-center justify-center rounded-md hover:bg-accent transition-colors"
+          <div className="hidden items-center gap-2 md:flex">
+            <div className="inline-flex overflow-hidden rounded-sm border border-cyan-300/35">
+              <button
+                onClick={() => changeViewMode("map")}
+                aria-pressed={viewMode === "map"}
+                className={cn(
+                  "retro-ui px-3 py-2 text-[11px] transition",
+                  viewMode === "map"
+                    ? "bg-emerald-500/25 text-emerald-50"
+                    : "bg-slate-900/70 text-slate-200 hover:bg-slate-800/80"
+                )}
+              >
+                MAP VIEW
+              </button>
+              <button
+                onClick={() => changeViewMode("grid")}
+                aria-pressed={viewMode === "grid"}
+                className={cn(
+                  "retro-ui border-l border-cyan-300/35 px-3 py-2 text-[11px] transition",
+                  viewMode === "grid"
+                    ? "bg-cyan-500/25 text-cyan-50"
+                    : "bg-slate-900/70 text-slate-200 hover:bg-slate-800/80"
+                )}
+              >
+                RESUME VIEW
+              </button>
+            </div>
+
+            <a
+              href="https://github.com/natezimm"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              onClick={() => trackPortfolioEvent("social_link_click", { destination: "github", source: "nav" })}
+              className="rounded-sm border border-slate-400/40 bg-slate-700/35 p-2 text-slate-100 transition hover:bg-slate-700/60"
             >
-              <div className="w-6 h-5 flex flex-col justify-between">
-                {/* Top line */}
-                <span
-                  className={cn(
-                    "block h-0.5 bg-foreground rounded-full transition-all duration-300 ease-in-out origin-left",
-                    isMobileMenuOpen ? "rotate-45 translate-x-[3px] -translate-y-[1px] w-[29px]" : "w-full"
-                  )}
-                />
-                {/* Middle line */}
-                <span
-                  className={cn(
-                    "block h-0.5 bg-foreground rounded-full transition-all duration-300 ease-in-out",
-                    isMobileMenuOpen ? "opacity-0 translate-x-4" : "opacity-100 w-full"
-                  )}
-                />
-                {/* Bottom line */}
-                <span
-                  className={cn(
-                    "block h-0.5 bg-foreground rounded-full transition-all duration-300 ease-in-out origin-left",
-                    isMobileMenuOpen ? "-rotate-45 translate-x-[3px] translate-y-[1px] w-[29px]" : "w-full"
-                  )}
-                />
-              </div>
-            </button>
+              <Github className="h-4 w-4" />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/zimmermannathan"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              onClick={() => trackPortfolioEvent("social_link_click", { destination: "linkedin", source: "nav" })}
+              className="rounded-sm border border-slate-400/40 bg-slate-700/35 p-2 text-slate-100 transition hover:bg-slate-700/60"
+            >
+              <Linkedin className="h-4 w-4" />
+            </a>
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackPortfolioEvent("resume_click", { source: "nav" })}
+              className="retro-ui rounded-sm border border-amber-300/50 bg-amber-400/15 px-3 py-2 text-[11px] text-amber-100 transition-colors hover:bg-amber-400/25"
+            >
+              RESUME
+            </a>
           </div>
+
+          <button
+            onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+            aria-label="Toggle menu"
+            aria-expanded={isMobileMenuOpen}
+            className="retro-ui rounded-sm border border-cyan-300/40 px-2 py-1 text-xs text-cyan-100 md:hidden"
+          >
+            MENU
+          </button>
         </div>
 
-        {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div
-            data-testid="mobile-menu"
-            className="md:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-lg border-t border-white/10 shadow-xl animate-fade-in"
-          >
-            <div className="flex flex-col p-4 gap-2">
+          <div data-testid="mobile-menu" className="md:hidden pb-3">
+            <div className="flex flex-col gap-2 rounded-sm border border-cyan-300/25 bg-slate-950/95 p-2">
               {navItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className="text-foreground/70 hover:text-primary hover:bg-white/5 transition-all font-medium text-left px-4 py-3 rounded-md"
+                  className={cn(
+                    "retro-ui rounded-sm border border-cyan-300/20 bg-cyan-400/10 px-3 py-2 text-left text-xs text-cyan-100"
+                  )}
                 >
                   {item.label}
                 </button>
               ))}
+
+              <div className="mt-1 grid grid-cols-2 gap-2">
+                <button
+                  onClick={() => {
+                    changeViewMode("map");
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={cn(
+                    "retro-ui rounded-sm border px-3 py-2 text-xs",
+                    viewMode === "map"
+                      ? "border-emerald-300/40 bg-emerald-500/20 text-emerald-50"
+                      : "border-slate-500/35 bg-slate-700/20 text-slate-100"
+                  )}
+                >
+                  MAP VIEW
+                </button>
+                <button
+                  onClick={() => {
+                    changeViewMode("grid");
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className={cn(
+                    "retro-ui rounded-sm border px-3 py-2 text-xs",
+                    viewMode === "grid"
+                      ? "border-cyan-300/40 bg-cyan-500/20 text-cyan-50"
+                      : "border-slate-500/35 bg-slate-700/20 text-slate-100"
+                  )}
+                >
+                  RESUME VIEW
+                </button>
+              </div>
+
+              <a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackPortfolioEvent("resume_click", { source: "mobile_nav" })}
+                className="retro-ui rounded-sm border border-amber-300/40 bg-amber-400/10 px-3 py-2 text-xs text-amber-100"
+              >
+                RESUME
+              </a>
             </div>
           </div>
         )}

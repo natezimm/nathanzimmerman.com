@@ -1,11 +1,17 @@
-import { Mail, MapPin } from "lucide-react";
+import { FileText, Github, Linkedin, Mail, MapPin } from "lucide-react";
 import { toast } from "sonner";
-import { useState, useRef } from "react";
-import emailjs from '@emailjs/browser';
+import { useRef, useState } from "react";
+import emailjs from "@emailjs/browser";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
+import { type ViewMode } from "@/data/portfolioData";
+import { trackPortfolioEvent } from "@/lib/analytics";
+
+type ContactProps = {
+  viewMode?: ViewMode;
+};
 
 const MAX_NAME_LENGTH = 100;
 const MAX_EMAIL_LENGTH = 254;
@@ -13,12 +19,10 @@ const MAX_MESSAGE_LENGTH = 2000;
 const SUBMIT_COOLDOWN_MS = 30000;
 
 const sanitizeInput = (input: string): string => {
-  return input
-    .replace(/[<>]/g, '')
-    .trim();
+  return input.replace(/[<>]/g, "").trim();
 };
 
-const Contact = () => {
+const Contact = ({ viewMode = "map" }: ContactProps) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -32,7 +36,9 @@ const Contact = () => {
 
     const now = Date.now();
     if (now - lastSubmitTime.current < SUBMIT_COOLDOWN_MS) {
-      const remainingSeconds = Math.ceil((SUBMIT_COOLDOWN_MS - (now - lastSubmitTime.current)) / 1000);
+      const remainingSeconds = Math.ceil(
+        (SUBMIT_COOLDOWN_MS - (now - lastSubmitTime.current)) / 1000
+      );
       toast.error(`Please wait ${remainingSeconds} seconds before sending another message.`);
       return;
     }
@@ -46,6 +52,7 @@ const Contact = () => {
 
       if (!serviceId || !templateId || !publicKey) {
         toast.error("Contact form is not configured. Please email me directly.");
+        trackPortfolioEvent("contact_submit_failure", { reason: "not_configured" });
         setIsSubmitting(false);
         return;
       }
@@ -56,43 +63,47 @@ const Contact = () => {
 
       if (!sanitizedName || !sanitizedEmail || !sanitizedMessage) {
         toast.error("Please fill in all fields with valid content.");
+        trackPortfolioEvent("contact_submit_failure", { reason: "invalid_content" });
         setIsSubmitting(false);
         return;
       }
 
-      const currentDate = new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        timeZoneName: 'short'
+      const currentDate = new Date().toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZoneName: "short",
       });
 
-      const templateParams = {
-        fname: sanitizedName,
-        femail: sanitizedEmail,
-        message: sanitizedMessage,
-        to_name: "Nathan Zimmerman",
-        date: currentDate,
-      };
-
-      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      await emailjs.send(
+        serviceId,
+        templateId,
+        {
+          fname: sanitizedName,
+          femail: sanitizedEmail,
+          message: sanitizedMessage,
+          to_name: "Nathan Zimmerman",
+          date: currentDate,
+        },
+        publicKey
+      );
 
       lastSubmitTime.current = Date.now();
       toast.success("Message sent! You'll receive a confirmation email shortly.");
+      trackPortfolioEvent("contact_submit_success", { source: "contact_form" });
       setFormData({ name: "", email: "", message: "" });
     } catch (error) {
       console.error("Form submission error:", error);
       toast.error("Failed to send message. Please try again or email me directly.");
+      trackPortfolioEvent("contact_submit_failure", { reason: "send_error" });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
@@ -100,121 +111,145 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="pt-6 pb-24 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px] -translate-x-1/2 translate-y-1/2 pointer-events-none" />
-
-      <div className="container px-4 mx-auto relative z-10">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Get In <span className="gradient-text">Touch</span>
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+    <section id="contact" className="retro-section contact-zone py-16 md:py-20">
+      <div className="contact-backdrop" />
+      <div className="container relative z-10 mx-auto px-4">
+        <div className="mx-auto max-w-6xl">
+          <div className="text-center mb-10">
+            <h2 className="retro-heading text-4xl text-amber-200 md:text-5xl">LET&apos;S CONNECT!</h2>
+            <p className="mt-4 text-lg text-slate-200/90 md:text-xl">
               I enjoy meeting new people and chatting about engineering or creative projects. Always happy to connect.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-12">
-            <div className="space-y-8 animate-slide-in">
-              <div>
-                <h3 className="text-2xl font-semibold mb-6">Let's Connect</h3>
-                <p className="text-muted-foreground mb-8 text-lg leading-relaxed">
-                  Have an idea or just want to say hello? Send a message — I’d love to hear from you.
-                </p>
-              </div>
+          <div className="mx-auto mb-8 grid max-w-4xl grid-cols-2 gap-3 sm:grid-cols-4">
+            <a
+              href="https://github.com/natezimm"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={viewMode === "map" ? "retro-contact-btn" : "retro-contact-btn retro-contact-btn-muted"}
+              aria-label="GitHub"
+              onClick={() => trackPortfolioEvent("social_link_click", { destination: "github", source: "contact" })}
+            >
+              <Github className="h-5 w-5" />
+              GITHUB
+            </a>
+            <a
+              href="https://www.linkedin.com/in/zimmermannathan"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={viewMode === "map" ? "retro-contact-btn" : "retro-contact-btn retro-contact-btn-muted"}
+              aria-label="LinkedIn"
+              onClick={() => trackPortfolioEvent("social_link_click", { destination: "linkedin", source: "contact" })}
+            >
+              <Linkedin className="h-5 w-5" />
+              LINKEDIN
+            </a>
+            <a
+              href="mailto:nathan.a.zimmerman@gmail.com"
+              className={viewMode === "map" ? "retro-contact-btn" : "retro-contact-btn retro-contact-btn-muted"}
+              aria-label="Email"
+              onClick={() => trackPortfolioEvent("contact_link_click", { destination: "email", source: "contact" })}
+            >
+              <Mail className="h-5 w-5" />
+              EMAIL
+            </a>
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="retro-contact-btn retro-contact-btn-gold"
+              aria-label="Resume"
+              onClick={() => trackPortfolioEvent("resume_click", { source: "contact" })}
+            >
+              <FileText className="h-5 w-5" />
+              RESUME
+            </a>
+          </div>
 
-              <div className="space-y-6">
-                <Card className="glass-card border-white/40">
-                  <CardContent className="flex items-center gap-4 p-6">
-                    <Mail className="w-8 h-8 text-cyan-400 flex-shrink-0" />
-                    <div>
-                      <h4 className="font-semibold mb-1">Email</h4>
-                      <p className="text-muted-foreground">
-                        nathan.a.zimmerman@gmail.com
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card className="glass-card border-white/40">
-                  <CardContent className="flex items-center gap-4 p-6">
-                    <MapPin className="w-8 h-8 text-cyan-400 flex-shrink-0" />
-                    <div>
-                      <h4 className="font-semibold mb-1">Location</h4>
-                      <p className="text-muted-foreground">
-                        New Jersey
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-
-            <div className="animate-fade-in delay-200">
-              <Card className="glass-card border-white/5 p-6 md:p-8">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="space-y-2">
-                    <label htmlFor="name" className="text-sm font-medium">
-                      Name
-                    </label>
-                    <Input
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      placeholder="Your name"
-                      required
-                      maxLength={MAX_NAME_LENGTH}
-                      className="bg-background/60 border border-slate-300 dark:border-white/25 focus-visible:border-primary focus-visible:ring-primary/40 transition-colors"
-                    />
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-4">
+              <Card className="border-cyan-300/22 bg-slate-950/75">
+                <CardContent className="flex items-center gap-4 p-5">
+                  <Mail className="h-8 w-8 text-cyan-300" />
+                  <div>
+                    <h3 className="retro-ui text-xs text-cyan-100">EMAIL</h3>
+                    <p className="mt-1 text-sm text-slate-200">nathan.a.zimmerman@gmail.com</p>
                   </div>
-
-                  <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium">
-                      Email
-                    </label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="your.email@example.com"
-                      required
-                      maxLength={MAX_EMAIL_LENGTH}
-                      className="bg-background/60 border border-slate-300 dark:border-white/25 focus-visible:border-primary focus-visible:ring-primary/40 transition-colors"
-                    />
+                </CardContent>
+              </Card>
+              <Card className="border-cyan-300/22 bg-slate-950/75">
+                <CardContent className="flex items-center gap-4 p-5">
+                  <MapPin className="h-8 w-8 text-cyan-300" />
+                  <div>
+                    <h3 className="retro-ui text-xs text-cyan-100">LOCATION</h3>
+                    <p className="mt-1 text-sm text-slate-200">New Jersey, United States</p>
                   </div>
-
-                  <div className="space-y-2">
-                    <label htmlFor="message" className="text-sm font-medium">
-                      Message
-                    </label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      placeholder="Tell me what you're working on or say hello!"
-                      rows={6}
-                      required
-                      maxLength={MAX_MESSAGE_LENGTH}
-                      className="bg-background/60 border border-slate-300 dark:border-white/25 focus-visible:border-primary focus-visible:ring-primary/40 transition-colors resize-none"
-                    />
-                  </div>
-
-                  <Button
-                    type="submit"
-                    size="lg"
-                    disabled={isSubmitting}
-                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20"
-                  >
-                    {isSubmitting ? "Sending..." : "Send Message"}
-                  </Button>
-                </form>
+                </CardContent>
               </Card>
             </div>
+
+            <Card className="border-cyan-300/22 bg-slate-950/80 p-4 md:p-6">
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-1.5">
+                  <label htmlFor="name" className="retro-ui text-[10px] text-slate-100">
+                    Name
+                  </label>
+                  <Input
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Your name"
+                    required
+                    maxLength={MAX_NAME_LENGTH}
+                    className="border-slate-400/35 bg-slate-900/70 text-slate-100 placeholder:text-slate-400 focus-visible:ring-cyan-300/40"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label htmlFor="email" className="retro-ui text-[10px] text-slate-100">
+                    Email
+                  </label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="your.email@example.com"
+                    required
+                    maxLength={MAX_EMAIL_LENGTH}
+                    className="border-slate-400/35 bg-slate-900/70 text-slate-100 placeholder:text-slate-400 focus-visible:ring-cyan-300/40"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label htmlFor="message" className="retro-ui text-[10px] text-slate-100">
+                    Message
+                  </label>
+                  <Textarea
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder="Tell me what you're working on or say hello!"
+                    rows={5}
+                    required
+                    maxLength={MAX_MESSAGE_LENGTH}
+                    className="resize-none border-slate-400/35 bg-slate-900/70 text-slate-100 placeholder:text-slate-400 focus-visible:ring-cyan-300/40"
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="retro-ui w-full rounded-sm border border-emerald-300/45 bg-emerald-500/18 text-xs text-emerald-50 hover:bg-emerald-500/30"
+                >
+                  {isSubmitting ? "Sending..." : "Send Message"}
+                </Button>
+              </form>
+            </Card>
           </div>
         </div>
       </div>
