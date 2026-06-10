@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { Github, Linkedin } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { type ViewMode } from "@/data/portfolioData";
-import { trackPortfolioEvent } from "@/lib/analytics";
+import { useState } from 'react';
+import { Github, Linkedin } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { type ViewMode } from '@/data/portfolioData';
+import { trackPortfolioEvent } from '@/lib/analytics';
 
 type NavigationProps = {
   viewMode: ViewMode;
@@ -14,20 +14,22 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
 
   const scrollToSection = (id: string) => {
     setIsMobileMenuOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document
+      .getElementById(id)
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const changeViewMode = (mode: ViewMode) => {
-    trackPortfolioEvent("view_mode_change", { mode, source: "navigation" });
+    trackPortfolioEvent('view_mode_change', { mode, source: 'navigation' });
     onViewModeChange(mode);
   };
 
   const navItems = [
-    { label: "ABOUT", id: "about" },
-    { label: "PROJECTS", id: "projects" },
-    { label: "EXPERIENCE", id: "experience" },
-    { label: "SKILLS", id: "skills" },
-    { label: "CONTACT", id: "contact" },
+    { label: 'ABOUT', id: 'about' },
+    { label: 'PROJECTS', id: 'projects' },
+    { label: 'EXPERIENCE', id: 'experience' },
+    { label: 'SKILLS', id: 'skills' },
+    { label: 'CONTACT', id: 'contact' },
   ];
 
   return (
@@ -35,7 +37,7 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
       <div className="container mx-auto px-4">
         <div className="flex min-h-[66px] items-center justify-between gap-4">
           <button
-            onClick={() => scrollToSection("home")}
+            onClick={() => scrollToSection('home')}
             className="retro-ui text-xs text-emerald-300 md:text-sm"
           >
             NATHAN ZIMMERMAN
@@ -56,25 +58,25 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
           <div className="hidden items-center gap-2 md:flex">
             <div className="inline-flex overflow-hidden rounded-sm border border-cyan-300/35">
               <button
-                onClick={() => changeViewMode("map")}
-                aria-pressed={viewMode === "map"}
+                onClick={() => changeViewMode('map')}
+                aria-pressed={viewMode === 'map'}
                 className={cn(
-                  "retro-ui px-3 py-2 text-[11px] transition",
-                  viewMode === "map"
-                    ? "bg-emerald-500/25 text-emerald-50"
-                    : "bg-slate-900/70 text-slate-200 hover:bg-slate-800/80"
+                  'retro-ui px-3 py-2 text-[11px] transition',
+                  viewMode === 'map'
+                    ? 'bg-emerald-500/25 text-emerald-50'
+                    : 'bg-slate-900/70 text-slate-200 hover:bg-slate-800/80'
                 )}
               >
                 MAP VIEW
               </button>
               <button
-                onClick={() => changeViewMode("grid")}
-                aria-pressed={viewMode === "grid"}
+                onClick={() => changeViewMode('grid')}
+                aria-pressed={viewMode === 'grid'}
                 className={cn(
-                  "retro-ui border-l border-cyan-300/35 px-3 py-2 text-[11px] transition",
-                  viewMode === "grid"
-                    ? "bg-cyan-500/25 text-cyan-50"
-                    : "bg-slate-900/70 text-slate-200 hover:bg-slate-800/80"
+                  'retro-ui border-l border-cyan-300/35 px-3 py-2 text-[11px] transition',
+                  viewMode === 'grid'
+                    ? 'bg-cyan-500/25 text-cyan-50'
+                    : 'bg-slate-900/70 text-slate-200 hover:bg-slate-800/80'
                 )}
               >
                 RESUME VIEW
@@ -86,7 +88,12 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
-              onClick={() => trackPortfolioEvent("social_link_click", { destination: "github", source: "nav" })}
+              onClick={() =>
+                trackPortfolioEvent('social_link_click', {
+                  destination: 'github',
+                  source: 'nav',
+                })
+              }
               className="rounded-sm border border-slate-400/40 bg-slate-700/35 p-2 text-slate-100 transition hover:bg-slate-700/60"
             >
               <Github className="h-4 w-4" />
@@ -96,7 +103,12 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
-              onClick={() => trackPortfolioEvent("social_link_click", { destination: "linkedin", source: "nav" })}
+              onClick={() =>
+                trackPortfolioEvent('social_link_click', {
+                  destination: 'linkedin',
+                  source: 'nav',
+                })
+              }
               className="rounded-sm border border-slate-400/40 bg-slate-700/35 p-2 text-slate-100 transition hover:bg-slate-700/60"
             >
               <Linkedin className="h-4 w-4" />
@@ -105,7 +117,9 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
               href="/resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => trackPortfolioEvent("resume_click", { source: "nav" })}
+              onClick={() =>
+                trackPortfolioEvent('resume_click', { source: 'nav' })
+              }
               className="retro-ui rounded-sm border border-amber-300/50 bg-amber-400/15 px-3 py-2 text-[11px] text-amber-100 transition-colors hover:bg-amber-400/25"
             >
               RESUME
@@ -130,7 +144,7 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
                   className={cn(
-                    "retro-ui rounded-sm border border-cyan-300/20 bg-cyan-400/10 px-3 py-2 text-left text-xs text-cyan-100"
+                    'retro-ui rounded-sm border border-cyan-300/20 bg-cyan-400/10 px-3 py-2 text-left text-xs text-cyan-100'
                   )}
                 >
                   {item.label}
@@ -140,28 +154,28 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
               <div className="mt-1 grid grid-cols-2 gap-2">
                 <button
                   onClick={() => {
-                    changeViewMode("map");
+                    changeViewMode('map');
                     setIsMobileMenuOpen(false);
                   }}
                   className={cn(
-                    "retro-ui rounded-sm border px-3 py-2 text-xs",
-                    viewMode === "map"
-                      ? "border-emerald-300/40 bg-emerald-500/20 text-emerald-50"
-                      : "border-slate-500/35 bg-slate-700/20 text-slate-100"
+                    'retro-ui rounded-sm border px-3 py-2 text-xs',
+                    viewMode === 'map'
+                      ? 'border-emerald-300/40 bg-emerald-500/20 text-emerald-50'
+                      : 'border-slate-500/35 bg-slate-700/20 text-slate-100'
                   )}
                 >
                   MAP VIEW
                 </button>
                 <button
                   onClick={() => {
-                    changeViewMode("grid");
+                    changeViewMode('grid');
                     setIsMobileMenuOpen(false);
                   }}
                   className={cn(
-                    "retro-ui rounded-sm border px-3 py-2 text-xs",
-                    viewMode === "grid"
-                      ? "border-cyan-300/40 bg-cyan-500/20 text-cyan-50"
-                      : "border-slate-500/35 bg-slate-700/20 text-slate-100"
+                    'retro-ui rounded-sm border px-3 py-2 text-xs',
+                    viewMode === 'grid'
+                      ? 'border-cyan-300/40 bg-cyan-500/20 text-cyan-50'
+                      : 'border-slate-500/35 bg-slate-700/20 text-slate-100'
                   )}
                 >
                   RESUME VIEW
@@ -172,7 +186,9 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
                 href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => trackPortfolioEvent("resume_click", { source: "mobile_nav" })}
+                onClick={() =>
+                  trackPortfolioEvent('resume_click', { source: 'mobile_nav' })
+                }
                 className="retro-ui rounded-sm border border-amber-300/40 bg-amber-400/10 px-3 py-2 text-xs text-amber-100"
               >
                 RESUME

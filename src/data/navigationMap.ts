@@ -3,7 +3,7 @@ export type Point = {
   y: number;
 };
 
-export type NavDirection = "up" | "down" | "left" | "right";
+export type NavDirection = 'up' | 'down' | 'left' | 'right';
 
 type GridPoint = {
   col: number;
@@ -28,7 +28,7 @@ const LOCATION_DESTINATIONS_GRID = {
   blackjack: { col: 192, row: 97.5 },
   sudoku: { col: 304.5, row: 117.5 },
   nerdle: { col: 98, row: 218.75 },
-  "brick-breaker": { col: 192, row: 218.75 },
+  'brick-breaker': { col: 192, row: 218.75 },
   resume: { col: 279, row: 218.75 },
 } satisfies Record<string, GridPoint>;
 
@@ -36,7 +36,7 @@ export const LOCATION_DESTINATIONS = Object.fromEntries(
   Object.entries(LOCATION_DESTINATIONS_GRID).map(([id, gridPoint]) => [
     id,
     toPoint(gridPoint),
-  ]),
+  ])
 ) as Record<keyof typeof LOCATION_DESTINATIONS_GRID, Point>;
 
 const NAV_POINTS_GRID = {
@@ -61,40 +61,40 @@ export const NAV_POINTS = Object.fromEntries(
   Object.entries(NAV_POINTS_GRID).map(([id, gridPoint]) => [
     id,
     toPoint(gridPoint),
-  ]),
+  ])
 ) as Record<keyof typeof NAV_POINTS_GRID, Point>;
 
 export type NavNode = keyof typeof NAV_POINTS;
 
 const LOCATION_NODES: Record<string, NavNode> = {
-  center: "center",
-  projects: "center",
-  skills: "center",
-  about: "aboutDoor",
-  blackjack: "blackjackDoor",
-  sudoku: "sudokuDoor",
-  nerdle: "nerdleDoor",
-  "brick-breaker": "bottomCenter",
-  experience: "resumeDoor",
-  contact: "resumeDoor",
+  center: 'center',
+  projects: 'center',
+  skills: 'center',
+  about: 'aboutDoor',
+  blackjack: 'blackjackDoor',
+  sudoku: 'sudokuDoor',
+  nerdle: 'nerdleDoor',
+  'brick-breaker': 'bottomCenter',
+  experience: 'resumeDoor',
+  contact: 'resumeDoor',
 };
 
 const GRAPH_EDGES: Array<[NavNode, NavNode]> = [
-  ["aboutDoor", "aboutPath"],
-  ["aboutPath", "leftTopSpine"],
-  ["leftTopSpine", "center"],
-  ["leftTopSpine", "leftBottomSpine"],
-  ["leftBottomSpine", "nerdlePath"],
-  ["nerdlePath", "nerdleDoor"],
-  ["leftBottomSpine", "bottomCenter"],
-  ["bottomCenter", "rightBottomSpine"],
-  ["rightBottomSpine", "resumePath"],
-  ["resumePath", "resumeDoor"],
-  ["rightBottomSpine", "rightTopSpine"],
-  ["rightTopSpine", "center"],
-  ["rightTopSpine", "sudokuPath"],
-  ["sudokuPath", "sudokuDoor"],
-  ["center", "blackjackDoor"],
+  ['aboutDoor', 'aboutPath'],
+  ['aboutPath', 'leftTopSpine'],
+  ['leftTopSpine', 'center'],
+  ['leftTopSpine', 'leftBottomSpine'],
+  ['leftBottomSpine', 'nerdlePath'],
+  ['nerdlePath', 'nerdleDoor'],
+  ['leftBottomSpine', 'bottomCenter'],
+  ['bottomCenter', 'rightBottomSpine'],
+  ['rightBottomSpine', 'resumePath'],
+  ['resumePath', 'resumeDoor'],
+  ['rightBottomSpine', 'rightTopSpine'],
+  ['rightTopSpine', 'center'],
+  ['rightTopSpine', 'sudokuPath'],
+  ['sudokuPath', 'sudokuDoor'],
+  ['center', 'blackjackDoor'],
 ];
 
 const distanceBetween = (a: Point, b: Point) =>
@@ -108,14 +108,14 @@ export const NAV_GRAPH = GRAPH_EDGES.reduce(
   },
   Object.keys(NAV_POINTS).reduce(
     (graph, node) => ({ ...graph, [node]: [] }),
-    {} as Record<NavNode, NavNode[]>,
-  ),
+    {} as Record<NavNode, NavNode[]>
+  )
 );
 
 const shortestNodePath = (from: NavNode, to: NavNode) => {
   const distances = Object.keys(NAV_POINTS).reduce(
     (next, node) => ({ ...next, [node]: Number.POSITIVE_INFINITY }),
-    {} as Record<NavNode, number>,
+    {} as Record<NavNode, number>
   );
   const previous = {} as Partial<Record<NavNode, NavNode>>;
   const unvisited = new Set(Object.keys(NAV_POINTS) as NavNode[]);
@@ -123,7 +123,7 @@ const shortestNodePath = (from: NavNode, to: NavNode) => {
 
   while (unvisited.size > 0) {
     const current = [...unvisited].reduce((best, node) =>
-      distances[node] < distances[best] ? node : best,
+      distances[node] < distances[best] ? node : best
     );
     unvisited.delete(current);
 
@@ -157,7 +157,7 @@ const shortestNodePath = (from: NavNode, to: NavNode) => {
 export const START_POSITION = NAV_POINTS.center;
 
 export const getLocationNode = (id: string): NavNode =>
-  LOCATION_NODES[id] ?? "center";
+  LOCATION_NODES[id] ?? 'center';
 
 export const buildGuidedNodeRoute = (fromNode: NavNode, toId: string) => {
   const toNode = getLocationNode(toId);
@@ -172,30 +172,23 @@ export const buildGuidedRoute = (fromId: string, toId: string) => {
     .map((node) => NAV_POINTS[node]);
 };
 
-const directionScore = (
-  from: Point,
-  to: Point,
-  direction: NavDirection,
-) => {
+const directionScore = (from: Point, to: Point, direction: NavDirection) => {
   const dx = to.x - from.x;
   const dy = to.y - from.y;
 
   switch (direction) {
-    case "up":
+    case 'up':
       return dy < 0 && Math.abs(dy) >= Math.abs(dx) ? Math.abs(dy) : 0;
-    case "down":
+    case 'down':
       return dy > 0 && Math.abs(dy) >= Math.abs(dx) ? Math.abs(dy) : 0;
-    case "left":
+    case 'left':
       return dx < 0 && Math.abs(dx) >= Math.abs(dy) ? Math.abs(dx) : 0;
-    case "right":
+    case 'right':
       return dx > 0 && Math.abs(dx) >= Math.abs(dy) ? Math.abs(dx) : 0;
   }
 };
 
-export const getNextNavNode = (
-  fromNode: NavNode,
-  direction: NavDirection,
-) => {
+export const getNextNavNode = (fromNode: NavNode, direction: NavDirection) => {
   const from = NAV_POINTS[fromNode];
 
   return NAV_GRAPH[fromNode]

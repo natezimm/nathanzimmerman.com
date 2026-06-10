@@ -3,7 +3,7 @@
 
 # Nathan Zimmerman - Portfolio Website
 
-Personal portfolio built with React, TypeScript, and Vite. The single‑page experience ties together navigation, hero, about, projects, and contact sections with responsive layouts, theme persistence, and subtle animation hooks powered by Radix UI primitives, Lucide icons, and Sonner toasts.
+Personal portfolio built with React, TypeScript, and Vite. The single-page experience ties together navigation, hero, about, projects, and contact sections with responsive layouts, theme persistence, and subtle animation hooks powered by Radix UI primitives, Lucide icons, and Sonner toasts. See [`docs/architecture.md`](docs/architecture.md) for runtime boundaries, quality gates, deployment flow, and deferred architecture follow-ups.
 
 ## Quick start
 
@@ -17,8 +17,11 @@ Personal portfolio built with React, TypeScript, and Vite. The single‑page exp
 - `npm run build` – Production bundle for static hosting (outputs in `dist/`).
 - `npm run build:dev` – Build with the development mode configuration.
 - `npm run preview` – Serve the build locally for a final sanity check.
-- `npm run lint` – ESLint across the whole workspace (powered by `@eslint/js` + TypeScript).
-- `npm run test` – Vitest suite covering shared helpers, context, and visible sections.
+- `npm run lint` - ESLint across the whole workspace (powered by `@eslint/js` + TypeScript).
+- `npm run format` / `npm run format:check` - Prettier write/check modes using the shared repo style.
+- `npm run typecheck` - TypeScript compilation with `noEmit`.
+- `npm run quality` - Full gate: format check, lint, typecheck, coverage, and production build.
+- `npm run test` - Vitest suite covering shared helpers, context, and visible sections.
 - `npm run test:watch` – Watch mode for the Vitest suite.
 - `npm run test:coverage` – Vitest with coverage reporting via `c8`.
 
@@ -41,23 +44,26 @@ Personal portfolio built with React, TypeScript, and Vite. The single‑page exp
 
 ## Testing & quality
 
-- CI runs automated tests on every push before deployment
+- CI runs `npm run quality` on pull requests and pushes to `main` before deployment
 - Coverage is enforced as part of CI to prevent regressions
 - Coverage thresholds:
-  - Lines ≥ 90%
-  - Statements ≥ 85%
-  - Functions ≥ 85%
-  - Branches ≥ 80%
+  - Lines >= 67%
+  - Statements >= 66%
+  - Functions >= 64%
+  - Branches >= 64%
 
 Tooling:
+
 - Vitest + Testing Library for component, context, and integration tests
 - ESLint for consistent TypeScript and React conventions
+- Prettier for shared formatting across the portfolio and sibling repos
 
 ## Security
 
 The site implements multiple layers of security:
 
 ### HTTP Security Headers (`public/_headers`)
+
 - **Content-Security-Policy (CSP)** – Restricts resource loading to trusted origins, preventing XSS and data injection attacks
 - **X-Content-Type-Options: nosniff** – Prevents MIME type sniffing
 - **X-Frame-Options: DENY** – Blocks clickjacking by preventing iframe embedding
@@ -65,12 +71,14 @@ The site implements multiple layers of security:
 - **Permissions-Policy** – Disables access to camera, microphone, geolocation, and FLoC tracking
 
 ### Contact Form Protection
+
 - **Input sanitization** – Strips potentially dangerous HTML characters to prevent XSS
 - **Length limits** – Enforces maximum lengths (name: 100, email: 254, message: 2000 chars)
 - **Rate limiting** – 30-second cooldown between submissions to prevent spam
 - **Environment variable isolation** – EmailJS credentials stored in env vars, not in code
 
 ### Caching Strategy
+
 - Static assets (JS, CSS, images, fonts) cached for 1 year with content hashing
 - HTML files use `must-revalidate` to ensure users always get the latest version
 

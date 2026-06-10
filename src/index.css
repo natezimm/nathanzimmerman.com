@@ -47,16 +47,24 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
     margin: 0;
-    font-family: "Inter", sans-serif;
+    font-family: 'Inter', sans-serif;
     scroll-behavior: smooth;
     background:
-      radial-gradient(circle at 14% 8%, rgba(48, 105, 230, 0.22), transparent 34%),
-      radial-gradient(circle at 86% 5%, rgba(128, 68, 244, 0.2), transparent 27%),
+      radial-gradient(
+        circle at 14% 8%,
+        rgba(48, 105, 230, 0.22),
+        transparent 34%
+      ),
+      radial-gradient(
+        circle at 86% 5%,
+        rgba(128, 68, 244, 0.2),
+        transparent 27%
+      ),
       linear-gradient(180deg, #050b1f 0%, #080f2a 46%, #090f24 100%);
   }
 
   body::before {
-    content: "";
+    content: '';
     position: fixed;
     inset: 0;
     pointer-events: none;
@@ -70,12 +78,16 @@
   }
 
   body::after {
-    content: "";
+    content: '';
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 1;
-    background: radial-gradient(circle at center, transparent 52%, rgba(0, 0, 0, 0.35) 100%);
+    background: radial-gradient(
+      circle at center,
+      transparent 52%,
+      rgba(0, 0, 0, 0.35) 100%
+    );
   }
 
   #root {
@@ -86,20 +98,24 @@
 
 @layer utilities {
   .retro-ui {
-    font-family: "Press Start 2P", "Outfit", sans-serif;
+    font-family: 'Press Start 2P', 'Outfit', sans-serif;
     letter-spacing: 0;
   }
 
   .retro-heading {
-    font-family: "Press Start 2P", "Outfit", sans-serif;
+    font-family: 'Press Start 2P', 'Outfit', sans-serif;
     letter-spacing: 0;
     line-height: 1.1;
     text-wrap: balance;
   }
 
   .retro-shell {
-    background:
-      linear-gradient(180deg, rgba(5, 10, 25, 0.78) 0%, rgba(7, 14, 36, 0.72) 44%, rgba(8, 13, 34, 0.82) 100%);
+    background: linear-gradient(
+      180deg,
+      rgba(5, 10, 25, 0.78) 0%,
+      rgba(7, 14, 36, 0.72) 44%,
+      rgba(8, 13, 34, 0.82) 100%
+    );
   }
 
   .retro-section {
@@ -109,7 +125,11 @@
 
   .hero-overworld {
     background:
-      radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.14), transparent 48%),
+      radial-gradient(
+        circle at 50% 0%,
+        rgba(56, 189, 248, 0.14),
+        transparent 48%
+      ),
       linear-gradient(180deg, rgba(9, 17, 42, 0.94), rgba(9, 16, 36, 0.98));
   }
 
@@ -185,7 +205,10 @@
     border-radius: 0.125rem;
     background: rgba(8, 47, 73, 0.44);
     color: rgb(224 242 254);
-    transition: background-color 0.16s ease, border-color 0.16s ease, opacity 0.16s ease;
+    transition:
+      background-color 0.16s ease,
+      border-color 0.16s ease,
+      opacity 0.16s ease;
   }
 
   .map-roam-button:hover:not(:disabled),
@@ -211,7 +234,9 @@
     border: 1px solid transparent;
     border-radius: 0.35rem;
     background: transparent;
-    transition: border-color 0.2s ease, background-color 0.2s ease;
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease;
   }
 
   .map-start-hotspot:hover {
@@ -282,7 +307,11 @@
   .about-zone {
     background:
       linear-gradient(180deg, rgba(8, 12, 31, 0.98), rgba(9, 15, 35, 0.97)),
-      radial-gradient(circle at 10% 20%, rgba(134, 239, 172, 0.14), transparent 38%);
+      radial-gradient(
+        circle at 10% 20%,
+        rgba(134, 239, 172, 0.14),
+        transparent 38%
+      );
     border-top: 2px solid rgba(45, 212, 191, 0.3);
     border-bottom: 2px solid rgba(45, 212, 191, 0.28);
   }
@@ -293,7 +322,11 @@
 
   .projects-zone {
     background:
-      linear-gradient(180deg, rgba(18, 14, 44, 0.98) 0%, rgba(10, 11, 29, 0.98) 100%),
+      linear-gradient(
+        180deg,
+        rgba(18, 14, 44, 0.98) 0%,
+        rgba(10, 11, 29, 0.98) 100%
+      ),
       repeating-linear-gradient(
         90deg,
         rgba(168, 85, 247, 0.08) 0 48px,
@@ -305,7 +338,9 @@
 
   .retro-project-card {
     box-shadow: 0 12px 25px rgba(0, 0, 0, 0.34);
-    transition: transform 0.2s ease, filter 0.2s ease;
+    transition:
+      transform 0.2s ease,
+      filter 0.2s ease;
   }
 
   .retro-project-card:hover {
@@ -316,7 +351,11 @@
   .experience-zone {
     background:
       linear-gradient(180deg, rgba(7, 11, 26, 0.98), rgba(10, 16, 38, 0.97)),
-      radial-gradient(circle at 88% 15%, rgba(59, 130, 246, 0.12), transparent 34%);
+      radial-gradient(
+        circle at 88% 15%,
+        rgba(59, 130, 246, 0.12),
+        transparent 34%
+      );
   }
 
   .experience-board {
@@ -328,7 +367,11 @@
   .skills-zone {
     background:
       linear-gradient(180deg, rgba(11, 14, 35, 0.98), rgba(10, 13, 31, 0.98)),
-      radial-gradient(circle at 12% 86%, rgba(139, 92, 246, 0.15), transparent 34%);
+      radial-gradient(
+        circle at 12% 86%,
+        rgba(139, 92, 246, 0.15),
+        transparent 34%
+      );
     border-top: 2px solid rgba(59, 130, 246, 0.24);
     border-bottom: 2px solid rgba(59, 130, 246, 0.24);
   }
@@ -340,14 +383,22 @@
   .contact-zone {
     background:
       linear-gradient(180deg, rgba(39, 31, 70, 0.85), rgba(14, 15, 38, 0.96)),
-      radial-gradient(circle at 18% 78%, rgba(250, 204, 21, 0.18), transparent 34%);
+      radial-gradient(
+        circle at 18% 78%,
+        rgba(250, 204, 21, 0.18),
+        transparent 34%
+      );
   }
 
   .contact-backdrop {
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(circle at 82% 16%, rgba(59, 130, 246, 0.24), transparent 33%),
+      radial-gradient(
+        circle at 82% 16%,
+        rgba(59, 130, 246, 0.24),
+        transparent 33%
+      ),
       linear-gradient(180deg, transparent 0%, rgba(15, 23, 42, 0.62) 100%);
   }
 
@@ -391,8 +442,16 @@
 
   .project-detail-page {
     background:
-      radial-gradient(circle at 14% 10%, rgba(45, 212, 191, 0.1), transparent 32%),
-      radial-gradient(circle at 82% 6%, rgba(96, 165, 250, 0.15), transparent 30%),
+      radial-gradient(
+        circle at 14% 10%,
+        rgba(45, 212, 191, 0.1),
+        transparent 32%
+      ),
+      radial-gradient(
+        circle at 82% 6%,
+        rgba(96, 165, 250, 0.15),
+        transparent 30%
+      ),
       linear-gradient(180deg, rgba(5, 11, 28, 0.98), rgba(8, 14, 31, 0.98));
   }
 
@@ -432,20 +491,20 @@
     opacity: 0.82;
   }
 
-  .retro-shell[data-view-mode="grid"] .guide-panel {
+  .retro-shell[data-view-mode='grid'] .guide-panel {
     display: none;
   }
 
-  .retro-shell[data-view-mode="grid"] .world-map {
+  .retro-shell[data-view-mode='grid'] .world-map {
     aspect-ratio: 12 / 7;
   }
 
-  .retro-shell[data-view-mode="grid"] .map-hotspot {
+  .retro-shell[data-view-mode='grid'] .map-hotspot {
     border-color: rgba(56, 189, 248, 0.38);
     background: rgba(3, 15, 33, 0.45);
   }
 
-  .retro-shell[data-view-mode="grid"] .map-dungeon {
+  .retro-shell[data-view-mode='grid'] .map-dungeon {
     display: none;
   }
 }

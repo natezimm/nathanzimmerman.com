@@ -1,12 +1,12 @@
-import { ArrowLeft, ExternalLink, FileText, Github } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
-import { projectBySlug } from "@/data/portfolioData";
-import { trackPortfolioEvent } from "@/lib/analytics";
-import { cn } from "@/lib/utils";
-import NotFound from "./NotFound";
+import { ArrowLeft, ExternalLink, FileText, Github } from 'lucide-react';
+import { Link, useParams } from 'react-router-dom';
+import { projectBySlug } from '@/data/portfolioData';
+import { trackPortfolioEvent } from '@/lib/analytics';
+import { cn } from '@/lib/utils';
+import NotFound from './NotFound';
 
 const ProjectDetail = () => {
-  const { slug = "" } = useParams();
+  const { slug = '' } = useParams();
   const project = projectBySlug(slug);
 
   if (!project) {
@@ -17,7 +17,10 @@ const ProjectDetail = () => {
     <div className="project-detail-page min-h-screen">
       <header className="detail-topbar sticky top-0 z-40 border-b border-cyan-300/20 bg-slate-950/90 backdrop-blur">
         <div className="container mx-auto flex min-h-[66px] items-center justify-between gap-4 px-4">
-          <Link to="/" className="retro-ui inline-flex items-center gap-2 text-xs text-cyan-100 hover:text-cyan-50">
+          <Link
+            to="/"
+            className="retro-ui inline-flex items-center gap-2 text-xs text-cyan-100 hover:text-cyan-50"
+          >
             <ArrowLeft className="h-4 w-4" />
             BACK TO NATHAN&apos;S WORLD
           </Link>
@@ -25,7 +28,9 @@ const ProjectDetail = () => {
             href="/resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() => trackPortfolioEvent("resume_click", { source: "project_detail" })}
+            onClick={() =>
+              trackPortfolioEvent('resume_click', { source: 'project_detail' })
+            }
             className="retro-ui inline-flex items-center gap-2 rounded-sm border border-amber-300/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-100 hover:bg-amber-500/20"
           >
             <FileText className="h-4 w-4" />
@@ -36,16 +41,24 @@ const ProjectDetail = () => {
 
       <main className="container mx-auto px-4 py-10">
         <div className="detail-frame mx-auto max-w-6xl rounded-md border border-cyan-300/25 bg-slate-950/78 p-5 md:p-8">
-          <p className="retro-ui text-xs text-emerald-300/90">{project.regionLabel}</p>
-          <h1 className="retro-heading mt-2 text-3xl text-slate-50 md:text-5xl">{project.title}</h1>
-          <p className="mt-3 max-w-3xl text-base text-slate-200 md:text-lg">{project.summary}</p>
+          <p className="retro-ui text-xs text-emerald-300/90">
+            {project.regionLabel}
+          </p>
+          <h1 className="retro-heading mt-2 text-3xl text-slate-50 md:text-5xl">
+            {project.title}
+          </h1>
+          <p className="mt-3 max-w-3xl text-base text-slate-200 md:text-lg">
+            {project.summary}
+          </p>
 
           <div className="mt-6 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
             <section className="space-y-4">
               <div
                 className={cn(
-                  "flex items-center justify-center overflow-hidden rounded-sm border border-slate-200/20",
-                  project.mediaBackground === "dark" ? "bg-emerald-950/80" : "bg-white"
+                  'flex items-center justify-center overflow-hidden rounded-sm border border-slate-200/20',
+                  project.mediaBackground === 'dark'
+                    ? 'bg-emerald-950/80'
+                    : 'bg-white'
                 )}
               >
                 <img
@@ -66,9 +79,9 @@ const ProjectDetail = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() =>
-                      trackPortfolioEvent("project_live_click", {
+                      trackPortfolioEvent('project_live_click', {
                         project: project.slug,
-                        source: "project_detail",
+                        source: 'project_detail',
                       })
                     }
                     className="detail-action detail-action-live"
@@ -77,7 +90,9 @@ const ProjectDetail = () => {
                     VIEW LIVE
                   </a>
                 ) : (
-                  <span className="detail-action detail-action-muted">LIVE COMING SOON</span>
+                  <span className="detail-action detail-action-muted">
+                    LIVE COMING SOON
+                  </span>
                 )}
                 {project.links.code ? (
                   <a
@@ -85,9 +100,9 @@ const ProjectDetail = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() =>
-                      trackPortfolioEvent("project_code_click", {
+                      trackPortfolioEvent('project_code_click', {
                         project: project.slug,
-                        source: "project_detail",
+                        source: 'project_detail',
                       })
                     }
                     className="detail-action detail-action-code"
@@ -96,14 +111,18 @@ const ProjectDetail = () => {
                     VIEW CODE
                   </a>
                 ) : (
-                  <span className="detail-action detail-action-muted">PRIVATE CODEBASE</span>
+                  <span className="detail-action detail-action-muted">
+                    PRIVATE CODEBASE
+                  </span>
                 )}
               </div>
             </section>
 
             <aside className="space-y-4">
               <article className="rounded-sm border border-emerald-300/20 bg-emerald-500/5 p-4">
-                <h2 className="retro-ui text-xs text-emerald-200">TECH STACK</h2>
+                <h2 className="retro-ui text-xs text-emerald-200">
+                  TECH STACK
+                </h2>
                 <ul className="mt-3 flex flex-wrap gap-2">
                   {project.stack.map((item) => (
                     <li

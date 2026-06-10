@@ -1,15 +1,15 @@
-import { type ViewMode } from "@/data/portfolioData";
+import { type ViewMode } from '@/data/portfolioData';
 
 type AboutProps = {
   viewMode: ViewMode;
 };
 
 const playerStats = [
-  { label: "Problem Solving", value: 92 },
-  { label: "Backend", value: 90 },
-  { label: "Frontend", value: 87 },
-  { label: "Databases", value: 80 },
-  { label: "Cloud & DevOps", value: 82 },
+  { label: 'Problem Solving', value: 92 },
+  { label: 'Backend', value: 90 },
+  { label: 'Frontend', value: 87 },
+  { label: 'Databases', value: 80 },
+  { label: 'Cloud & DevOps', value: 82 },
 ];
 
 const About = ({ viewMode }: AboutProps) => {
@@ -55,9 +55,9 @@ const About = ({ viewMode }: AboutProps) => {
 
           <article
             className={
-              viewMode === "map"
-                ? "about-card rounded-sm border border-emerald-300/28 bg-emerald-600/8 p-5"
-                : "about-card rounded-sm border border-cyan-300/28 bg-slate-900/70 p-5"
+              viewMode === 'map'
+                ? 'about-card rounded-sm border border-emerald-300/28 bg-emerald-600/8 p-5'
+                : 'about-card rounded-sm border border-cyan-300/28 bg-slate-900/70 p-5'
             }
           >
             <h3 className="retro-ui text-sm text-amber-200">PLAYER STATS</h3>

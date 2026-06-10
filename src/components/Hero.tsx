@@ -1,13 +1,13 @@
-import backgroundMap from "@/assets/background.webp";
-import idleFrontSprite from "@/assets/sprites/idle.png";
-import walkDown1Sprite from "@/assets/sprites/walk_down_1.png";
-import walkDown2Sprite from "@/assets/sprites/walk_down_2.png";
-import walkLeft1Sprite from "@/assets/sprites/walk_left_1.png";
-import walkLeft2Sprite from "@/assets/sprites/walk_left_2.png";
-import walkRight1Sprite from "@/assets/sprites/walk_right_1.png";
-import walkRight2Sprite from "@/assets/sprites/walk_right_2.png";
-import walkUp1Sprite from "@/assets/sprites/walk_up_1.png";
-import walkUp2Sprite from "@/assets/sprites/walk_up_2.png";
+import backgroundMap from '@/assets/background.webp';
+import idleFrontSprite from '@/assets/sprites/idle.png';
+import walkDown1Sprite from '@/assets/sprites/walk_down_1.png';
+import walkDown2Sprite from '@/assets/sprites/walk_down_2.png';
+import walkLeft1Sprite from '@/assets/sprites/walk_left_1.png';
+import walkLeft2Sprite from '@/assets/sprites/walk_left_2.png';
+import walkRight1Sprite from '@/assets/sprites/walk_right_1.png';
+import walkRight2Sprite from '@/assets/sprites/walk_right_2.png';
+import walkUp1Sprite from '@/assets/sprites/walk_up_1.png';
+import walkUp2Sprite from '@/assets/sprites/walk_up_2.png';
 import {
   LOCATION_DESTINATIONS,
   MAP_HEIGHT,
@@ -21,16 +21,16 @@ import {
   type NavDirection,
   type NavNode,
   type Point,
-} from "@/data/navigationMap";
+} from '@/data/navigationMap';
 import {
   mapLocations,
   projectEntries,
   type ProjectEntry,
   type SectionId,
   type ViewMode,
-} from "@/data/portfolioData";
-import { trackPortfolioEvent } from "@/lib/analytics";
-import { cn } from "@/lib/utils";
+} from '@/data/portfolioData';
+import { trackPortfolioEvent } from '@/lib/analytics';
+import { cn } from '@/lib/utils';
 import {
   ArrowDown,
   ArrowLeft,
@@ -44,9 +44,9 @@ import {
   MapPin,
   SkipForward,
   X,
-} from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+} from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 type HeroProps = {
   viewMode: ViewMode;
@@ -63,7 +63,7 @@ type PlayerState = Point & {
 
 type MapPoint = {
   id: string;
-  kind: "section" | "project";
+  kind: 'section' | 'project';
   title: string;
   subtitle: string;
   left: string;
@@ -86,7 +86,7 @@ const SPRITE_HEIGHT_PERCENT = (SPRITE_SIZE / MAP_HEIGHT) * 100;
 const FRAME_TICK_MS = 110;
 const ARRIVAL_DISTANCE = 5;
 const ARRIVAL_PAUSE_MS = 1000;
-const IS_TEST_ENV = import.meta.env.MODE === "test";
+const IS_TEST_ENV = import.meta.env.MODE === 'test';
 
 const WALK_SPRITES: Record<Direction, string[]> = {
   up: [walkUp1Sprite, walkUp2Sprite],
@@ -100,96 +100,96 @@ const sectionPointOverrides: Record<
   Partial<MapPoint> & { destination: Point }
 > = {
   about: {
-    title: "HOMESTEAD",
-    subtitle: "About Me",
-    left: "16%",
-    top: "29%",
-    width: "18%",
-    height: "20%",
+    title: 'HOMESTEAD',
+    subtitle: 'About Me',
+    left: '16%',
+    top: '29%',
+    width: '18%',
+    height: '20%',
     destination: LOCATION_DESTINATIONS.about,
   },
   projects: {
-    title: "PROJECT CROSSROADS",
-    subtitle: "Featured Projects",
-    left: "50%",
-    top: "45%",
-    width: "14%",
-    height: "13%",
+    title: 'PROJECT CROSSROADS',
+    subtitle: 'Featured Projects',
+    left: '50%',
+    top: '45%',
+    width: '14%',
+    height: '13%',
     destination: CENTER_POINT,
   },
   experience: {
-    title: "RESUME KEEP",
-    subtitle: "Experience",
-    left: "79.5%",
-    top: "76%",
-    width: "18%",
-    height: "18%",
+    title: 'RESUME KEEP',
+    subtitle: 'Experience',
+    left: '79.5%',
+    top: '76%',
+    width: '18%',
+    height: '18%',
     destination: LOCATION_DESTINATIONS.resume,
   },
   skills: {
-    title: "TOWN SQUARE",
-    subtitle: "Skills & Tech",
-    left: "50%",
-    top: "45%",
-    width: "14%",
-    height: "13%",
+    title: 'TOWN SQUARE',
+    subtitle: 'Skills & Tech',
+    left: '50%',
+    top: '45%',
+    width: '14%',
+    height: '13%',
     destination: CENTER_POINT,
   },
   contact: {
-    title: "RESUME KEEP",
-    subtitle: "Contact",
-    left: "79.5%",
-    top: "76%",
-    width: "18%",
-    height: "18%",
+    title: 'RESUME KEEP',
+    subtitle: 'Contact',
+    left: '79.5%',
+    top: '76%',
+    width: '18%',
+    height: '18%',
     destination: LOCATION_DESTINATIONS.resume,
   },
 };
 
 const projectMapPoints: MapPoint[] = [
   {
-    id: "blackjack",
-    kind: "project",
-    title: "CASINO OF CHANCE",
-    subtitle: "Blackjack",
-    left: "50%",
-    top: "29%",
-    width: "18%",
-    height: "22%",
+    id: 'blackjack',
+    kind: 'project',
+    title: 'CASINO OF CHANCE',
+    subtitle: 'Blackjack',
+    left: '50%',
+    top: '29%',
+    width: '18%',
+    height: '22%',
     destination: LOCATION_DESTINATIONS.blackjack,
   },
   {
-    id: "sudoku",
-    kind: "project",
-    title: "LOGIC LIGHT TEMPLE",
-    subtitle: "Sudoku",
-    left: "79.5%",
-    top: "32%",
-    width: "17%",
-    height: "21%",
+    id: 'sudoku',
+    kind: 'project',
+    title: 'LOGIC LIGHT TEMPLE',
+    subtitle: 'Sudoku',
+    left: '79.5%',
+    top: '32%',
+    width: '17%',
+    height: '21%',
     destination: LOCATION_DESTINATIONS.sudoku,
   },
   {
-    id: "nerdle",
-    kind: "project",
-    title: "LETTER WIZARD TOWER",
-    subtitle: "Nerdle",
-    left: "18.5%",
-    top: "72%",
-    width: "18%",
-    height: "27%",
+    id: 'nerdle',
+    kind: 'project',
+    title: 'LETTER WIZARD TOWER',
+    subtitle: 'Nerdle',
+    left: '18.5%',
+    top: '72%',
+    width: '18%',
+    height: '27%',
     destination: LOCATION_DESTINATIONS.nerdle,
   },
   {
-    id: "brick-breaker",
-    kind: "project",
-    title: "ARCADE DISTRICT",
-    subtitle: "Brick Breaker Resume",
-    left: "50%",
-    top: "75%",
-    width: "20%",
-    height: "25%",
-    destination: LOCATION_DESTINATIONS["brick-breaker"],
+    id: 'brick-breaker',
+    kind: 'project',
+    title: 'ARCADE DISTRICT',
+    subtitle: 'Brick Breaker Resume',
+    left: '50%',
+    top: '75%',
+    width: '20%',
+    height: '25%',
+    destination: LOCATION_DESTINATIONS['brick-breaker'],
   },
 ];
 
@@ -199,10 +199,10 @@ const distanceBetween = (a: Point, b: Point) =>
 const directionFromDelta = (
   dx: number,
   dy: number,
-  fallback: Direction,
+  fallback: Direction
 ): Direction => {
-  if (Math.abs(dx) > Math.abs(dy)) return dx >= 0 ? "right" : "left";
-  if (Math.abs(dy) > 0.001) return dy >= 0 ? "down" : "up";
+  if (Math.abs(dx) > Math.abs(dy)) return dx >= 0 ? 'right' : 'left';
+  if (Math.abs(dy) > 0.001) return dy >= 0 ? 'down' : 'up';
   return fallback;
 };
 
@@ -215,7 +215,7 @@ const buildRoute = (fromNode: NavNode, toId: string) => {
   return route.filter(
     (step, index) =>
       index === 0 ||
-      distanceBetween(step.point, route[index - 1].point) > ARRIVAL_DISTANCE,
+      distanceBetween(step.point, route[index - 1].point) > ARRIVAL_DISTANCE
   );
 };
 
@@ -231,38 +231,38 @@ const MobileViewToggle = ({
   <div className="mt-4 inline-flex w-full max-w-sm overflow-hidden rounded-sm border border-cyan-300/35 md:hidden">
     <button
       onClick={() => {
-        trackPortfolioEvent("view_mode_change", {
-          mode: "map",
-          source: "mobile_hero",
+        trackPortfolioEvent('view_mode_change', {
+          mode: 'map',
+          source: 'mobile_hero',
         });
-        onViewModeChange("map");
+        onViewModeChange('map');
       }}
       aria-label="Switch to map view"
-      aria-pressed={viewMode === "map"}
+      aria-pressed={viewMode === 'map'}
       className={cn(
-        "retro-ui flex-1 px-3 py-2 text-[10px] transition",
-        viewMode === "map"
-          ? "bg-emerald-500/25 text-emerald-50"
-          : "bg-slate-900/70 text-slate-200 hover:bg-slate-800/80",
+        'retro-ui flex-1 px-3 py-2 text-[10px] transition',
+        viewMode === 'map'
+          ? 'bg-emerald-500/25 text-emerald-50'
+          : 'bg-slate-900/70 text-slate-200 hover:bg-slate-800/80'
       )}
     >
       MAP VIEW
     </button>
     <button
       onClick={() => {
-        trackPortfolioEvent("view_mode_change", {
-          mode: "grid",
-          source: "mobile_hero",
+        trackPortfolioEvent('view_mode_change', {
+          mode: 'grid',
+          source: 'mobile_hero',
         });
-        onViewModeChange("grid");
+        onViewModeChange('grid');
       }}
       aria-label="Switch to resume view"
-      aria-pressed={viewMode === "grid"}
+      aria-pressed={viewMode === 'grid'}
       className={cn(
-        "retro-ui flex-1 border-l border-cyan-300/35 px-3 py-2 text-[10px] transition",
-        viewMode === "grid"
-          ? "bg-cyan-500/25 text-cyan-50"
-          : "bg-slate-900/70 text-slate-200 hover:bg-slate-800/80",
+        'retro-ui flex-1 border-l border-cyan-300/35 px-3 py-2 text-[10px] transition',
+        viewMode === 'grid'
+          ? 'bg-cyan-500/25 text-cyan-50'
+          : 'bg-slate-900/70 text-slate-200 hover:bg-slate-800/80'
       )}
     >
       RESUME VIEW
@@ -275,30 +275,30 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
   const animationFrameRef = useRef<number | null>(null);
   const lastAnimationTimeRef = useRef<number | null>(null);
   const frameClockRef = useRef(0);
-  const currentNodeRef = useRef<NavNode>("center");
+  const currentNodeRef = useRef<NavNode>('center');
   const pendingArrivalRef = useRef<(() => void) | null>(null);
   const finalDestinationRef = useRef<Point>(START_POSITION);
-  const finalNodeRef = useRef<NavNode>("center");
+  const finalNodeRef = useRef<NavNode>('center');
   const arrivalTimeoutRef = useRef<number | null>(null);
   const projectDialogRef = useRef<HTMLDivElement | null>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
   const [player, setPlayer] = useState<PlayerState>({
     ...START_POSITION,
-    direction: "down",
+    direction: 'down',
     moving: false,
     frame: 0,
   });
   const [activeProject, setActiveProject] = useState<ProjectEntry | null>(null);
   const [travelLabel, setTravelLabel] = useState<string | null>(null);
-  const [travelStatus, setTravelStatus] = useState<"walking" | "opening">(
-    "walking",
+  const [travelStatus, setTravelStatus] = useState<'walking' | 'opening'>(
+    'walking'
   );
   const [hoveredMapPoint, setHoveredMapPoint] = useState<MapPoint | null>(null);
-  const [currentNode, setCurrentNode] = useState<NavNode>("center");
+  const [currentNode, setCurrentNode] = useState<NavNode>('center');
   const debugNavGridVisible = useMemo(() => {
-    if (typeof window === "undefined") return false;
-    return new URLSearchParams(window.location.search).has("debugNavGrid");
+    if (typeof window === 'undefined') return false;
+    return new URLSearchParams(window.location.search).has('debugNavGrid');
   }, []);
 
   const sectionMapPoints = useMemo<MapPoint[]>(
@@ -307,7 +307,7 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
         const override = sectionPointOverrides[location.id];
         return {
           id: location.id,
-          kind: "section",
+          kind: 'section',
           title: override.title ?? location.title,
           subtitle: override.subtitle ?? location.subtitle,
           left: override.left ?? location.position.left,
@@ -317,18 +317,18 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
           destination: override.destination,
         };
       }),
-    [],
+    []
   );
 
   const mapPoints = useMemo(
     () => [...sectionMapPoints, ...projectMapPoints],
-    [sectionMapPoints],
+    [sectionMapPoints]
   );
 
   const scrollToSection = useCallback((id: SectionId) => {
     document
       .getElementById(id)
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
 
   const completeArrival = useCallback(() => {
@@ -340,7 +340,7 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
     const onArrival = pendingArrivalRef.current;
     pendingArrivalRef.current = null;
     setTravelLabel(null);
-    setTravelStatus("walking");
+    setTravelStatus('walking');
 
     if (onArrival) {
       onArrival();
@@ -376,7 +376,7 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
       finalDestinationRef.current = point.destination;
       finalNodeRef.current = destinationNode;
       setTravelLabel(point.title);
-      setTravelStatus("walking");
+      setTravelStatus('walking');
 
       if (route.length === 0) {
         currentNodeRef.current = destinationNode;
@@ -394,7 +394,7 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
       routeRef.current = route;
       setActiveProject(null);
     },
-    [completeArrival],
+    [completeArrival]
   );
 
   const skipTravel = useCallback(() => {
@@ -417,12 +417,12 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
 
   const openMapPoint = useCallback(
     (point: MapPoint) => {
-      trackPortfolioEvent("map_destination_open", {
+      trackPortfolioEvent('map_destination_open', {
         destination: point.id,
         kind: point.kind,
       });
 
-      if (point.kind === "section") {
+      if (point.kind === 'section') {
         scrollToSection(point.id as SectionId);
         return;
       }
@@ -432,36 +432,34 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
         setActiveProject(project);
       }
     },
-    [scrollToSection],
+    [scrollToSection]
   );
 
   const activateMapPoint = useCallback(
     (point: MapPoint) => {
       startGuidedTravel(point, () => openMapPoint(point));
     },
-    [openMapPoint, startGuidedTravel],
+    [openMapPoint, startGuidedTravel]
   );
 
   const currentMapChoices = useMemo(() => {
     if (player.moving || travelLabel || activeProject) return [];
 
-    return mapPoints.filter(
-      (point) => {
-        const locationNode = getLocationNode(point.id);
-        const locationPoint = NAV_POINTS[locationNode];
-        const currentPoint = NAV_POINTS[currentNode];
+    return mapPoints.filter((point) => {
+      const locationNode = getLocationNode(point.id);
+      const locationPoint = NAV_POINTS[locationNode];
+      const currentPoint = NAV_POINTS[currentNode];
 
-        return (
-          locationNode === currentNode ||
-          distanceBetween(locationPoint, currentPoint) <= 8
-        );
-      },
-    );
+      return (
+        locationNode === currentNode ||
+        distanceBetween(locationPoint, currentPoint) <= 8
+      );
+    });
   }, [activeProject, currentNode, mapPoints, player.moving, travelLabel]);
 
   const canRoam = useMemo(
     () => !player.moving && !travelLabel && !activeProject,
-    [activeProject, player.moving, travelLabel],
+    [activeProject, player.moving, travelLabel]
   );
 
   const moveToNode = useCallback((node: NavNode) => {
@@ -478,7 +476,7 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
     pendingArrivalRef.current = null;
     routeRef.current = [{ node, point }];
     setTravelLabel(null);
-    setTravelStatus("walking");
+    setTravelStatus('walking');
     setActiveProject(null);
     setPlayer((previous) => ({ ...previous, moving: true }));
   }, []);
@@ -506,45 +504,43 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
 
       moveToNode(nextNode);
     },
-    [canRoam, moveToNode],
+    [canRoam, moveToNode]
   );
 
   const availableDirections = useMemo(
     () => ({
-      up: Boolean(getNextNavNode(currentNode, "up")),
-      down: Boolean(getNextNavNode(currentNode, "down")),
-      left: Boolean(getNextNavNode(currentNode, "left")),
-      right: Boolean(getNextNavNode(currentNode, "right")),
+      up: Boolean(getNextNavNode(currentNode, 'up')),
+      down: Boolean(getNextNavNode(currentNode, 'down')),
+      left: Boolean(getNextNavNode(currentNode, 'left')),
+      right: Boolean(getNextNavNode(currentNode, 'right')),
     }),
-    [currentNode],
+    [currentNode]
   );
 
   useEffect(() => {
-    if (viewMode !== "map" || activeProject) return;
+    if (viewMode !== 'map' || activeProject) return;
 
     const keyDirections: Partial<Record<string, NavDirection>> = {
-      ArrowUp: "up",
-      w: "up",
-      W: "up",
-      ArrowDown: "down",
-      s: "down",
-      S: "down",
-      ArrowLeft: "left",
-      a: "left",
-      A: "left",
-      ArrowRight: "right",
-      d: "right",
-      D: "right",
+      ArrowUp: 'up',
+      w: 'up',
+      W: 'up',
+      ArrowDown: 'down',
+      s: 'down',
+      S: 'down',
+      ArrowLeft: 'left',
+      a: 'left',
+      A: 'left',
+      ArrowRight: 'right',
+      d: 'right',
+      D: 'right',
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
       const target = event.target;
       if (
         target instanceof HTMLElement &&
-        target.closest("input, textarea, select, button, a") &&
-        !["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(
-          event.key,
-        )
+        target.closest('input, textarea, select, button, a') &&
+        !['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(event.key)
       ) {
         return;
       }
@@ -557,14 +553,14 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
         return;
       }
 
-      if (event.key === "Enter" && currentMapChoices.length > 0 && canRoam) {
+      if (event.key === 'Enter' && currentMapChoices.length > 0 && canRoam) {
         event.preventDefault();
         openMapPoint(currentMapChoices[0]);
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [
     activeProject,
     canRoam,
@@ -585,13 +581,13 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
     projectDialogRef.current?.focus();
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         event.preventDefault();
         setActiveProject(null);
         return;
       }
 
-      if (event.key !== "Tab") {
+      if (event.key !== 'Tab') {
         return;
       }
 
@@ -600,9 +596,9 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
 
       const focusableElements = [
         ...dialog.querySelectorAll<HTMLElement>(
-          'a[href], button:not(:disabled), [tabindex]:not([tabindex="-1"])',
+          'a[href], button:not(:disabled), [tabindex]:not([tabindex="-1"])'
         ),
-      ].filter((element) => !element.hasAttribute("disabled"));
+      ].filter((element) => !element.hasAttribute('disabled'));
 
       if (focusableElements.length === 0) {
         event.preventDefault();
@@ -622,9 +618,9 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener('keydown', handleKeyDown);
       previousFocusRef.current?.focus();
     };
   }, [activeProject]);
@@ -659,14 +655,14 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
 
           if (routeRef.current.length === 0) {
             if (pendingArrivalRef.current) {
-              setTravelStatus("opening");
+              setTravelStatus('opening');
               arrivalTimeoutRef.current = window.setTimeout(
                 completeArrival,
-                ARRIVAL_PAUSE_MS,
+                ARRIVAL_PAUSE_MS
               );
             } else {
               setTravelLabel(null);
-              setTravelStatus("walking");
+              setTravelStatus('walking');
             }
 
             return {
@@ -691,7 +687,7 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
         const direction = directionFromDelta(
           nextX - previous.x,
           nextY - previous.y,
-          previous.direction,
+          previous.direction
         );
         let frame = previous.frame;
 
@@ -732,7 +728,7 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
     ? WALK_SPRITES[player.direction][player.frame]
     : idleFrontSprite;
 
-  if (viewMode === "grid") {
+  if (viewMode === 'grid') {
     return (
       <section
         id="home"
@@ -797,7 +793,7 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
             />
             <div className="mt-4 flex flex-wrap items-center gap-3">
               <button
-                onClick={() => scrollToSection("projects")}
+                onClick={() => scrollToSection('projects')}
                 className="retro-ui inline-flex items-center gap-2 rounded-sm border border-amber-300/50 bg-amber-500/15 px-4 py-2 text-xs text-amber-100 hover:bg-amber-500/25"
               >
                 <ChevronDown className="h-3.5 w-3.5" />
@@ -807,7 +803,9 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
                 href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => trackPortfolioEvent("resume_click", { source: "hero" })}
+                onClick={() =>
+                  trackPortfolioEvent('resume_click', { source: 'hero' })
+                }
                 className="retro-ui inline-flex items-center gap-2 rounded-sm border border-emerald-300/45 bg-emerald-500/12 px-4 py-2 text-xs text-emerald-100 hover:bg-emerald-500/25"
               >
                 <FileText className="h-3.5 w-3.5" />
@@ -843,8 +841,8 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
             />
             <div
               className={cn(
-                "map-nav-grid",
-                debugNavGridVisible && "map-nav-grid-visible",
+                'map-nav-grid',
+                debugNavGridVisible && 'map-nav-grid-visible'
               )}
               style={{
                 backgroundSize: `${NAV_GRID_CELL_SIZE}px ${NAV_GRID_CELL_SIZE}px`,
@@ -891,7 +889,7 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
             {travelLabel && (
               <div className="absolute bottom-3 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 rounded-sm border border-amber-300/45 bg-slate-950/90 px-3 py-2 text-center">
                 <p className="retro-ui text-[10px] text-amber-100">
-                  {travelStatus === "opening" ? "OPENING" : "WALKING TO"}{" "}
+                  {travelStatus === 'opening' ? 'OPENING' : 'WALKING TO'}{' '}
                   {travelLabel}
                 </p>
                 <button
@@ -909,11 +907,11 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
             <div className="space-y-2">
               <p className="text-xs text-slate-300">
                 <span className="retro-ui text-emerald-300">
-                  {hoveredMapPoint ? "DESTINATION:" : "WORLD MAP:"}
-                </span>{" "}
+                  {hoveredMapPoint ? 'DESTINATION:' : 'WORLD MAP:'}
+                </span>{' '}
                 {hoveredMapPoint
                   ? `${hoveredMapPoint.title} - ${hoveredMapPoint.subtitle}`
-                  : "Use arrows/WASD to roam. Hover or tap a destination to preview."}
+                  : 'Use arrows/WASD to roam. Hover or tap a destination to preview.'}
               </p>
               {currentMapChoices.length > 0 && (
                 <div className="flex flex-wrap items-center gap-2">
@@ -944,7 +942,7 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
               >
                 <span />
                 <button
-                  onClick={() => movePlayer("up")}
+                  onClick={() => movePlayer('up')}
                   disabled={!canRoam || !availableDirections.up}
                   className="map-roam-button"
                   aria-label="Move up"
@@ -953,7 +951,7 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
                 </button>
                 <span />
                 <button
-                  onClick={() => movePlayer("left")}
+                  onClick={() => movePlayer('left')}
                   disabled={!canRoam || !availableDirections.left}
                   className="map-roam-button"
                   aria-label="Move left"
@@ -962,7 +960,8 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
                 </button>
                 <button
                   onClick={() => {
-                    if (currentMapChoices[0]) openMapPoint(currentMapChoices[0]);
+                    if (currentMapChoices[0])
+                      openMapPoint(currentMapChoices[0]);
                   }}
                   disabled={!canRoam || currentMapChoices.length === 0}
                   className="map-roam-button"
@@ -971,7 +970,7 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
                   <CornerDownLeft className="h-3.5 w-3.5" />
                 </button>
                 <button
-                  onClick={() => movePlayer("right")}
+                  onClick={() => movePlayer('right')}
                   disabled={!canRoam || !availableDirections.right}
                   className="map-roam-button"
                   aria-label="Move right"
@@ -980,7 +979,7 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
                 </button>
                 <span />
                 <button
-                  onClick={() => movePlayer("down")}
+                  onClick={() => movePlayer('down')}
                   disabled={!canRoam || !availableDirections.down}
                   className="map-roam-button"
                   aria-label="Move down"
@@ -1034,10 +1033,10 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
               <div className="mt-5 grid gap-5 md:grid-cols-[1.2fr_0.8fr]">
                 <div
                   className={cn(
-                    "flex min-h-[230px] items-center justify-center overflow-hidden rounded-sm border border-slate-300/20",
-                    activeProject.mediaBackground === "dark"
-                      ? "bg-emerald-950/80"
-                      : "bg-white",
+                    'flex min-h-[230px] items-center justify-center overflow-hidden rounded-sm border border-slate-300/20',
+                    activeProject.mediaBackground === 'dark'
+                      ? 'bg-emerald-950/80'
+                      : 'bg-white'
                   )}
                 >
                   <img
@@ -1080,9 +1079,9 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() =>
-                          trackPortfolioEvent("project_live_click", {
+                          trackPortfolioEvent('project_live_click', {
                             project: activeProject.slug,
-                            source: "map_modal",
+                            source: 'map_modal',
                           })
                         }
                       >
@@ -1097,9 +1096,9 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() =>
-                          trackPortfolioEvent("project_code_click", {
+                          trackPortfolioEvent('project_code_click', {
                             project: activeProject.slug,
-                            source: "map_modal",
+                            source: 'map_modal',
                           })
                         }
                       >
@@ -1111,9 +1110,9 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
                       className="detail-action"
                       to={`/projects/${activeProject.slug}`}
                       onClick={() =>
-                        trackPortfolioEvent("project_details_click", {
+                        trackPortfolioEvent('project_details_click', {
                           project: activeProject.slug,
-                          source: "map_modal",
+                          source: 'map_modal',
                         })
                       }
                     >

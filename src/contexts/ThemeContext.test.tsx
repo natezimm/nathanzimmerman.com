@@ -1,6 +1,6 @@
-import { describe, expect, it, beforeEach, vi } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { ThemeProvider, useTheme } from "./ThemeContext";
+import { describe, expect, it, beforeEach, vi } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { ThemeProvider, useTheme } from './ThemeContext';
 
 const ThemeInspector = () => {
   const { theme, toggleTheme } = useTheme();
@@ -15,13 +15,13 @@ const ThemeInspector = () => {
   );
 };
 
-describe("ThemeContext", () => {
+describe('ThemeContext', () => {
   beforeEach(() => {
     localStorage.clear();
-    document.documentElement.className = "";
+    document.documentElement.className = '';
   });
 
-  it("defaults to dark when no preference exists", async () => {
+  it('defaults to dark when no preference exists', async () => {
     render(
       <ThemeProvider>
         <ThemeInspector />
@@ -29,15 +29,15 @@ describe("ThemeContext", () => {
     );
 
     await waitFor(() => {
-      expect(document.documentElement.classList.contains("dark")).toBe(true);
+      expect(document.documentElement.classList.contains('dark')).toBe(true);
     });
 
-    expect(screen.getByTestId("theme")).toHaveTextContent("dark");
-    expect(localStorage.getItem("theme")).toBe("dark");
+    expect(screen.getByTestId('theme')).toHaveTextContent('dark');
+    expect(localStorage.getItem('theme')).toBe('dark');
   });
 
-  it("respects saved theme and toggles value", async () => {
-    localStorage.setItem("theme", "dark");
+  it('respects saved theme and toggles value', async () => {
+    localStorage.setItem('theme', 'dark');
 
     render(
       <ThemeProvider>
@@ -46,21 +46,21 @@ describe("ThemeContext", () => {
     );
 
     await waitFor(() => {
-      expect(document.documentElement.classList.contains("dark")).toBe(true);
+      expect(document.documentElement.classList.contains('dark')).toBe(true);
     });
 
-    const toggle = screen.getByTestId("toggle");
+    const toggle = screen.getByTestId('toggle');
     fireEvent.click(toggle);
 
     await waitFor(() => {
-      expect(screen.getByTestId("theme")).toHaveTextContent("light");
-      expect(document.documentElement.classList.contains("light")).toBe(true);
-      expect(localStorage.getItem("theme")).toBe("light");
+      expect(screen.getByTestId('theme')).toHaveTextContent('light');
+      expect(document.documentElement.classList.contains('light')).toBe(true);
+      expect(localStorage.getItem('theme')).toBe('light');
     });
   });
 
-  it("respects saved light theme preference", async () => {
-    localStorage.setItem("theme", "light");
+  it('respects saved light theme preference', async () => {
+    localStorage.setItem('theme', 'light');
 
     render(
       <ThemeProvider>
@@ -69,20 +69,20 @@ describe("ThemeContext", () => {
     );
 
     await waitFor(() => {
-      expect(document.documentElement.classList.contains("light")).toBe(true);
+      expect(document.documentElement.classList.contains('light')).toBe(true);
     });
 
-    expect(screen.getByTestId("theme")).toHaveTextContent("light");
-    expect(localStorage.getItem("theme")).toBe("light");
+    expect(screen.getByTestId('theme')).toHaveTextContent('light');
+    expect(localStorage.getItem('theme')).toBe('light');
   });
 
-  it("throws when used outside provider", () => {
+  it('throws when used outside provider', () => {
     const consoleError = vi
-      .spyOn(console, "error")
+      .spyOn(console, 'error')
       .mockImplementation(() => {});
 
     expect(() => render(<ThemeInspector />)).toThrow(
-      "useTheme must be used within a ThemeProvider"
+      'useTheme must be used within a ThemeProvider'
     );
 
     consoleError.mockRestore();

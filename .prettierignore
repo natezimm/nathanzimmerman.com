@@ -1,0 +1,56 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Build and coverage output
+dist/
+build/
+coverage/
+client/dist/
+client/build/
+client/coverage/
+server/build/
+server/bin/
+server/obj/
+server/coverage/
+server/target/
+server/.gradle/
+.angular/
+.vite/
+.cache/
+TestResults/
+out/
+
+# Generated and deploy artifacts
+public/assets/
+package-lock.json
+client/package-lock.json
+server/package-lock.json
+bun.lockb
+*.log
+*.tsbuildinfo
+
+# Local environment and editor state
+.env
+.env.*
+!.env.example
+!client/.env.example
+!client/.env.production.example
+.idea/
+.vscode/
+.DS_Store
+
+# Binary assets
+*.avif
+*.docx
+*.gif
+*.ico
+*.jar
+*.jpeg
+*.jpg
+*.mp3
+*.pdf
+*.png
+*.webp
+*.wav

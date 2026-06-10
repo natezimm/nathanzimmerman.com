@@ -1,13 +1,13 @@
-import { FileText, Github, Linkedin, Mail, MapPin } from "lucide-react";
-import { toast } from "sonner";
-import { useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
-import { type ViewMode } from "@/data/portfolioData";
-import { trackPortfolioEvent } from "@/lib/analytics";
+import { FileText, Github, Linkedin, Mail, MapPin } from 'lucide-react';
+import { toast } from 'sonner';
+import { useRef, useState } from 'react';
+import emailjs from '@emailjs/browser';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent } from '@/components/ui/card';
+import { type ViewMode } from '@/data/portfolioData';
+import { trackPortfolioEvent } from '@/lib/analytics';
 
 type ContactProps = {
   viewMode?: ViewMode;
@@ -19,14 +19,14 @@ const MAX_MESSAGE_LENGTH = 2000;
 const SUBMIT_COOLDOWN_MS = 30000;
 
 const sanitizeInput = (input: string): string => {
-  return input.replace(/[<>]/g, "").trim();
+  return input.replace(/[<>]/g, '').trim();
 };
 
-const Contact = ({ viewMode = "map" }: ContactProps) => {
+const Contact = ({ viewMode = 'map' }: ContactProps) => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
+    name: '',
+    email: '',
+    message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const lastSubmitTime = useRef<number>(0);
@@ -39,7 +39,9 @@ const Contact = ({ viewMode = "map" }: ContactProps) => {
       const remainingSeconds = Math.ceil(
         (SUBMIT_COOLDOWN_MS - (now - lastSubmitTime.current)) / 1000
       );
-      toast.error(`Please wait ${remainingSeconds} seconds before sending another message.`);
+      toast.error(
+        `Please wait ${remainingSeconds} seconds before sending another message.`
+      );
       return;
     }
 
@@ -51,30 +53,45 @@ const Contact = ({ viewMode = "map" }: ContactProps) => {
       const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
       if (!serviceId || !templateId || !publicKey) {
-        toast.error("Contact form is not configured. Please email me directly.");
-        trackPortfolioEvent("contact_submit_failure", { reason: "not_configured" });
+        toast.error(
+          'Contact form is not configured. Please email me directly.'
+        );
+        trackPortfolioEvent('contact_submit_failure', {
+          reason: 'not_configured',
+        });
         setIsSubmitting(false);
         return;
       }
 
-      const sanitizedName = sanitizeInput(formData.name).slice(0, MAX_NAME_LENGTH);
-      const sanitizedEmail = sanitizeInput(formData.email).slice(0, MAX_EMAIL_LENGTH);
-      const sanitizedMessage = sanitizeInput(formData.message).slice(0, MAX_MESSAGE_LENGTH);
+      const sanitizedName = sanitizeInput(formData.name).slice(
+        0,
+        MAX_NAME_LENGTH
+      );
+      const sanitizedEmail = sanitizeInput(formData.email).slice(
+        0,
+        MAX_EMAIL_LENGTH
+      );
+      const sanitizedMessage = sanitizeInput(formData.message).slice(
+        0,
+        MAX_MESSAGE_LENGTH
+      );
 
       if (!sanitizedName || !sanitizedEmail || !sanitizedMessage) {
-        toast.error("Please fill in all fields with valid content.");
-        trackPortfolioEvent("contact_submit_failure", { reason: "invalid_content" });
+        toast.error('Please fill in all fields with valid content.');
+        trackPortfolioEvent('contact_submit_failure', {
+          reason: 'invalid_content',
+        });
         setIsSubmitting(false);
         return;
       }
 
-      const currentDate = new Date().toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        timeZoneName: "short",
+      const currentDate = new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZoneName: 'short',
       });
 
       await emailjs.send(
@@ -84,26 +101,32 @@ const Contact = ({ viewMode = "map" }: ContactProps) => {
           fname: sanitizedName,
           femail: sanitizedEmail,
           message: sanitizedMessage,
-          to_name: "Nathan Zimmerman",
+          to_name: 'Nathan Zimmerman',
           date: currentDate,
         },
         publicKey
       );
 
       lastSubmitTime.current = Date.now();
-      toast.success("Message sent! You'll receive a confirmation email shortly.");
-      trackPortfolioEvent("contact_submit_success", { source: "contact_form" });
-      setFormData({ name: "", email: "", message: "" });
+      toast.success(
+        "Message sent! You'll receive a confirmation email shortly."
+      );
+      trackPortfolioEvent('contact_submit_success', { source: 'contact_form' });
+      setFormData({ name: '', email: '', message: '' });
     } catch (error) {
-      console.error("Form submission error:", error);
-      toast.error("Failed to send message. Please try again or email me directly.");
-      trackPortfolioEvent("contact_submit_failure", { reason: "send_error" });
+      console.error('Form submission error:', error);
+      toast.error(
+        'Failed to send message. Please try again or email me directly.'
+      );
+      trackPortfolioEvent('contact_submit_failure', { reason: 'send_error' });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
@@ -116,9 +139,12 @@ const Contact = ({ viewMode = "map" }: ContactProps) => {
       <div className="container relative z-10 mx-auto px-4">
         <div className="mx-auto max-w-6xl">
           <div className="text-center mb-10">
-            <h2 className="retro-heading text-4xl text-amber-200 md:text-5xl">LET&apos;S CONNECT!</h2>
+            <h2 className="retro-heading text-4xl text-amber-200 md:text-5xl">
+              LET&apos;S CONNECT!
+            </h2>
             <p className="mt-4 text-lg text-slate-200/90 md:text-xl">
-              I enjoy meeting new people and chatting about engineering or creative projects. Always happy to connect.
+              I enjoy meeting new people and chatting about engineering or
+              creative projects. Always happy to connect.
             </p>
           </div>
 
@@ -127,9 +153,18 @@ const Contact = ({ viewMode = "map" }: ContactProps) => {
               href="https://github.com/natezimm"
               target="_blank"
               rel="noopener noreferrer"
-              className={viewMode === "map" ? "retro-contact-btn" : "retro-contact-btn retro-contact-btn-muted"}
+              className={
+                viewMode === 'map'
+                  ? 'retro-contact-btn'
+                  : 'retro-contact-btn retro-contact-btn-muted'
+              }
               aria-label="GitHub"
-              onClick={() => trackPortfolioEvent("social_link_click", { destination: "github", source: "contact" })}
+              onClick={() =>
+                trackPortfolioEvent('social_link_click', {
+                  destination: 'github',
+                  source: 'contact',
+                })
+              }
             >
               <Github className="h-5 w-5" />
               GITHUB
@@ -138,18 +173,36 @@ const Contact = ({ viewMode = "map" }: ContactProps) => {
               href="https://www.linkedin.com/in/zimmermannathan"
               target="_blank"
               rel="noopener noreferrer"
-              className={viewMode === "map" ? "retro-contact-btn" : "retro-contact-btn retro-contact-btn-muted"}
+              className={
+                viewMode === 'map'
+                  ? 'retro-contact-btn'
+                  : 'retro-contact-btn retro-contact-btn-muted'
+              }
               aria-label="LinkedIn"
-              onClick={() => trackPortfolioEvent("social_link_click", { destination: "linkedin", source: "contact" })}
+              onClick={() =>
+                trackPortfolioEvent('social_link_click', {
+                  destination: 'linkedin',
+                  source: 'contact',
+                })
+              }
             >
               <Linkedin className="h-5 w-5" />
               LINKEDIN
             </a>
             <a
               href="mailto:nathan.a.zimmerman@gmail.com"
-              className={viewMode === "map" ? "retro-contact-btn" : "retro-contact-btn retro-contact-btn-muted"}
+              className={
+                viewMode === 'map'
+                  ? 'retro-contact-btn'
+                  : 'retro-contact-btn retro-contact-btn-muted'
+              }
               aria-label="Email"
-              onClick={() => trackPortfolioEvent("contact_link_click", { destination: "email", source: "contact" })}
+              onClick={() =>
+                trackPortfolioEvent('contact_link_click', {
+                  destination: 'email',
+                  source: 'contact',
+                })
+              }
             >
               <Mail className="h-5 w-5" />
               EMAIL
@@ -160,7 +213,9 @@ const Contact = ({ viewMode = "map" }: ContactProps) => {
               rel="noopener noreferrer"
               className="retro-contact-btn retro-contact-btn-gold"
               aria-label="Resume"
-              onClick={() => trackPortfolioEvent("resume_click", { source: "contact" })}
+              onClick={() =>
+                trackPortfolioEvent('resume_click', { source: 'contact' })
+              }
             >
               <FileText className="h-5 w-5" />
               RESUME
@@ -174,7 +229,9 @@ const Contact = ({ viewMode = "map" }: ContactProps) => {
                   <Mail className="h-8 w-8 text-cyan-300" />
                   <div>
                     <h3 className="retro-ui text-xs text-cyan-100">EMAIL</h3>
-                    <p className="mt-1 text-sm text-slate-200">nathan.a.zimmerman@gmail.com</p>
+                    <p className="mt-1 text-sm text-slate-200">
+                      nathan.a.zimmerman@gmail.com
+                    </p>
                   </div>
                 </CardContent>
               </Card>
@@ -183,7 +240,9 @@ const Contact = ({ viewMode = "map" }: ContactProps) => {
                   <MapPin className="h-8 w-8 text-cyan-300" />
                   <div>
                     <h3 className="retro-ui text-xs text-cyan-100">LOCATION</h3>
-                    <p className="mt-1 text-sm text-slate-200">New Jersey, United States</p>
+                    <p className="mt-1 text-sm text-slate-200">
+                      New Jersey, United States
+                    </p>
                   </div>
                 </CardContent>
               </Card>
@@ -192,7 +251,10 @@ const Contact = ({ viewMode = "map" }: ContactProps) => {
             <Card className="border-cyan-300/22 bg-slate-950/80 p-4 md:p-6">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-1.5">
-                  <label htmlFor="name" className="retro-ui text-[10px] text-slate-100">
+                  <label
+                    htmlFor="name"
+                    className="retro-ui text-[10px] text-slate-100"
+                  >
                     Name
                   </label>
                   <Input
@@ -208,7 +270,10 @@ const Contact = ({ viewMode = "map" }: ContactProps) => {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label htmlFor="email" className="retro-ui text-[10px] text-slate-100">
+                  <label
+                    htmlFor="email"
+                    className="retro-ui text-[10px] text-slate-100"
+                  >
                     Email
                   </label>
                   <Input
@@ -225,7 +290,10 @@ const Contact = ({ viewMode = "map" }: ContactProps) => {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label htmlFor="message" className="retro-ui text-[10px] text-slate-100">
+                  <label
+                    htmlFor="message"
+                    className="retro-ui text-[10px] text-slate-100"
+                  >
                     Message
                   </label>
                   <Textarea
@@ -246,7 +314,7 @@ const Contact = ({ viewMode = "map" }: ContactProps) => {
                   disabled={isSubmitting}
                   className="retro-ui w-full rounded-sm border border-emerald-300/45 bg-emerald-500/18 text-xs text-emerald-50 hover:bg-emerald-500/30"
                 >
-                  {isSubmitting ? "Sending..." : "Send Message"}
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
                 </Button>
               </form>
             </Card>

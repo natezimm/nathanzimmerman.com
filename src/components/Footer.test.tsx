@@ -1,16 +1,20 @@
-import { describe, expect, it } from "vitest";
-import { render, screen } from "@testing-library/react";
-import Footer from "./Footer";
+import { describe, expect, it } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import Footer from './Footer';
 
-describe("Footer", () => {
-  it("renders the current year", () => {
+describe('Footer', () => {
+  it('renders the current year', () => {
     render(<Footer />);
 
     const year = new Date().getFullYear().toString();
-    expect(screen.getByText((content) => content.includes(year))).toBeInTheDocument();
     expect(
-      screen.getByText("Thanks for stopping by! Built with React, TypeScript, and Tailwind.")
+      screen.getByText((content) => content.includes(year))
     ).toBeInTheDocument();
-    expect(screen.queryByText("❤")).not.toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'Thanks for stopping by! Built with React, TypeScript, and Tailwind.'
+      )
+    ).toBeInTheDocument();
+    expect(screen.queryByText('❤')).not.toBeInTheDocument();
   });
 });

@@ -1,8 +1,10 @@
 name: CI & Deploy
 
 on:
+  pull_request:
+    branches: ['main']
   push:
-    branches: [ "main" ]
+    branches: ['main']
 
 jobs:
   ci:
@@ -21,11 +23,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run tests with coverage
-        run: npm run test:coverage
-
-      - name: Build production bundle
-        run: npm run build
+      - name: Run quality gate
+        run: npm run quality
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -35,6 +34,7 @@ jobs:
           if-no-files-found: error
 
   deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: ci
     runs-on: ubuntu-latest
 
@@ -54,18 +54,17 @@ jobs:
 
       - name: Deploy to Lightsail
         run: |
-          rsync -avz --delete dist/ \
-            ${{ secrets.LIGHTSAIL_USER }}@${{ secrets.LIGHTSAIL_HOST }}:/var/www/nathanzimmerman.com/
+          rsync -avz --delete dist/ ${{ secrets.LIGHTSAIL_USER }}@${{ secrets.LIGHTSAIL_HOST }}:/var/www/nathanzimmerman.com/
 
       - name: Health check
         run: |
-          echo "⏳ Waiting for site to be available..."
+          echo "Waiting for site to be available..."
           sleep 5
 
-          echo "🔍 Checking nathanzimmerman.com..."
+          echo "Checking nathanzimmerman.com..."
           curl -f https://nathanzimmerman.com || {
-            echo "❌ Health check failed"
+            echo "Health check failed"
             exit 1
           }
 
-          echo "✅ Health check passed"
+          echo "Health check passed"

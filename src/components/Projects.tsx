@@ -1,16 +1,16 @@
-import { ExternalLink, Github } from "lucide-react";
-import { Link } from "react-router-dom";
-import { projectEntries, type ViewMode } from "@/data/portfolioData";
-import { trackPortfolioEvent } from "@/lib/analytics";
-import { cn } from "@/lib/utils";
+import { ExternalLink, Github } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { projectEntries, type ViewMode } from '@/data/portfolioData';
+import { trackPortfolioEvent } from '@/lib/analytics';
+import { cn } from '@/lib/utils';
 
 const accentClasses: Record<string, string> = {
-  forest: "border-green-400/38 bg-green-500/10",
-  violet: "border-violet-400/40 bg-violet-500/10",
-  ember: "border-orange-400/42 bg-orange-500/10",
-  azure: "border-blue-400/42 bg-blue-500/10",
-  gold: "border-yellow-400/42 bg-yellow-500/10",
-  jade: "border-emerald-400/42 bg-emerald-500/10",
+  forest: 'border-green-400/38 bg-green-500/10',
+  violet: 'border-violet-400/40 bg-violet-500/10',
+  ember: 'border-orange-400/42 bg-orange-500/10',
+  azure: 'border-blue-400/42 bg-blue-500/10',
+  gold: 'border-yellow-400/42 bg-yellow-500/10',
+  jade: 'border-emerald-400/42 bg-emerald-500/10',
 };
 
 type ProjectsProps = {
@@ -19,14 +19,19 @@ type ProjectsProps = {
 
 const Projects = ({ viewMode }: ProjectsProps) => {
   return (
-    <section id="projects" className="retro-section projects-zone py-16 md:py-20">
+    <section
+      id="projects"
+      className="retro-section projects-zone py-16 md:py-20"
+    >
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-7xl">
           <div className="mb-10 text-center">
-            <h2 className="retro-heading text-4xl text-violet-300 md:text-5xl">FEATURED PROJECTS</h2>
+            <h2 className="retro-heading text-4xl text-violet-300 md:text-5xl">
+              FEATURED PROJECTS
+            </h2>
             <p className="mx-auto mt-4 max-w-3xl text-sm leading-relaxed text-slate-300 md:text-base">
-              Interactive full-stack projects that combine engineering, design, and gameplay to create engaging user
-              experiences.
+              Interactive full-stack projects that combine engineering, design,
+              and gameplay to create engaging user experiences.
             </p>
           </div>
 
@@ -35,19 +40,27 @@ const Projects = ({ viewMode }: ProjectsProps) => {
               <article
                 key={project.slug}
                 className={`retro-project-card rounded-sm border p-3 ${
-                  viewMode === "map"
+                  viewMode === 'map'
                     ? accentClasses[project.accent]
-                    : "border-cyan-300/30 bg-slate-900/75"
+                    : 'border-cyan-300/30 bg-slate-900/75'
                 }`}
               >
-                <p className="retro-ui text-[10px] text-amber-200">{project.regionLabel}</p>
-                <h3 className="retro-ui mt-1 text-lg text-slate-50">{project.title}</h3>
-                <p className="mt-1 text-sm text-slate-300">{project.subtitle}</p>
+                <p className="retro-ui text-[10px] text-amber-200">
+                  {project.regionLabel}
+                </p>
+                <h3 className="retro-ui mt-1 text-lg text-slate-50">
+                  {project.title}
+                </h3>
+                <p className="mt-1 text-sm text-slate-300">
+                  {project.subtitle}
+                </p>
 
                 <div
                   className={cn(
-                    "mt-3 flex aspect-[1200/648] items-center justify-center overflow-hidden rounded-sm border border-slate-200/20",
-                    project.mediaBackground === "dark" ? "bg-emerald-950/80" : "bg-white"
+                    'mt-3 flex aspect-[1200/648] items-center justify-center overflow-hidden rounded-sm border border-slate-200/20',
+                    project.mediaBackground === 'dark'
+                      ? 'bg-emerald-950/80'
+                      : 'bg-white'
                   )}
                 >
                   <img
@@ -58,7 +71,9 @@ const Projects = ({ viewMode }: ProjectsProps) => {
                   />
                 </div>
 
-                <p className="mt-3 min-h-[68px] text-sm leading-relaxed text-slate-200">{project.summary}</p>
+                <p className="mt-3 min-h-[68px] text-sm leading-relaxed text-slate-200">
+                  {project.summary}
+                </p>
 
                 <div className="mt-4 grid grid-cols-3 gap-2">
                   {project.links.live ? (
@@ -67,9 +82,9 @@ const Projects = ({ viewMode }: ProjectsProps) => {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={() =>
-                        trackPortfolioEvent("project_live_click", {
+                        trackPortfolioEvent('project_live_click', {
                           project: project.slug,
-                          source: "project_card",
+                          source: 'project_card',
                         })
                       }
                       className="retro-ui inline-flex items-center justify-center gap-1 rounded-sm border border-emerald-300/45 bg-emerald-500/15 px-2 py-2 text-[10px] text-emerald-100 hover:bg-emerald-500/25"
@@ -89,9 +104,9 @@ const Projects = ({ viewMode }: ProjectsProps) => {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={() =>
-                        trackPortfolioEvent("project_code_click", {
+                        trackPortfolioEvent('project_code_click', {
                           project: project.slug,
-                          source: "project_card",
+                          source: 'project_card',
                         })
                       }
                       className="retro-ui inline-flex items-center justify-center gap-1 rounded-sm border border-cyan-300/45 bg-cyan-500/15 px-2 py-2 text-[10px] text-cyan-100 hover:bg-cyan-500/25"
@@ -108,9 +123,9 @@ const Projects = ({ viewMode }: ProjectsProps) => {
                   <Link
                     to={`/projects/${project.slug}`}
                     onClick={() =>
-                      trackPortfolioEvent("project_details_click", {
+                      trackPortfolioEvent('project_details_click', {
                         project: project.slug,
-                        source: "project_card",
+                        source: 'project_card',
                       })
                     }
                     className="retro-ui inline-flex items-center justify-center rounded-sm border border-amber-300/45 bg-amber-500/15 px-2 py-2 text-[10px] text-amber-100 hover:bg-amber-500/25"
