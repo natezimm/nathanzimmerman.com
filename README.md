@@ -24,6 +24,8 @@ Personal portfolio built with React, TypeScript, and Vite. The single-page exper
 - `npm run test` - Vitest suite covering shared helpers, context, and visible sections.
 - `npm run test:watch` – Watch mode for the Vitest suite.
 - `npm run test:coverage` – Vitest with coverage reporting via `c8`.
+- `npm run test:e2e` – Playwright end-to-end tests against a production preview.
+- `npm run test:e2e:headed` / `npm run test:e2e:ui` – Debug Playwright in headed or UI mode.
 
 ## Tech snapshot
 
@@ -55,6 +57,7 @@ Personal portfolio built with React, TypeScript, and Vite. The single-page exper
 Tooling:
 
 - Vitest + Testing Library for component, context, and integration tests
+- Playwright for cross-viewport end-to-end smoke coverage
 - ESLint for consistent TypeScript and React conventions
 - Prettier for shared formatting across the portfolio and sibling repos
 
