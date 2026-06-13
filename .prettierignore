@@ -20,6 +20,8 @@ server/.gradle/
 .vite/
 .cache/
 TestResults/
+playwright-report/
+test-results/
 out/
 
 # Generated and deploy artifacts
