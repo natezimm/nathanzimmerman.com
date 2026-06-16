@@ -192,7 +192,7 @@ export const experienceItems: ExperienceItem[] = [
     company: 'Nelnet',
     summary:
       'Built payment-plan and billing workflows across .NET microservices and Angular UI.',
-    tags: ['C#', '.NET', 'Angular', 'Azure'],
+    tags: ['C#', '.NET', 'Angular', 'Azure', 'AWS'],
   },
   {
     period: '2022 - 2023',
@@ -207,7 +207,7 @@ export const experienceItems: ExperienceItem[] = [
     title: 'Software Developer',
     company: 'Radian Group, Inc.',
     summary: 'Delivered customer-facing mortgage platform features.',
-    tags: ['React', 'Node.js', 'AWS'],
+    tags: ['Node.js', 'React', 'AWS'],
   },
 ];
 
@@ -251,8 +251,8 @@ export const skillGroups: SkillGroup[] = [
   {
     label: 'TOOLS & OTHER',
     items: [
+      { name: 'AWS', years: '6+ Years' },
       { name: 'Azure', years: '3+ Years' },
-      { name: 'AWS', years: '4+ Years' },
       { name: 'REST APIs', years: '6+ Years' },
     ],
   },
