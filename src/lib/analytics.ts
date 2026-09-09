@@ -12,7 +12,8 @@ export type PortfolioEventName =
   | 'project_live_click'
   | 'resume_click'
   | 'social_link_click'
-  | 'view_mode_change';
+  | 'view_mode_change'
+  | 'world_enter';
 
 type AnalyticsWindow = Window & {
   gtag?: (

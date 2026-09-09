@@ -22,7 +22,7 @@ const ProjectDetail = () => {
             className="retro-ui inline-flex items-center gap-2 text-xs text-cyan-100 hover:text-cyan-50"
           >
             <ArrowLeft className="h-4 w-4" />
-            BACK TO NATHAN&apos;S WORLD
+            BACK TO PORTFOLIO
           </Link>
           <a
             href="/resume.pdf"

@@ -11,6 +11,7 @@ import { trackPortfolioEvent } from '@/lib/analytics';
 
 type ContactProps = {
   viewMode?: ViewMode;
+  variant?: 'retro' | 'landing';
 };
 
 const MAX_NAME_LENGTH = 100;
@@ -22,7 +23,12 @@ const sanitizeInput = (input: string): string => {
   return input.replace(/[<>]/g, '').trim();
 };
 
-const Contact = ({ viewMode = 'map' }: ContactProps) => {
+const Contact = ({ viewMode = 'map', variant = 'retro' }: ContactProps) => {
+  const isEmailConfigured = Boolean(
+    import.meta.env.VITE_EMAILJS_SERVICE_ID &&
+    import.meta.env.VITE_EMAILJS_TEMPLATE_ID &&
+    import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+  );
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -134,17 +140,23 @@ const Contact = ({ viewMode = 'map' }: ContactProps) => {
   };
 
   return (
-    <section id="contact" className="retro-section contact-zone py-16 md:py-20">
+    <section
+      id="contact"
+      className={`retro-section contact-zone py-16 md:py-20 ${variant === 'landing' ? 'landing-contact' : ''}`}
+    >
       <div className="contact-backdrop" />
       <div className="container relative z-10 mx-auto px-4">
         <div className="mx-auto max-w-6xl">
           <div className="text-center mb-10">
             <h2 className="retro-heading text-4xl text-amber-200 md:text-5xl">
-              LET&apos;S CONNECT!
+              {variant === 'landing'
+                ? 'Let’s build something useful.'
+                : "LET'S CONNECT!"}
             </h2>
             <p className="mt-4 text-lg text-slate-200/90 md:text-xl">
-              I enjoy meeting new people and chatting about engineering or
-              creative projects. Always happy to connect.
+              {variant === 'landing'
+                ? 'Have an opportunity, an interesting problem, or a project in mind? I’d love to hear about it.'
+                : 'I enjoy meeting new people and chatting about engineering or creative projects. Always happy to connect.'}
             </p>
           </div>
 
@@ -249,74 +261,96 @@ const Contact = ({ viewMode = 'map' }: ContactProps) => {
             </div>
 
             <Card className="border-cyan-300/22 bg-slate-950/80 p-4 md:p-6">
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-1.5">
-                  <label
-                    htmlFor="name"
-                    className="retro-ui text-[10px] text-slate-100"
+              {variant === 'landing' && !isEmailConfigured ? (
+                <div className="lp-email-fallback">
+                  <h3>Start a conversation.</h3>
+                  <p>
+                    Tell me what you’re working on, what you’re looking for, or
+                    just say hello.
+                  </p>
+                  <a
+                    className="lp-button lp-button-primary"
+                    href="mailto:nathan.a.zimmerman@gmail.com"
+                    onClick={() =>
+                      trackPortfolioEvent('contact_link_click', {
+                        destination: 'email',
+                        source: 'landing_contact',
+                      })
+                    }
                   >
-                    Name
-                  </label>
-                  <Input
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="Your name"
-                    required
-                    maxLength={MAX_NAME_LENGTH}
-                    className="border-slate-400/35 bg-slate-900/70 text-slate-100 placeholder:text-slate-400 focus-visible:ring-cyan-300/40"
-                  />
+                    Write an email <Mail size={18} aria-hidden="true" />
+                  </a>
                 </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-1.5">
+                    <label
+                      htmlFor="name"
+                      className="retro-ui text-[10px] text-slate-100"
+                    >
+                      Name
+                    </label>
+                    <Input
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      placeholder="Your name"
+                      required
+                      maxLength={MAX_NAME_LENGTH}
+                      className="border-slate-400/35 bg-slate-900/70 text-slate-100 placeholder:text-slate-400 focus-visible:ring-cyan-300/40"
+                    />
+                  </div>
 
-                <div className="space-y-1.5">
-                  <label
-                    htmlFor="email"
-                    className="retro-ui text-[10px] text-slate-100"
+                  <div className="space-y-1.5">
+                    <label
+                      htmlFor="email"
+                      className="retro-ui text-[10px] text-slate-100"
+                    >
+                      Email
+                    </label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="your.email@example.com"
+                      required
+                      maxLength={MAX_EMAIL_LENGTH}
+                      className="border-slate-400/35 bg-slate-900/70 text-slate-100 placeholder:text-slate-400 focus-visible:ring-cyan-300/40"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label
+                      htmlFor="message"
+                      className="retro-ui text-[10px] text-slate-100"
+                    >
+                      Message
+                    </label>
+                    <Textarea
+                      id="message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      placeholder="Tell me what you're working on or say hello!"
+                      rows={5}
+                      required
+                      maxLength={MAX_MESSAGE_LENGTH}
+                      className="resize-none border-slate-400/35 bg-slate-900/70 text-slate-100 placeholder:text-slate-400 focus-visible:ring-cyan-300/40"
+                    />
+                  </div>
+
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="retro-ui w-full rounded-sm border border-emerald-300/45 bg-emerald-500/18 text-xs text-emerald-50 hover:bg-emerald-500/30"
                   >
-                    Email
-                  </label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="your.email@example.com"
-                    required
-                    maxLength={MAX_EMAIL_LENGTH}
-                    className="border-slate-400/35 bg-slate-900/70 text-slate-100 placeholder:text-slate-400 focus-visible:ring-cyan-300/40"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label
-                    htmlFor="message"
-                    className="retro-ui text-[10px] text-slate-100"
-                  >
-                    Message
-                  </label>
-                  <Textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    placeholder="Tell me what you're working on or say hello!"
-                    rows={5}
-                    required
-                    maxLength={MAX_MESSAGE_LENGTH}
-                    className="resize-none border-slate-400/35 bg-slate-900/70 text-slate-100 placeholder:text-slate-400 focus-visible:ring-cyan-300/40"
-                  />
-                </div>
-
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="retro-ui w-full rounded-sm border border-emerald-300/45 bg-emerald-500/18 text-xs text-emerald-50 hover:bg-emerald-500/30"
-                >
-                  {isSubmitting ? 'Sending...' : 'Send Message'}
-                </Button>
-              </form>
+                    {isSubmitting ? 'Sending...' : 'Send Message'}
+                  </Button>
+                </form>
+              )}
             </Card>
           </div>
         </div>

@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import Index from './pages/Index';
 import NotFound from './pages/NotFound';
 import ProjectDetail from './pages/ProjectDetail';
+import Landing from './pages/Landing';
 
 const queryClient = new QueryClient();
 
@@ -24,7 +25,8 @@ const App = () => (
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
-        <Route path="/" element={<Index />} />
+        <Route path="/" element={<Landing />} />
+        <Route path="/explore" element={<Index />} />
         <Route path="/projects/:slug" element={<ProjectDetail />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

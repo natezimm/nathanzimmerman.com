@@ -44,11 +44,9 @@ describe('Navigation', () => {
     ).not.toBeInTheDocument();
     expect(screen.queryByText(/❤/i)).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('button', { name: /NATHAN ZIMMERMAN/i }));
-    expect(homeElement.scrollIntoView).toHaveBeenCalledWith({
-      behavior: 'smooth',
-      block: 'start',
-    });
+    expect(
+      screen.getByRole('link', { name: /NATHAN ZIMMERMAN/i })
+    ).toHaveAttribute('href', '/');
 
     fireEvent.click(screen.getByRole('button', { name: 'PROJECTS' }));
     expect(projectsElement.scrollIntoView).toHaveBeenCalledWith({
