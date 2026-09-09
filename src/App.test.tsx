@@ -112,9 +112,9 @@ describe('App shell', () => {
 
     try {
       const links = [
-        screen.getByRole('link', { name: 'Résumé', exact: true }),
+        screen.getByRole('link', { name: 'Résumé' }),
         screen.getByRole('link', { name: 'Write an email' }),
-        screen.getByRole('link', { name: 'GitHub', exact: true }),
+        screen.getByRole('link', { name: 'GitHub' }),
       ];
       for (const link of links) {
         // Exercise each handler without opening an external app or document.
