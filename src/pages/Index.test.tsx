@@ -1,5 +1,5 @@
 import { afterEach, describe, it, expect, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Index from './Index';
 
@@ -19,7 +19,7 @@ describe('Index page', () => {
     expect(mapToggle).toHaveAttribute('aria-pressed', 'true');
   });
 
-  it('defaults small screens to resume view', () => {
+  it('keeps the interactive map as the default on small screens', () => {
     vi.stubGlobal(
       'matchMedia',
       vi.fn().mockImplementation((query: string) => ({
@@ -39,8 +39,24 @@ describe('Index page', () => {
       </MemoryRouter>
     );
 
-    const resumeToggle = screen.getByRole('button', { name: 'RESUME VIEW' });
-    expect(resumeToggle).toHaveAttribute('aria-pressed', 'true');
+    const mapToggle = screen.getByRole('button', { name: 'MAP VIEW' });
+    expect(mapToggle).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('switches the complete portfolio into resume view on request', () => {
+    const { container } = render(
+      <MemoryRouter>
+        <Index />
+      </MemoryRouter>
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'RESUME VIEW' }));
+
+    expect(container.firstChild).toHaveAttribute('data-view-mode', 'grid');
+    expect(screen.getByRole('button', { name: 'RESUME VIEW' })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
   });
 
   it('renders the main sections', async () => {
@@ -51,7 +67,7 @@ describe('Index page', () => {
     );
 
     expect(
-      screen.getByRole('heading', { name: /Nathan's World/i })
+      screen.getByRole('heading', { name: /Explore Nathan's world/i })
     ).toBeInTheDocument();
 
     await waitFor(

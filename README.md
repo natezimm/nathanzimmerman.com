@@ -5,8 +5,6 @@
 
 Personal portfolio built with React, TypeScript, and Vite. The single-page experience ties together navigation, hero, about, projects, and contact sections with responsive layouts, theme persistence, and subtle animation hooks powered by Radix UI primitives, Lucide icons, and Sonner toasts. See [`docs/architecture.md`](docs/architecture.md) for runtime boundaries, quality gates, deployment flow, and deferred architecture follow-ups.
 
-The new landing page lives at `/`. The original map and resume views remain available at `/explore`, and individual projects retain their `/projects/:slug` routes. Landing styles are scoped in `src/pages/Landing.css`. The contact section uses the existing EmailJS form when configured and offers a direct email link otherwise.
-
 ## Quick start
 
 1. `npm install`

@@ -536,3 +536,393 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Interactive portfolio redesign — map-first, field-guide inspired */
+.retro-shell {
+  --world-ink: #151a16;
+  --world-panel: #1d241d;
+  --world-panel-raised: #252e24;
+  --world-paper: #eef1e8;
+  --world-lime: #d4f27c;
+  --world-muted: #abb5a3;
+  --world-line: #465143;
+  background: var(--world-ink);
+  color: var(--world-paper);
+}
+
+.retro-shell .retro-nav {
+  border-color: var(--world-line);
+  background: rgba(21, 26, 22, 0.94);
+  box-shadow: none;
+}
+
+.retro-shell .retro-nav > div > div {
+  min-height: 74px;
+}
+
+.retro-shell .retro-nav button:first-child {
+  color: var(--world-lime);
+}
+
+.retro-shell .retro-nav button:not(:first-child) {
+  color: #d9ded3;
+}
+
+.retro-shell .retro-nav button:not(:first-child):hover {
+  color: var(--world-lime);
+}
+
+.retro-shell .retro-nav a[aria-label],
+.retro-shell .retro-nav a[href='/resume.pdf'] {
+  border-color: #63705e;
+  background: transparent;
+  color: var(--world-paper);
+}
+
+.retro-shell .retro-nav a[aria-label]:hover,
+.retro-shell .retro-nav a[href='/resume.pdf']:hover {
+  border-color: var(--world-lime);
+  background: var(--world-lime);
+  color: var(--world-ink);
+}
+
+.retro-shell .hero-overworld {
+  background:
+    radial-gradient(
+      circle at 88% 4%,
+      rgba(212, 242, 124, 0.09),
+      transparent 25rem
+    ),
+    linear-gradient(180deg, #151a16, #1a211a);
+}
+
+.world-intro {
+  position: relative;
+}
+
+.world-intro::before {
+  content: '';
+  position: absolute;
+  top: -22px;
+  right: 0;
+  width: 34%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--world-line));
+}
+
+.world-kicker {
+  color: var(--world-muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.world-title {
+  margin-top: 0.8rem;
+  max-width: 800px;
+  color: var(--world-paper);
+  font-family: 'Outfit', 'Inter', sans-serif;
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+}
+
+.world-title span {
+  color: var(--world-lime);
+}
+
+.world-lede {
+  max-width: 620px;
+  margin-top: 1.35rem;
+  color: #c2cabd;
+  font-size: 1.0625rem;
+  line-height: 1.8;
+}
+
+.world-primary-action,
+.world-secondary-action {
+  min-height: 46px;
+  border: 1px solid var(--world-lime);
+  border-radius: 2px;
+  transition:
+    transform 160ms ease,
+    background 160ms ease,
+    color 160ms ease;
+}
+
+.world-primary-action {
+  background: var(--world-lime);
+  color: var(--world-ink);
+}
+
+.world-secondary-action {
+  background: transparent;
+  color: var(--world-paper);
+}
+
+.world-primary-action:hover,
+.world-secondary-action:hover {
+  transform: translateY(-2px);
+}
+
+.world-secondary-action:hover {
+  background: var(--world-lime);
+  color: var(--world-ink);
+}
+
+.retro-shell .guide-panel {
+  border: 1px solid var(--world-line);
+  border-radius: 3px;
+  background: var(--world-panel);
+  box-shadow: 9px 9px 0 rgba(3, 6, 3, 0.25);
+}
+
+.guide-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.guide-heading p {
+  color: var(--world-lime);
+  font-size: 0.75rem;
+}
+
+.guide-heading span {
+  color: var(--world-muted);
+  font-size: 0.75rem;
+}
+
+.retro-shell .guide-grid button {
+  border: 1px solid #4d5948;
+  border-radius: 2px;
+  background: #171d17;
+  color: #e0e5d9;
+}
+
+.retro-shell .guide-grid button:hover,
+.retro-shell .guide-grid button:focus-visible {
+  border-color: var(--world-lime);
+  background: #2a3525;
+  color: var(--world-lime);
+}
+
+.retro-shell .hero-board {
+  border: 1px solid #65705f;
+  border-radius: 4px;
+  background: #0d120e;
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.38);
+}
+
+.resume-hub-title {
+  font-size: clamp(3rem, 6vw, 5rem);
+}
+
+.resume-hub-grid > * {
+  display: flex;
+  min-height: 86px;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  border: 1px solid var(--world-line);
+  border-radius: 2px;
+  background: #171d17;
+  color: var(--world-paper);
+}
+
+.resume-hub-grid > * > span {
+  color: var(--world-muted);
+  font-size: 0.62rem;
+}
+
+.resume-hub-grid > *:hover,
+.resume-hub-grid > *:focus-visible {
+  border-color: var(--world-lime);
+  background: #2a3525;
+  color: var(--world-lime);
+}
+
+.world-frame-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 43px;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid #65705f;
+  color: #cbd3c5;
+  font-size: 0.7rem;
+}
+
+.world-live-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--world-lime);
+}
+
+.world-live-indicator i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--world-lime);
+  box-shadow: 0 0 10px rgba(212, 242, 124, 0.68);
+}
+
+.retro-shell .world-map {
+  border-radius: 0;
+  box-shadow: none;
+  filter: saturate(0.9) contrast(1.03);
+}
+
+.retro-shell .map-hotspot:hover,
+.retro-shell .map-hotspot:focus-visible {
+  outline: 2px solid var(--world-lime);
+  outline-offset: -2px;
+  background: rgba(212, 242, 124, 0.1);
+  box-shadow: inset 0 0 20px rgba(212, 242, 124, 0.16);
+}
+
+.retro-shell .map-player {
+  filter: drop-shadow(0 0 5px var(--world-lime))
+    drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+}
+
+.world-control-deck {
+  border-top: 1px solid #65705f;
+  background: var(--world-panel);
+}
+
+.world-control-deck p {
+  color: #c3ccbd;
+  font-size: 0.8125rem;
+}
+
+.world-control-deck p .retro-ui,
+.world-control-deck .text-emerald-300,
+.world-control-deck .text-amber-200,
+.world-control-deck .text-amber-300 {
+  color: var(--world-lime);
+}
+
+.retro-shell .map-roam-button {
+  border-color: #5d6a57;
+  border-radius: 2px;
+  background: #131913;
+  color: var(--world-paper);
+}
+
+.retro-shell .map-roam-button:hover:not(:disabled),
+.retro-shell .map-roam-button:focus-visible:not(:disabled) {
+  border-color: var(--world-lime);
+  background: var(--world-lime);
+  color: var(--world-ink);
+}
+
+.retro-shell .about-zone,
+.retro-shell .projects-zone,
+.retro-shell .experience-zone,
+.retro-shell .skills-zone,
+.retro-shell .contact-zone {
+  border-color: var(--world-line);
+  background: var(--world-ink);
+}
+
+.retro-shell .projects-zone,
+.retro-shell .skills-zone {
+  background: #1b221b;
+}
+
+.retro-shell
+  :is(
+    .about-zone,
+    .projects-zone,
+    .experience-zone,
+    .skills-zone,
+    .contact-zone
+  )
+  h2 {
+  color: var(--world-lime);
+}
+
+.retro-shell .about-card,
+.retro-shell .retro-project-card,
+.retro-shell .retro-skill-card,
+.retro-shell .experience-board,
+.retro-shell .contact-zone .border {
+  border-color: var(--world-line);
+  border-radius: 3px;
+  background: var(--world-panel);
+  color: var(--world-paper);
+  box-shadow: none;
+}
+
+.retro-shell .retro-project-card:hover {
+  border-color: var(--world-lime);
+  transform: translateY(-4px);
+}
+
+.retro-shell .experience-board,
+.retro-shell .experience-board article {
+  border-color: var(--world-line);
+  background: var(--world-panel);
+  color: var(--world-paper);
+}
+
+.retro-shell .experience-board article + article {
+  margin-top: 1rem;
+}
+
+.retro-shell .experience-board :is(p, h3, span) {
+  color: inherit;
+}
+
+.retro-shell .experience-board article > div:first-child > p:first-child,
+.retro-shell .retro-project-card > p:first-child,
+.retro-shell .retro-skill-card h3 {
+  color: var(--world-lime);
+}
+
+.retro-shell .retro-skill-card [role='meter'] {
+  background: var(--world-lime);
+}
+
+.retro-shell .retro-contact-btn {
+  border-color: #5d6a57;
+  background: transparent;
+  color: var(--world-paper);
+}
+
+.retro-shell .retro-contact-btn:hover {
+  border-color: var(--world-lime);
+  background: var(--world-lime);
+  color: var(--world-ink);
+}
+
+.retro-shell .retro-footer {
+  border-color: var(--world-line);
+  background: #111511;
+  box-shadow: none;
+}
+
+@media (max-width: 767px) {
+  .world-intro::before {
+    display: none;
+  }
+
+  .world-title {
+    font-size: clamp(2.65rem, 13vw, 4rem);
+  }
+
+  .world-lede {
+    font-size: 1rem;
+  }
+
+  .retro-shell .guide-panel {
+    max-width: none;
+  }
+
+  .world-control-deck {
+    align-items: flex-start;
+  }
+}

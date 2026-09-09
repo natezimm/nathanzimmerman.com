@@ -9,14 +9,8 @@ import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 import { type ViewMode } from '@/data/portfolioData';
 
-const MOBILE_RESUME_VIEW_QUERY = '(max-width: 767px)';
-
 const getInitialViewMode = (): ViewMode => {
-  if (typeof window === 'undefined' || !window.matchMedia) {
-    return 'map';
-  }
-
-  return window.matchMedia(MOBILE_RESUME_VIEW_QUERY).matches ? 'grid' : 'map';
+  return 'map';
 };
 
 const Index = () => {

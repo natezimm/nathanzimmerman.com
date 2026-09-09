@@ -199,4 +199,22 @@ describe('Contact form', () => {
 
     expect(emailjs.send).not.toHaveBeenCalled();
   });
+
+  it('rejects content that becomes empty after sanitizing', async () => {
+    render(<Contact />);
+
+    fillForm({ name: '<>', email: 'test@example.com', message: 'Hello' });
+    const form = screen
+      .getByRole('button', { name: 'Send Message' })
+      .closest('form');
+    if (!form) throw new Error('Contact form not found');
+    fireEvent.submit(form);
+
+    await waitFor(() => {
+      expect(toast.error).toHaveBeenCalledWith(
+        'Please fill in all fields with valid content.'
+      );
+    });
+    expect(emailjs.send).not.toHaveBeenCalled();
+  });
 });

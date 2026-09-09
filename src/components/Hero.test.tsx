@@ -44,25 +44,25 @@ describe('Hero section', () => {
     );
 
     expect(
-      screen.getByRole('heading', { name: /Nathan's World/i })
+      screen.getByRole('heading', { name: /Explore Nathan's world/i })
     ).toBeInTheDocument();
     expect(screen.getByAltText(/Retro overworld map/i)).toBeInTheDocument();
     expect(
-      screen.getByRole('button', { name: /PRESS START/i })
+      screen.getByRole('button', { name: /SEE ALL PROJECTS/i })
     ).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: /HOMESTEAD/i })
     ).toBeInTheDocument();
   });
 
-  it('scrolls when press start is clicked', () => {
+  it('scrolls when see all projects is clicked', () => {
     render(
       <MemoryRouter>
         <Hero viewMode="map" onViewModeChange={onViewModeChange} />
       </MemoryRouter>
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /PRESS START/i }));
+    fireEvent.click(screen.getByRole('button', { name: /SEE ALL PROJECTS/i }));
     expect(projectsElement.scrollIntoView).toHaveBeenCalledWith({
       behavior: 'smooth',
       block: 'start',
@@ -106,6 +106,18 @@ describe('Hero section', () => {
     );
 
     expect(onViewModeChange).toHaveBeenCalledWith('grid');
+  });
+
+  it('switches back to the interactive map from resume view', () => {
+    render(
+      <MemoryRouter>
+        <Hero viewMode="grid" onViewModeChange={onViewModeChange} />
+      </MemoryRouter>
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Switch to map view' }));
+
+    expect(onViewModeChange).toHaveBeenCalledWith('map');
   });
 
   it('locks manual controls to available path directions', () => {

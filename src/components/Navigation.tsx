@@ -36,9 +36,12 @@ const Navigation = ({ viewMode, onViewModeChange }: NavigationProps) => {
     <nav className="retro-nav fixed left-0 right-0 top-0 z-50 border-b border-cyan-300/30 bg-slate-950/92 backdrop-blur-md">
       <div className="container mx-auto px-4">
         <div className="flex min-h-[66px] items-center justify-between gap-4">
-          <a href="/" className="retro-ui text-xs text-emerald-300 md:text-sm">
+          <button
+            onClick={() => scrollToSection('home')}
+            className="retro-ui text-xs text-emerald-300 md:text-sm"
+          >
             NATHAN ZIMMERMAN
-          </a>
+          </button>
 
           <div className="hidden items-center gap-5 lg:flex">
             {navItems.map((item) => (

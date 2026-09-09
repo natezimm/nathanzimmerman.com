@@ -732,28 +732,31 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
     return (
       <section
         id="home"
-        className="retro-section hero-overworld pb-10 pt-24 md:pb-14 md:pt-28"
+        className="retro-section hero-overworld pb-12 pt-24 md:pb-16 md:pt-28"
       >
         <div className="container mx-auto px-4">
-          <div className="hero-board rounded-sm border border-cyan-300/35 bg-slate-950/80 p-5">
-            <p className="retro-ui text-xs text-emerald-300 md:text-sm">
-              RESUME VIEW
-            </p>
-            <h1 className="retro-heading mt-2 text-2xl text-slate-100 md:text-4xl">
-              Nathan's World
+          <div className="resume-hub hero-board p-5 md:p-8">
+            <p className="world-kicker retro-ui">QUICK ACCESS / RESUME VIEW</p>
+            <h1 className="world-title resume-hub-title">
+              Nathan&apos;s <span>world.</span>
             </h1>
+            <p className="world-lede">
+              Jump directly to the work, experience, and tools—or switch back to
+              the map and explore on foot.
+            </p>
             <MobileViewToggle
               viewMode={viewMode}
               onViewModeChange={onViewModeChange}
             />
 
-            <div className="mt-6 grid gap-3 md:grid-cols-3">
+            <div className="resume-hub-grid mt-8 grid gap-3 md:grid-cols-3">
               {mapLocations.map((location) => (
                 <button
                   key={location.id}
                   onClick={() => scrollToSection(location.id)}
-                  className="retro-ui rounded-sm border border-cyan-300/30 bg-cyan-500/10 px-3 py-3 text-left text-xs text-cyan-100 hover:bg-cyan-500/20"
+                  className="retro-ui px-4 py-4 text-left text-xs"
                 >
+                  <span>SECTION</span>
                   {location.id.toUpperCase()}
                 </button>
               ))}
@@ -761,8 +764,9 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
                 <Link
                   key={project.slug}
                   to={`/projects/${project.slug}`}
-                  className="retro-ui rounded-sm border border-amber-300/35 bg-amber-500/10 px-3 py-3 text-xs text-amber-100 hover:bg-amber-500/20"
+                  className="retro-ui px-4 py-4 text-xs"
                 >
+                  <span>PROJECT</span>
                   {project.title}
                 </Link>
               ))}
@@ -776,28 +780,32 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
   return (
     <section
       id="home"
-      className="retro-section hero-overworld pb-10 pt-24 md:pb-14 md:pt-28"
+      className="retro-section hero-overworld pb-12 pt-24 md:pb-16 md:pt-28"
     >
       <div className="container mx-auto px-4">
-        <header className="mb-6 grid gap-4 md:grid-cols-[1fr_auto] md:items-end">
-          <div>
-            <p className="retro-ui text-xs text-emerald-300 md:text-sm">
-              INTERACTIVE MAP
+        <header className="world-intro mb-7 grid gap-6 lg:grid-cols-[1fr_360px] lg:items-end">
+          <div className="world-intro-copy">
+            <p className="world-kicker retro-ui">
+              FULL-STACK SOFTWARE ENGINEER · NJ
             </p>
-            <h1 className="retro-heading mt-2 text-2xl text-slate-100 md:text-4xl">
-              Nathan's World
+            <h1 className="world-title">
+              Explore Nathan&apos;s <span>world.</span>
             </h1>
+            <p className="world-lede">
+              Walk the map to discover the projects, experience, and skills
+              behind seven years of building software.
+            </p>
             <MobileViewToggle
               viewMode={viewMode}
               onViewModeChange={onViewModeChange}
             />
-            <div className="mt-4 flex flex-wrap items-center gap-3">
+            <div className="world-actions mt-5 flex flex-wrap items-center gap-3">
               <button
                 onClick={() => scrollToSection('projects')}
-                className="retro-ui inline-flex items-center gap-2 rounded-sm border border-amber-300/50 bg-amber-500/15 px-4 py-2 text-xs text-amber-100 hover:bg-amber-500/25"
+                className="world-primary-action retro-ui inline-flex items-center gap-2 px-4 py-3 text-xs"
               >
                 <ChevronDown className="h-3.5 w-3.5" />
-                PRESS START
+                SEE ALL PROJECTS
               </button>
               <a
                 href="/resume.pdf"
@@ -806,7 +814,7 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
                 onClick={() =>
                   trackPortfolioEvent('resume_click', { source: 'hero' })
                 }
-                className="retro-ui inline-flex items-center gap-2 rounded-sm border border-emerald-300/45 bg-emerald-500/12 px-4 py-2 text-xs text-emerald-100 hover:bg-emerald-500/25"
+                className="world-secondary-action retro-ui inline-flex items-center gap-2 px-4 py-3 text-xs"
               >
                 <FileText className="h-3.5 w-3.5" />
                 RESUME
@@ -814,16 +822,17 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
             </div>
           </div>
 
-          <aside className="guide-panel w-full max-w-[300px] rounded-sm border border-cyan-300/35 bg-slate-950/80 p-4 md:justify-self-end">
-            <p className="retro-ui text-xs text-emerald-300">
-              CHOOSE DESTINATION
-            </p>
-            <div className="mt-3 grid grid-cols-2 gap-2">
+          <aside className="guide-panel w-full p-5 lg:justify-self-end">
+            <div className="guide-heading">
+              <p className="retro-ui">FAST TRAVEL</p>
+              <span>Choose a destination</span>
+            </div>
+            <div className="guide-grid mt-4 grid grid-cols-2 gap-2">
               {mapLocations.map((location) => (
                 <button
                   key={location.id}
                   onClick={() => scrollToSection(location.id)}
-                  className="retro-ui rounded-sm border border-cyan-300/30 bg-cyan-500/10 px-2 py-2 text-[10px] text-cyan-100 hover:bg-cyan-500/20"
+                  className="retro-ui px-2 py-2.5 text-[10px]"
                 >
                   {location.id.toUpperCase()}
                 </button>
@@ -832,7 +841,13 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
           </aside>
         </header>
 
-        <div className="hero-board overflow-hidden rounded-sm border border-cyan-300/35 bg-slate-950/80">
+        <div className="hero-board overflow-hidden">
+          <div className="world-frame-bar retro-ui">
+            <span>NATHAN&apos;S WORLD / 01</span>
+            <span className="world-live-indicator">
+              <i /> INTERACTIVE
+            </span>
+          </div>
           <div className="world-map relative overflow-hidden rounded-sm image-pixelated outline-none">
             <img
               src={backgroundMap}
@@ -903,7 +918,7 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
             )}
           </div>
 
-          <div className="grid gap-3 border-t border-cyan-300/25 bg-slate-950/85 p-3 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div className="world-control-deck grid gap-4 p-4 lg:grid-cols-[1fr_auto] lg:items-center">
             <div className="space-y-2">
               <p className="text-xs text-slate-300">
                 <span className="retro-ui text-emerald-300">
@@ -934,7 +949,7 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
             <div className="flex flex-wrap items-center gap-3">
               <div className="flex items-center gap-2 text-[11px] text-slate-200">
                 <MapPin className="h-3.5 w-3.5 text-amber-300" />
-                <span className="retro-ui">PATH LOCKED</span>
+                <span className="retro-ui">GUIDED PATHS</span>
               </div>
               <div
                 className="grid grid-cols-3 gap-1"
