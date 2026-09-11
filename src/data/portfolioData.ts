@@ -60,7 +60,7 @@ export const projectEntries: ProjectEntry[] = [
   {
     slug: 'nerdle',
     title: 'NERDLE',
-    subtitle: 'Daily Numbers Puzzle',
+    subtitle: 'Technology Word Game',
     regionLabel: 'Letter Wizard Tower',
     summary:
       'Word puzzle game inspired by Wordle, focused on technology-related vocabulary.',
@@ -68,7 +68,7 @@ export const projectEntries: ProjectEntry[] = [
       'Built with React and Node.js, featuring animated feedback, server-side validation, and persistent stats across multiple word lengths.',
     stack: ['React', 'Axios', 'Node.js'],
     features: [
-      'Technology-themed word list and daily puzzle flow',
+      'Technology-themed words with on-demand new games',
       'Animated guess feedback and keyboard state',
       'Server-side validation with persistent player stats',
       'Multiple word lengths for replay variety',
