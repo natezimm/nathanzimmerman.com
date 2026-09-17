@@ -31,6 +31,7 @@ import {
 } from '@/data/portfolioData';
 import { trackPortfolioEvent } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
+import { ProjectImage } from '@/components/shared/ProjectImage';
 import {
   ArrowDown,
   ArrowLeft,
@@ -1039,10 +1040,12 @@ const Hero = ({ viewMode, onViewModeChange }: HeroProps) => {
                       : 'bg-white'
                   )}
                 >
-                  <img
-                    src={activeProject.detailImage ?? activeProject.image}
-                    alt={`${activeProject.title} screenshot`}
-                    className="h-auto max-h-[460px] w-full object-contain"
+                  <ProjectImage
+                    project={activeProject}
+                    useDetail
+                    className="flex h-auto w-full items-center justify-center"
+                    imgClassName="h-auto max-h-[460px] w-full object-contain"
+                    sizes="(max-width: 768px) 100vw, 600px"
                   />
                 </div>
                 <div className="space-y-4">

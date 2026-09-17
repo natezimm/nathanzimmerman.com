@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { projectEntries, type ViewMode } from '@/data/portfolioData';
 import { trackPortfolioEvent } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
+import { ProjectImage } from '@/components/shared/ProjectImage';
 
 const accentClasses: Record<string, string> = {
   forest: 'border-green-400/38 bg-green-500/10',
@@ -63,10 +64,11 @@ const Projects = ({ viewMode }: ProjectsProps) => {
                       : 'bg-white'
                   )}
                 >
-                  <img
-                    src={project.image}
-                    alt={`${project.title} screenshot`}
-                    className="h-full w-full object-contain"
+                  <ProjectImage
+                    project={project}
+                    className="flex h-full w-full items-center justify-center"
+                    imgClassName="h-full w-full object-contain"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 300px"
                     loading="lazy"
                   />
                 </div>

@@ -1,8 +1,23 @@
+import blackjackImgAvif from '@/assets/project-blackjack.avif';
+import blackjackImgAvifSmall from '@/assets/project-blackjack-small.avif';
 import blackjackImgWebp from '@/assets/project-blackjack.webp';
+import blackjackImgWebpSmall from '@/assets/project-blackjack-small.webp';
+
 import brickbreakerDetailImgWebp from '@/assets/project-brickbreaker-detail.webp';
+import brickbreakerImgAvif from '@/assets/project-brickbreaker.avif';
+import brickbreakerImgAvifSmall from '@/assets/project-brickbreaker-small.avif';
 import brickbreakerImgWebp from '@/assets/project-brickbreaker.webp';
+import brickbreakerImgWebpSmall from '@/assets/project-brickbreaker-small.webp';
+
+import nerdleImgAvif from '@/assets/project-nerdle.avif';
+import nerdleImgAvifSmall from '@/assets/project-nerdle-small.avif';
 import nerdleImgWebp from '@/assets/project-nerdle.webp';
+import nerdleImgWebpSmall from '@/assets/project-nerdle-small.webp';
+
+import sudokuImgAvif from '@/assets/project-sudoku.avif';
+import sudokuImgAvifSmall from '@/assets/project-sudoku-small.avif';
 import sudokuImgWebp from '@/assets/project-sudoku.webp';
+import sudokuImgWebpSmall from '@/assets/project-sudoku-small.webp';
 
 export type ViewMode = 'map' | 'grid';
 export type SectionId =
@@ -11,6 +26,13 @@ export type SectionId =
   | 'experience'
   | 'skills'
   | 'contact';
+
+export type ProjectMedia = {
+  webp: string;
+  webpSmall?: string;
+  avif?: string;
+  avifSmall?: string;
+};
 
 export type ProjectEntry = {
   slug: string;
@@ -26,7 +48,9 @@ export type ProjectEntry = {
     code?: string;
   };
   image: string;
+  media?: ProjectMedia;
   detailImage?: string;
+  detailMedia?: ProjectMedia;
   mediaBackground: 'light' | 'dark';
   accent: 'forest' | 'violet' | 'ember' | 'azure' | 'gold' | 'jade';
 };
@@ -53,7 +77,16 @@ export const projectEntries: ProjectEntry[] = [
       code: 'https://github.com/natezimm/brick-breaker-resume',
     },
     image: brickbreakerImgWebp,
+    media: {
+      webp: brickbreakerImgWebp,
+      webpSmall: brickbreakerImgWebpSmall,
+      avif: brickbreakerImgAvif,
+      avifSmall: brickbreakerImgAvifSmall,
+    },
     detailImage: brickbreakerDetailImgWebp,
+    detailMedia: {
+      webp: brickbreakerDetailImgWebp,
+    },
     mediaBackground: 'light',
     accent: 'forest',
   },
@@ -78,6 +111,12 @@ export const projectEntries: ProjectEntry[] = [
       code: 'https://github.com/natezimm/nerdle',
     },
     image: nerdleImgWebp,
+    media: {
+      webp: nerdleImgWebp,
+      webpSmall: nerdleImgWebpSmall,
+      avif: nerdleImgAvif,
+      avifSmall: nerdleImgAvifSmall,
+    },
     mediaBackground: 'light',
     accent: 'violet',
   },
@@ -101,6 +140,12 @@ export const projectEntries: ProjectEntry[] = [
       code: 'https://github.com/natezimm/sudoku',
     },
     image: sudokuImgWebp,
+    media: {
+      webp: sudokuImgWebp,
+      webpSmall: sudokuImgWebpSmall,
+      avif: sudokuImgAvif,
+      avifSmall: sudokuImgAvifSmall,
+    },
     mediaBackground: 'light',
     accent: 'ember',
   },
@@ -124,6 +169,12 @@ export const projectEntries: ProjectEntry[] = [
       code: 'https://github.com/natezimm/blackjack',
     },
     image: blackjackImgWebp,
+    media: {
+      webp: blackjackImgWebp,
+      webpSmall: blackjackImgWebpSmall,
+      avif: blackjackImgAvif,
+      avifSmall: blackjackImgAvifSmall,
+    },
     mediaBackground: 'dark',
     accent: 'gold',
   },

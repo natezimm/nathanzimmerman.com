@@ -19,6 +19,19 @@ describe('Index page', () => {
     expect(mapToggle).toHaveAttribute('aria-pressed', 'true');
   });
 
+  it('falls back to map view when matchMedia is unavailable', () => {
+    vi.stubGlobal('matchMedia', undefined);
+
+    render(
+      <MemoryRouter>
+        <Index />
+      </MemoryRouter>
+    );
+
+    const mapToggle = screen.getByRole('button', { name: 'MAP VIEW' });
+    expect(mapToggle).toHaveAttribute('aria-pressed', 'true');
+  });
+
   it('defaults small screens to resume view', () => {
     vi.stubGlobal(
       'matchMedia',

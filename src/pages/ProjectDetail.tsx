@@ -4,6 +4,7 @@ import { projectBySlug } from '@/data/portfolioData';
 import { trackPortfolioEvent } from '@/lib/analytics';
 import { cn } from '@/lib/utils';
 import NotFound from './NotFound';
+import { ProjectImage } from '@/components/shared/ProjectImage';
 
 const ProjectDetail = () => {
   const { slug = '' } = useParams();
@@ -61,10 +62,13 @@ const ProjectDetail = () => {
                     : 'bg-white'
                 )}
               >
-                <img
-                  src={project.detailImage ?? project.image}
-                  alt={`${project.title} screenshot`}
-                  className="h-auto w-full object-contain"
+                <ProjectImage
+                  project={project}
+                  useDetail
+                  className="flex h-auto w-full items-center justify-center"
+                  imgClassName="h-auto w-full object-contain"
+                  sizes="(max-width: 1024px) 100vw, 750px"
+                  loading="eager"
                 />
               </div>
 

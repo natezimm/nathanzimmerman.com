@@ -1,6 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const port = 4173;
+const port = Number(process.env.PLAYWRIGHT_PORT || process.env.PORT) || 4173;
 const host = '127.0.0.1';
 
 export default defineConfig({
