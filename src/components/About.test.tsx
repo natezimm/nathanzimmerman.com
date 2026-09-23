@@ -1,18 +1,20 @@
-import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import About from './About';
+import { describe, expect, it } from "vitest";
+import { render, screen } from "@testing-library/react";
+import About from "./About";
 
-describe('About section', () => {
-  it('renders profile copy and stats', () => {
-    render(<About viewMode="map" />);
+describe("About section", () => {
+  it("renders the key skills", () => {
+    render(<About />);
 
-    expect(
-      screen.getByRole('heading', { name: /PLAYER PROFILE/i })
-    ).toBeInTheDocument();
-    expect(screen.getAllByText(/Software Engineer II/i).length).toBeGreaterThan(
-      0
-    );
-    expect(screen.getByText('PLAYER STATS')).toBeInTheDocument();
-    expect(screen.getByText('Problem Solving')).toBeInTheDocument();
+    const skillHeadings = [
+      "Full-Stack Development",
+      "Backend & Architecture",
+      "Cloud & DevOps",
+      "Team Collaboration",
+    ];
+
+    skillHeadings.forEach((skill) => {
+      expect(screen.getByText(skill)).toBeInTheDocument();
+    });
   });
 });

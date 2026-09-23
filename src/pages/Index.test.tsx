@@ -1,89 +1,29 @@
-import { afterEach, describe, it, expect, vi } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import Index from './Index';
+import { describe, it, expect } from "vitest";
+import { render, screen, waitFor } from "@testing-library/react";
+import Index from "./Index";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 
-describe('Index page', () => {
-  afterEach(() => {
-    vi.unstubAllGlobals();
-  });
-
-  it('renders the executive hero and primary sections', () => {
+describe("Index page", () => {
+  it("renders the main sections", async () => {
     render(
-      <MemoryRouter>
+      <ThemeProvider>
         <Index />
-      </MemoryRouter>
+      </ThemeProvider>
     );
 
-    // Hero check
     expect(
-      screen.getByRole('heading', { name: /High-Integrity Distributed Systems/i })
+      screen.getByRole("heading", { name: /Hi, I'm Nathan/ })
     ).toBeInTheDocument();
-
-    // Section headings check
-    expect(
-      screen.getByRole('heading', { name: /Systems Blueprint Console/i })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { name: /Engineering Dossier/i })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { name: /Technical Specification Matrix/i })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { name: /Communication Dispatch/i })
-    ).toBeInTheDocument();
-  });
-
-  it('opens and closes the command palette via trigger button', () => {
-    render(
-      <MemoryRouter>
-        <Index />
-      </MemoryRouter>
-    );
-
-    const trigger = screen.getByRole('button', {
-      name: /Open Command Palette/i,
-    });
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-
-    fireEvent.click(trigger);
-    expect(screen.getByRole('dialog')).toBeInTheDocument();
-
-    // Close via close button
-    const closeBtn = screen.getByRole('button', { name: /Close command palette/i });
-    fireEvent.click(closeBtn);
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-  });
-
-  it('filters results in the command palette when user searches', () => {
-    render(
-      <MemoryRouter>
-        <Index />
-      </MemoryRouter>
-    );
-
-    fireEvent.click(screen.getByRole('button', { name: /Open Command Palette/i }));
-    const input = screen.getByPlaceholderText(/Ask about Nathan's experience/i);
-
-    fireEvent.change(input, { target: { value: 'Nelnet' } });
-    expect(
-      screen.getByRole('heading', { name: /Nelnet — Software Engineer II/i })
-    ).toBeInTheDocument();
-  });
-
-  it('toggles command palette with meta+k keydown', () => {
-    render(
-      <MemoryRouter>
-        <Index />
-      </MemoryRouter>
-    );
-
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    fireEvent.keyDown(window, { key: 'k', metaKey: true });
-    expect(screen.getByRole('dialog')).toBeInTheDocument();
-
-    fireEvent.keyDown(window, { key: 'Escape' });
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { name: /Featured Projects/ })
+      ).toBeInTheDocument();
+    }, { timeout: 5000 });
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", { name: /About Me/ })
+      ).toBeInTheDocument();
+    }, { timeout: 5000 });
   });
 });
