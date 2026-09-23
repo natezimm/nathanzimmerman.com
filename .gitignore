@@ -37,3 +37,6 @@ coverage
 .vitest
 playwright-report
 test-results
+
+# Local Roadmaps and Plans
+PORTFOLIO_ROADMAP.md
