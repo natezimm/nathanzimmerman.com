@@ -1,37 +1,40 @@
-import { useState } from 'react';
-import Navigation from '@/components/Navigation';
-import Hero from '@/components/Hero';
-import About from '@/components/About';
-import Experience from '@/components/Experience';
-import Skills from '@/components/Skills';
-import Projects from '@/components/Projects';
-import Contact from '@/components/Contact';
-import Footer from '@/components/Footer';
-import { type ViewMode } from '@/data/portfolioData';
+import { useState, useEffect } from 'react';
+import Header from '@/components/layout/Header';
+import CommandPalette from '@/components/layout/CommandPalette';
+import Hero from '@/components/sections/Hero';
+import Projects from '@/components/sections/Projects';
+import Experience from '@/components/sections/Experience';
+import Skills from '@/components/sections/Skills';
+import Contact from '@/components/sections/Contact';
+import Footer from '@/components/layout/Footer';
 
-const MOBILE_RESUME_VIEW_QUERY = '(max-width: 767px)';
+export const Index = () => {
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
 
-const getInitialViewMode = (): ViewMode => {
-  if (typeof window === 'undefined' || !window.matchMedia) {
-    return 'map';
-  }
-
-  return window.matchMedia(MOBILE_RESUME_VIEW_QUERY).matches ? 'grid' : 'map';
-};
-
-const Index = () => {
-  const [viewMode, setViewMode] = useState<ViewMode>(getInitialViewMode);
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        setCommandPaletteOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
-    <div className="retro-shell min-h-screen" data-view-mode={viewMode}>
-      <Navigation viewMode={viewMode} onViewModeChange={setViewMode} />
+    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-cyan-500/20 selection:text-cyan-200">
+      <Header onOpenCommandPalette={() => setCommandPaletteOpen(true)} />
+      <CommandPalette
+        isOpen={commandPaletteOpen}
+        onClose={() => setCommandPaletteOpen(false)}
+      />
       <main>
-        <Hero viewMode={viewMode} onViewModeChange={setViewMode} />
-        <About viewMode={viewMode} />
-        <Projects viewMode={viewMode} />
-        <Experience viewMode={viewMode} />
-        <Skills viewMode={viewMode} />
-        <Contact viewMode={viewMode} />
+        <Hero />
+        <Projects />
+        <Experience />
+        <Skills />
+        <Contact />
       </main>
       <Footer />
     </div>

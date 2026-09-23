@@ -12,7 +12,7 @@ describe('App shell', () => {
     render(<App />);
 
     expect(
-      screen.getByRole('heading', { name: /Nathan's World/i })
+      screen.getByRole('heading', { name: /Senior Software Engineer/i })
     ).toBeInTheDocument();
   });
 
@@ -24,7 +24,7 @@ describe('App shell', () => {
       screen.getByRole('heading', { name: /NERDLE/i })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('link', { name: /BACK TO NATHAN'S WORLD/i })
+      screen.getByRole('link', { name: /BACK TO PORTFOLIO/i })
     ).toBeInTheDocument();
     expect(
       screen.getByText(/Word puzzle game inspired by Wordle/i)

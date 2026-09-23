@@ -1,5 +1,5 @@
 import { afterEach, describe, it, expect, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Index from './Index';
 
@@ -8,80 +8,82 @@ describe('Index page', () => {
     vi.unstubAllGlobals();
   });
 
-  it('defaults to map view', () => {
+  it('renders the executive hero and primary sections', () => {
     render(
       <MemoryRouter>
         <Index />
       </MemoryRouter>
     );
 
-    const mapToggle = screen.getByRole('button', { name: 'MAP VIEW' });
-    expect(mapToggle).toHaveAttribute('aria-pressed', 'true');
-  });
-
-  it('falls back to map view when matchMedia is unavailable', () => {
-    vi.stubGlobal('matchMedia', undefined);
-
-    render(
-      <MemoryRouter>
-        <Index />
-      </MemoryRouter>
-    );
-
-    const mapToggle = screen.getByRole('button', { name: 'MAP VIEW' });
-    expect(mapToggle).toHaveAttribute('aria-pressed', 'true');
-  });
-
-  it('defaults small screens to resume view', () => {
-    vi.stubGlobal(
-      'matchMedia',
-      vi.fn().mockImplementation((query: string) => ({
-        matches: query === '(max-width: 767px)',
-        media: query,
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        addListener: vi.fn(),
-        removeListener: vi.fn(),
-        dispatchEvent: vi.fn(),
-      }))
-    );
-
-    render(
-      <MemoryRouter>
-        <Index />
-      </MemoryRouter>
-    );
-
-    const resumeToggle = screen.getByRole('button', { name: 'RESUME VIEW' });
-    expect(resumeToggle).toHaveAttribute('aria-pressed', 'true');
-  });
-
-  it('renders the main sections', async () => {
-    render(
-      <MemoryRouter>
-        <Index />
-      </MemoryRouter>
-    );
-
+    // Hero check
     expect(
-      screen.getByRole('heading', { name: /Nathan's World/i })
+      screen.getByRole('heading', { name: /Senior Software Engineer/i })
     ).toBeInTheDocument();
 
-    await waitFor(
-      () => {
-        expect(
-          screen.getByRole('heading', { name: /FEATURED PROJECTS/i })
-        ).toBeInTheDocument();
-      },
-      { timeout: 5000 }
+    // Section headings check
+    expect(
+      screen.getByRole('heading', { name: /Featured Projects & Live Demos/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /Production Engineering Experience/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /Verified Skills & Technology Stack/i })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /Let's Connect/i })
+    ).toBeInTheDocument();
+  });
+
+  it('opens and closes the command palette via trigger button', () => {
+    render(
+      <MemoryRouter>
+        <Index />
+      </MemoryRouter>
     );
-    await waitFor(
-      () => {
-        expect(
-          screen.getByRole('heading', { name: /EXPERIENCE/i })
-        ).toBeInTheDocument();
-      },
-      { timeout: 5000 }
+
+    const trigger = screen.getByRole('button', {
+      name: /Open Command Palette/i,
+    });
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+    fireEvent.click(trigger);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+    // Close via close button
+    const closeBtn = screen.getByRole('button', { name: /Close command palette/i });
+    fireEvent.click(closeBtn);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('filters results in the command palette when user searches', () => {
+    render(
+      <MemoryRouter>
+        <Index />
+      </MemoryRouter>
     );
+
+    fireEvent.click(screen.getByRole('button', { name: /Open Command Palette/i }));
+    const input = screen.getByPlaceholderText(/Ask about Nathan's experience/i);
+
+    fireEvent.change(input, { target: { value: 'Nelnet' } });
+    expect(
+      screen.getByRole('heading', { name: /Nelnet — Software Engineer II/i })
+    ).toBeInTheDocument();
+  });
+
+  it('toggles command palette with meta+k keydown', () => {
+    render(
+      <MemoryRouter>
+        <Index />
+      </MemoryRouter>
+    );
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    fireEvent.keyDown(window, { key: 'k', metaKey: true });
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 });
