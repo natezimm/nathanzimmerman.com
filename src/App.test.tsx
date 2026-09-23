@@ -12,7 +12,7 @@ describe('App shell', () => {
     render(<App />);
 
     expect(
-      screen.getByRole('heading', { name: /Senior Software Engineer/i })
+      screen.getByRole('heading', { name: /High-Integrity Distributed Systems/i })
     ).toBeInTheDocument();
   });
 

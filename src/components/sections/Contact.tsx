@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Mail, Github, Linkedin, MapPin, Copy, Check, Send, Loader2 } from 'lucide-react';
+import { Mail, Github, Linkedin, MapPin, Copy, Check, Send, Loader2, ArrowUpRight, Phone } from 'lucide-react';
 import emailjs from '@emailjs/browser';
 import { trackPortfolioEvent } from '@/lib/analytics';
 
@@ -28,12 +28,12 @@ export const Contact = () => {
     const now = Date.now();
     if (now - lastSubmitTime.current < SUBMIT_COOLDOWN_MS) {
       const waitSec = Math.ceil((SUBMIT_COOLDOWN_MS - (now - lastSubmitTime.current)) / 1000);
-      setStatusMessage({ type: 'error', text: `Please wait ${waitSec}s before sending another message.` });
+      setStatusMessage({ type: 'error', text: `Rate limit active: please wait ${waitSec}s before sending another message.` });
       return;
     }
 
     if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
-      setStatusMessage({ type: 'error', text: 'Please fill in all fields.' });
+      setStatusMessage({ type: 'error', text: 'All fields are required.' });
       return;
     }
 
@@ -45,10 +45,9 @@ export const Contact = () => {
       const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
       if (!serviceId || !templateId || !publicKey) {
-        // Fallback if emailjs is not configured locally
         setStatusMessage({
           type: 'error',
-          text: 'Contact service is currently offline. Please email me directly at nathan.a.zimmerman@gmail.com',
+          text: 'Dispatch service offline. Please transmit directly to nathan.a.zimmerman@gmail.com',
         });
         trackPortfolioEvent('contact_submit_failure', { reason: 'not_configured' });
         return;
@@ -68,12 +67,12 @@ export const Contact = () => {
 
       lastSubmitTime.current = Date.now();
       setFormData({ name: '', email: '', message: '' });
-      setStatusMessage({ type: 'success', text: 'Message sent successfully! I will get back to you shortly.' });
-      trackPortfolioEvent('contact_submit_success', { source: 'redesign_contact' });
+      setStatusMessage({ type: 'success', text: 'Dispatch transmitted successfully. I will review and reply promptly.' });
+      trackPortfolioEvent('contact_submit_success', { source: 'dispatch_console' });
     } catch {
       setStatusMessage({
         type: 'error',
-        text: 'Failed to send message. Please reach out directly to nathan.a.zimmerman@gmail.com.',
+        text: 'Transmission failure. Please transmit directly via nathan.a.zimmerman@gmail.com',
       });
       trackPortfolioEvent('contact_submit_failure', { reason: 'send_error' });
     } finally {
@@ -82,33 +81,39 @@ export const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-16 md:py-24 border-t border-slate-800/80 bg-slate-950">
-      <div className="container mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="max-w-2xl">
-          <p className="text-xs font-semibold uppercase tracking-wider text-rose-400">
-            Get in Touch
-          </p>
-          <h2 className="mt-2 text-3xl sm:text-4xl font-bold text-slate-100 tracking-tight">
-            Let&apos;s Connect
-          </h2>
-          <p className="mt-3 text-sm sm:text-base text-slate-400 leading-relaxed">
-            I am currently open to senior full-stack and backend engineering opportunities in the NYC metro area, 
-            hybrid or remote. Feel free to reach out directly.
+    <section id="dispatch" className="py-16 md:py-24 bg-[#090A0D]">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6">
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/[0.08] pb-6">
+          <div>
+            <div className="flex items-center gap-2 font-mono text-xs text-[#E6A838] uppercase tracking-wider">
+              <Mail className="h-4 w-4" />
+              <span>04 // INQUIRY &amp; DISPATCH CONSOLE</span>
+            </div>
+            <h2 className="mt-2 font-heading text-3xl sm:text-4xl font-bold tracking-tight text-[#F3F2EE]">
+              Communication Dispatch
+            </h2>
+          </div>
+          <p className="font-mono text-xs text-zinc-400 max-w-md">
+            Direct communication endpoint for senior full-stack, distributed systems, and payment infrastructure opportunities in the NYC metro area.
           </p>
         </div>
 
         <div className="mt-12 grid grid-cols-1 lg:grid-cols-[1fr_1.3fr] gap-8">
-          {/* Direct Contact Cards */}
+          {/* Left Column: Direct Coordinates */}
           <div className="space-y-4">
-            <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6 shadow-sm">
+            {/* Email Card */}
+            <div className="rounded-lg border border-white/[0.1] bg-[#0E1015] p-6 shadow-xl">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="rounded-lg bg-cyan-500/10 p-2.5 text-cyan-400 border border-cyan-500/20">
+                  <div className="rounded border border-white/[0.08] bg-black/40 p-2.5 text-[#E6A838]">
                     <Mail className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Direct Email</p>
-                    <p className="text-sm sm:text-base font-medium text-slate-100 mt-0.5">
+                    <p className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">
+                      DIRECT TRANSMISSION ENDPOINT
+                    </p>
+                    <p className="font-mono text-sm sm:text-base font-semibold text-[#F3F2EE] mt-0.5">
                       nathan.a.zimmerman@gmail.com
                     </p>
                   </div>
@@ -116,112 +121,149 @@ export const Contact = () => {
 
                 <button
                   onClick={handleCopyEmail}
-                  className="rounded-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 p-2 text-slate-300 transition-colors"
-                  aria-label="Copy email to clipboard"
+                  className="rounded border border-white/[0.12] bg-white/[0.03] hover:bg-white/[0.08] p-2 text-zinc-300 transition-colors"
+                  aria-label="Copy email address"
                 >
-                  {copiedEmail ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
+                  {copiedEmail ? <Check className="h-4 w-4 text-[#00E599]" /> : <Copy className="h-4 w-4" />}
                 </button>
               </div>
             </div>
 
-            <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-6 shadow-sm">
+            {/* Location & Phone Card */}
+            <div className="rounded-lg border border-white/[0.1] bg-[#0E1015] p-6 shadow-xl space-y-4">
               <div className="flex items-center gap-3">
-                <div className="rounded-lg bg-emerald-500/10 p-2.5 text-emerald-400 border border-emerald-500/20">
+                <div className="rounded border border-white/[0.08] bg-black/40 p-2.5 text-[#00E599]">
                   <MapPin className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Location</p>
-                  <p className="text-sm sm:text-base font-medium text-slate-100 mt-0.5">
+                  <p className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">
+                    GEOGRAPHIC COORDINATES
+                  </p>
+                  <p className="font-mono text-sm font-semibold text-[#F3F2EE] mt-0.5">
                     Raritan, NJ · NYC Metro Area
                   </p>
-                  <p className="text-xs text-slate-400 mt-0.5">Available for Hybrid (NYC commute) or Remote</p>
+                  <p className="font-mono text-[11px] text-zinc-400 mt-0.5">
+                    Commutable to NYC / Hybrid / Remote
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 pt-3 border-t border-white/[0.06]">
+                <div className="rounded border border-white/[0.08] bg-black/40 p-2.5 text-zinc-400">
+                  <Phone className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">
+                    VOICE / SMS
+                  </p>
+                  <p className="font-mono text-sm font-semibold text-[#F3F2EE] mt-0.5">
+                    610.955.6578
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Social channels */}
+            {/* Social Channels */}
             <div className="grid grid-cols-2 gap-4">
               <a
                 href="https://github.com/natezimm"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 rounded-xl border border-slate-800 bg-slate-900/60 hover:border-slate-700 hover:bg-slate-800/80 p-4 text-sm font-semibold text-slate-200 transition-all shadow-sm"
+                className="flex items-center justify-between rounded-lg border border-white/[0.1] bg-[#0E1015] hover:border-white/[0.2] hover:bg-[#12151B] p-4 font-mono text-xs text-[#F3F2EE] transition-all"
               >
-                <Github className="h-4 w-4 text-slate-300" />
-                GitHub Profile
+                <div className="flex items-center gap-2">
+                  <Github className="h-4 w-4 text-zinc-400" />
+                  <span>GITHUB</span>
+                </div>
+                <ArrowUpRight className="h-3.5 w-3.5 text-zinc-500" />
               </a>
+
               <a
                 href="https://www.linkedin.com/in/zimmermannathan"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 rounded-xl border border-slate-800 bg-slate-900/60 hover:border-slate-700 hover:bg-slate-800/80 p-4 text-sm font-semibold text-slate-200 transition-all shadow-sm"
+                className="flex items-center justify-between rounded-lg border border-white/[0.1] bg-[#0E1015] hover:border-white/[0.2] hover:bg-[#12151B] p-4 font-mono text-xs text-[#F3F2EE] transition-all"
               >
-                <Linkedin className="h-4 w-4 text-cyan-400" />
-                LinkedIn
+                <div className="flex items-center gap-2">
+                  <Linkedin className="h-4 w-4 text-[#E6A838]" />
+                  <span>LINKEDIN</span>
+                </div>
+                <ArrowUpRight className="h-3.5 w-3.5 text-zinc-500" />
               </a>
             </div>
           </div>
 
-          {/* Contact Message Form */}
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6 sm:p-8 shadow-sm">
-            <h3 className="text-lg font-bold text-slate-100">Send a Message</h3>
-            <p className="mt-1 text-xs text-slate-400">Messages are delivered directly to my inbox.</p>
-
-            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          {/* Right Column: Dispatch Transmission Form */}
+          <div className="rounded-lg border border-white/[0.1] bg-[#0E1015] p-6 sm:p-8 shadow-xl">
+            <div className="flex items-center justify-between border-b border-white/[0.08] pb-4 mb-6">
               <div>
-                <label htmlFor="name" className="block text-xs font-medium text-slate-300">
-                  Your Name
+                <h3 className="font-heading text-lg font-bold text-[#F3F2EE]">
+                  Transmit Dispatch Message
+                </h3>
+                <p className="font-mono text-xs text-zinc-400 mt-0.5">
+                  Direct encrypted transmission to personal engineer inbox.
+                </p>
+              </div>
+              <span className="font-mono text-[10px] text-[#00E599] uppercase tracking-wider">
+                READY
+              </span>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4 font-mono text-xs">
+              <div>
+                <label htmlFor="dispatch-name" className="block text-zinc-400 uppercase tracking-wider text-[11px] mb-1.5">
+                  Sender Identity [Name]
                 </label>
                 <input
-                  id="name"
+                  id="dispatch-name"
                   type="text"
                   required
                   maxLength={MAX_NAME_LENGTH}
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Jane Doe"
-                  className="mt-1.5 w-full rounded-lg border border-slate-800 bg-slate-950 px-3.5 py-2.5 text-sm text-slate-100 placeholder:text-slate-600 focus:border-cyan-500 focus:outline-none transition-colors"
+                  placeholder="e.g. Hiring Manager / Recruiter"
+                  className="w-full rounded border border-white/[0.1] bg-black/50 px-3.5 py-2.5 text-sm text-[#F3F2EE] placeholder:text-zinc-600 focus:border-[#E6A838] focus:outline-none transition-colors font-sans"
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-xs font-medium text-slate-300">
-                  Your Email
+                <label htmlFor="dispatch-email" className="block text-zinc-400 uppercase tracking-wider text-[11px] mb-1.5">
+                  Sender Return Address [Email]
                 </label>
                 <input
-                  id="email"
+                  id="dispatch-email"
                   type="email"
                   required
                   maxLength={MAX_EMAIL_LENGTH}
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="jane@company.com"
-                  className="mt-1.5 w-full rounded-lg border border-slate-800 bg-slate-950 px-3.5 py-2.5 text-sm text-slate-100 placeholder:text-slate-600 focus:border-cyan-500 focus:outline-none transition-colors"
+                  placeholder="name@organization.com"
+                  className="w-full rounded border border-white/[0.1] bg-black/50 px-3.5 py-2.5 text-sm text-[#F3F2EE] placeholder:text-zinc-600 focus:border-[#E6A838] focus:outline-none transition-colors font-sans"
                 />
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-xs font-medium text-slate-300">
-                  Message
+                <label htmlFor="dispatch-message" className="block text-zinc-400 uppercase tracking-wider text-[11px] mb-1.5">
+                  Transmission Payload [Message]
                 </label>
                 <textarea
-                  id="message"
+                  id="dispatch-message"
                   required
                   rows={4}
                   maxLength={MAX_MESSAGE_LENGTH}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  placeholder="Hi Nathan, we are looking for a senior C#/.NET and Angular engineer..."
-                  className="mt-1.5 w-full rounded-lg border border-slate-800 bg-slate-950 px-3.5 py-2.5 text-sm text-slate-100 placeholder:text-slate-600 focus:border-cyan-500 focus:outline-none transition-colors"
+                  placeholder="We are looking for a Senior C#/.NET and Angular engineer to lead financial transaction workflows..."
+                  className="w-full rounded border border-white/[0.1] bg-black/50 px-3.5 py-2.5 text-sm text-[#F3F2EE] placeholder:text-zinc-600 focus:border-[#E6A838] focus:outline-none transition-colors font-sans"
                 />
               </div>
 
               {statusMessage && (
                 <div
-                  className={`rounded-lg p-3 text-xs ${
+                  className={`rounded p-3 text-xs font-mono ${
                     statusMessage.type === 'success'
-                      ? 'bg-emerald-950/60 border border-emerald-500/30 text-emerald-300'
-                      : 'bg-rose-950/60 border border-rose-500/30 text-rose-300'
+                      ? 'border border-[#00E599]/30 bg-[#00E599]/10 text-[#00E599]'
+                      : 'border border-rose-500/30 bg-rose-500/10 text-rose-300'
                   }`}
                 >
                   {statusMessage.text}
@@ -231,17 +273,17 @@ export const Contact = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 disabled:opacity-50 px-5 py-3 text-sm font-semibold text-slate-950 transition-colors shadow-sm"
+                className="w-full inline-flex items-center justify-center gap-2 rounded bg-[#E6A838] hover:bg-[#f3b544] disabled:opacity-50 px-5 py-3 font-mono text-xs font-bold text-black uppercase tracking-wider transition-colors shadow-md"
               >
                 {isSubmitting ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Sending...
+                    <span>Transmitting...</span>
                   </>
                 ) : (
                   <>
                     <Send className="h-4 w-4" />
-                    Send Message
+                    <span>Transmit Dispatch</span>
                   </>
                 )}
               </button>

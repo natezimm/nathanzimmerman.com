@@ -17,21 +17,21 @@ describe('Index page', () => {
 
     // Hero check
     expect(
-      screen.getByRole('heading', { name: /Senior Software Engineer/i })
+      screen.getByRole('heading', { name: /High-Integrity Distributed Systems/i })
     ).toBeInTheDocument();
 
     // Section headings check
     expect(
-      screen.getByRole('heading', { name: /Featured Projects & Live Demos/i })
+      screen.getByRole('heading', { name: /Systems Blueprint Console/i })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { name: /Production Engineering Experience/i })
+      screen.getByRole('heading', { name: /Engineering Dossier/i })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { name: /Verified Skills & Technology Stack/i })
+      screen.getByRole('heading', { name: /Technical Specification Matrix/i })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole('heading', { name: /Let's Connect/i })
+      screen.getByRole('heading', { name: /Communication Dispatch/i })
     ).toBeInTheDocument();
   });
 

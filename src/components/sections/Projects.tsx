@@ -1,278 +1,301 @@
 import { useState } from 'react';
-import { ExternalLink, Github, Code2, Server, Cpu, CheckCircle } from 'lucide-react';
-import { projectEntries } from '@/data/portfolioData';
+import { ExternalLink, Github, Layers, ArrowUpRight, Cpu, Check, Terminal } from 'lucide-react';
+import { projectEntries, type ProjectEntry } from '@/data/portfolioData';
 import { ProjectImage } from '@/components/shared/ProjectImage';
 
 export const Projects = () => {
-  const [sudokuTab, setSudokuTab] = useState<'architecture' | 'api' | 'testing'>('architecture');
+  const [activeSlug, setActiveSlug] = useState<string>('sudoku');
+  const [activeTab, setActiveTab] = useState<'architecture' | 'invariants' | 'stack'>('architecture');
 
-  const sudokuProject = projectEntries.find((p) => p.slug === 'sudoku')!;
-  const secondaryProjects = projectEntries.filter((p) => p.slug !== 'sudoku');
+  const activeProject: ProjectEntry =
+    projectEntries.find((p) => p.slug === activeSlug) || projectEntries[0];
 
   return (
-    <section id="projects" className="py-16 md:py-24 border-t border-slate-800/80 bg-slate-950/60">
-      <div className="container mx-auto max-w-6xl px-4 sm:px-6">
+    <section id="systems" className="py-16 md:py-24 border-b border-white/[0.08] bg-[#0A0C0F]">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6">
         {/* Section Header */}
-        <div className="max-w-2xl">
-          <p className="text-xs font-semibold uppercase tracking-wider text-cyan-400">
-            Systems &amp; Architecture
-          </p>
-          <h2 className="mt-2 text-3xl sm:text-4xl font-bold text-slate-100 tracking-tight">
-            Featured Projects &amp; Live Demos
-          </h2>
-          <p className="mt-3 text-sm sm:text-base text-slate-400 leading-relaxed">
-            Full-stack web applications and microservices demonstrating backend correctness, API design, 
-            session security, and modern frontend architecture.
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/[0.08] pb-6">
+          <div>
+            <div className="flex items-center gap-2 font-mono text-xs text-[#E6A838] uppercase tracking-wider">
+              <Layers className="h-4 w-4" />
+              <span>01 // PRODUCTION ARTIFACTS &amp; SYSTEMS</span>
+            </div>
+            <h2 className="mt-2 font-heading text-3xl sm:text-4xl font-bold tracking-tight text-[#F3F2EE]">
+              Systems Blueprint Console
+            </h2>
+          </div>
+          <p className="font-mono text-xs text-zinc-400 max-w-md">
+            Interactive console detailing system topology, state invariants, and runtime execution across live full-stack applications.
           </p>
         </div>
 
-        {/* Primary Spotlight: Sudoku (.NET + Angular) */}
-        <div className="mt-10 overflow-hidden rounded-2xl border border-cyan-500/30 bg-slate-900/80 shadow-xl shadow-cyan-950/20">
-          <div className="border-b border-slate-800 bg-slate-900/90 px-6 py-4 flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <span className="flex h-3 w-3 rounded-full bg-emerald-400 animate-pulse" />
+        {/* Master-Detail Blueprint Console */}
+        <div className="mt-10 grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8 items-start">
+          {/* Left Rail: System Selector */}
+          <div className="space-y-2.5">
+            <p className="font-mono text-[11px] text-zinc-500 uppercase tracking-widest px-1">
+              Select Active System:
+            </p>
+
+            {projectEntries.map((project, idx) => {
+              const isSelected = project.slug === activeSlug;
+              return (
+                <button
+                  key={project.slug}
+                  onClick={() => {
+                    setActiveSlug(project.slug);
+                    setActiveTab('architecture');
+                  }}
+                  className={`w-full text-left p-4 rounded border transition-all ${
+                    isSelected
+                      ? 'border-[#E6A838] bg-[#14171E] shadow-lg shadow-[#E6A838]/5'
+                      : 'border-white/[0.08] bg-white/[0.02] hover:border-white/[0.18] hover:bg-white/[0.04]'
+                  }`}
+                >
+                  <div className="flex items-center justify-between font-mono text-[11px]">
+                    <span className={isSelected ? 'text-[#E6A838]' : 'text-zinc-500'}>
+                      SYS_0{idx + 1}
+                    </span>
+                    <span className="text-[10px] text-zinc-400 uppercase tracking-wider">
+                      {project.regionLabel}
+                    </span>
+                  </div>
+
+                  <h3 className="mt-1 text-base font-bold text-[#F3F2EE] font-heading">
+                    {project.title}
+                  </h3>
+
+                  <p className="mt-1 text-xs text-zinc-400 line-clamp-1 font-sans">
+                    {project.subtitle}
+                  </p>
+
+                  <div className="mt-3 flex flex-wrap gap-1">
+                    {project.stack.slice(0, 3).map((tech) => (
+                      <span
+                        key={tech}
+                        className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-black/40 text-zinc-300 border border-white/[0.06]"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Right Canvas: Blueprint Technical Dossier */}
+          <div className="rounded-lg border border-white/[0.1] bg-[#0E1015] overflow-hidden shadow-2xl">
+            {/* Blueprint Header */}
+            <div className="border-b border-white/[0.08] bg-[#12151B] p-5 sm:p-6 flex flex-wrap items-center justify-between gap-4">
               <div>
-                <span className="text-xs font-mono uppercase tracking-wider text-cyan-300">
-                  Featured Full-Stack System
-                </span>
-                <h3 className="text-lg sm:text-xl font-bold text-slate-100">
-                  Sudoku — .NET Web API &amp; Angular Client
+                <div className="flex items-center gap-2 font-mono text-xs text-[#E6A838]">
+                  <span className="h-2 w-2 rounded-full bg-[#00E599]" />
+                  <span>SPECIFICATION DOSSIER // {activeProject.title}</span>
+                </div>
+                <h3 className="mt-1 text-2xl font-bold text-[#F3F2EE] font-heading">
+                  {activeProject.title} — {activeProject.subtitle}
                 </h3>
               </div>
-            </div>
 
-            <div className="flex items-center gap-2">
-              <a
-                href={sudokuProject.links.live}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 px-4 py-2 text-xs font-semibold text-slate-950 transition-colors shadow-sm"
-              >
-                <ExternalLink className="h-3.5 w-3.5" />
-                Live Demo
-              </a>
-              <a
-                href={sudokuProject.links.code}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 px-4 py-2 text-xs font-medium text-slate-200 transition-colors"
-              >
-                <Github className="h-3.5 w-3.5" />
-                GitHub
-              </a>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1.4fr] gap-6 p-6">
-            {/* Left: Preview & Stack */}
-            <div>
-              <div className="overflow-hidden rounded-xl border border-slate-800 bg-slate-950">
-                <ProjectImage
-                  project={sudokuProject}
-                  useDetail
-                  className="w-full h-auto object-cover"
-                  sizes="(max-width: 768px) 100vw, 500px"
-                />
-              </div>
-
-              <div className="mt-4">
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                  Technology Stack
-                </p>
-                <div className="mt-2 flex flex-wrap gap-1.5">
-                  {['C#', 'ASP.NET Core Web API', 'Angular', 'TypeScript', 'Reactive Forms', 'CI/CD'].map((tech) => (
-                    <span
-                      key={tech}
-                      className="rounded border border-slate-800 bg-slate-950 px-2.5 py-1 text-xs font-medium text-cyan-200"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Right: Technical Inspector Tabs */}
-            <div className="flex flex-col justify-between">
-              <div>
-                {/* Tabs bar */}
-                <div className="flex items-center gap-2 border-b border-slate-800 pb-2">
-                  <button
-                    onClick={() => setSudokuTab('architecture')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
-                      sudokuTab === 'architecture'
-                        ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30'
-                        : 'text-slate-400 hover:text-slate-200'
-                    }`}
+              {/* Action Links */}
+              <div className="flex items-center gap-2.5">
+                {activeProject.links.live && (
+                  <a
+                    href={activeProject.links.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded bg-[#E6A838] hover:bg-[#f3b544] px-4 py-2 font-mono text-xs font-bold text-black transition-colors"
                   >
-                    <Cpu className="h-3.5 w-3.5" />
-                    Architecture &amp; Features
-                  </button>
-                  <button
-                    onClick={() => setSudokuTab('api')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
-                      sudokuTab === 'api'
-                        ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30'
-                        : 'text-slate-400 hover:text-slate-200'
-                    }`}
+                    <span>Launch Live</span>
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                )}
+                {activeProject.links.code && (
+                  <a
+                    href={activeProject.links.code}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 rounded border border-white/[0.15] bg-white/[0.04] hover:bg-white/[0.08] px-4 py-2 font-mono text-xs font-medium text-[#F3F2EE] transition-colors"
                   >
-                    <Server className="h-3.5 w-3.5" />
-                    API &amp; Backend
-                  </button>
-                  <button
-                    onClick={() => setSudokuTab('testing')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
-                      sudokuTab === 'testing'
-                        ? 'bg-cyan-500/15 text-cyan-300 border border-cyan-500/30'
-                        : 'text-slate-400 hover:text-slate-200'
-                    }`}
-                  >
-                    <Code2 className="h-3.5 w-3.5" />
-                    Testing &amp; Invariants
-                  </button>
-                </div>
-
-                {/* Tab Content */}
-                <div className="mt-4">
-                  {sudokuTab === 'architecture' && (
-                    <div className="space-y-3 text-sm text-slate-300">
-                      <p className="leading-relaxed">
-                        Full-stack puzzle generation and gameplay platform built with modern Angular and a C# .NET Web API.
-                      </p>
-                      <ul className="space-y-2">
-                        <li className="flex items-start gap-2">
-                          <CheckCircle className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
-                          <span>On-demand puzzle generation across selectable difficulty curves with seed reproducibility.</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <CheckCircle className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
-                          <span>Real-time input constraint validation, error highlighting, and responsive grid keyboard navigation.</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <CheckCircle className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
-                          <span>Persistent player state, timer tracking, and session resumption across browser reloads.</span>
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-
-                  {sudokuTab === 'api' && (
-                    <div className="space-y-3 text-xs font-mono">
-                      <div className="rounded-lg border border-slate-800 bg-slate-950 p-3">
-                        <span className="text-cyan-400 font-bold">GET</span> /api/sudoku/generate?difficulty=medium
-                        <p className="mt-1 text-slate-400 font-sans text-xs">
-                          Generates a mathematically solvable 9x9 board with deterministic single-solution validation.
-                        </p>
-                      </div>
-                      <div className="rounded-lg border border-slate-800 bg-slate-950 p-3">
-                        <span className="text-emerald-400 font-bold">POST</span> /api/sudoku/validate
-                        <p className="mt-1 text-slate-400 font-sans text-xs">
-                          Validates submitted board states and verifies completed solutions against the server generator.
-                        </p>
-                      </div>
-                      <p className="font-sans text-xs text-slate-400 mt-2">
-                        Backend incorporates rate limiting, CORS configuration, and decoupled state verification.
-                      </p>
-                    </div>
-                  )}
-
-                  {sudokuTab === 'testing' && (
-                    <div className="space-y-3 text-sm text-slate-300">
-                      <p className="leading-relaxed">
-                        Engineered with a focus on code correctness and test coverage:
-                      </p>
-                      <ul className="space-y-2 text-xs text-slate-300">
-                        <li className="flex items-start gap-2">
-                          <CheckCircle className="h-4 w-4 text-cyan-400 shrink-0 mt-0.5" />
-                          <span>Unit tests verify board generator produces strictly valid puzzles with unique solutions.</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <CheckCircle className="h-4 w-4 text-cyan-400 shrink-0 mt-0.5" />
-                          <span>Solver algorithm tests prevent impossible board configurations and backtracking infinite loops.</span>
-                        </li>
-                        <li className="flex items-start gap-2">
-                          <CheckCircle className="h-4 w-4 text-cyan-400 shrink-0 mt-0.5" />
-                          <span>CI pipeline backs automated builds, linting, and unit test execution on every commit.</span>
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-                <span>Deployed on GCP VM · Nginx Reverse Proxy</span>
-                <span className="font-mono text-cyan-300">sudoku.nathanzimmerman.com</span>
+                    <Github className="h-3.5 w-3.5" />
+                    <span>Source</span>
+                  </a>
+                )}
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* Secondary Systems Grid */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-          {secondaryProjects.map((project) => (
-            <div
-              key={project.slug}
-              className="flex flex-col justify-between rounded-xl border border-slate-800/80 bg-slate-900/50 hover:border-slate-700 transition-all p-5 shadow-sm"
-            >
-              <div>
-                <div className="overflow-hidden rounded-lg border border-slate-800 bg-slate-950 h-44">
+            {/* Blueprint Content Grid */}
+            <div className="p-6 sm:p-8 space-y-8">
+              {/* Media Preview & Core Summary */}
+              <div className="grid grid-cols-1 md:grid-cols-[1.1fr_1.3fr] gap-6 items-center">
+                <div className="overflow-hidden rounded border border-white/[0.08] bg-black/60 aspect-[16/10] flex items-center justify-center p-2">
                   <ProjectImage
-                    project={project}
-                    className="w-full h-full object-cover"
-                    sizes="(max-width: 768px) 100vw, 350px"
+                    project={activeProject}
+                    useDetail
+                    className="w-full h-full object-contain"
+                    sizes="(max-width: 768px) 100vw, 500px"
                   />
                 </div>
 
-                <h4 className="mt-4 text-base font-bold text-slate-100 flex items-center justify-between">
-                  <span>{project.title}</span>
-                  <span className="text-[11px] font-normal font-mono text-slate-400 uppercase">
-                    {project.regionLabel}
-                  </span>
-                </h4>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-mono text-xs text-zinc-500 uppercase tracking-wider">
+                      Architectural Overview:
+                    </h4>
+                    <p className="mt-1 text-sm text-zinc-200 leading-relaxed font-sans">
+                      {activeProject.description}
+                    </p>
+                  </div>
 
-                <p className="mt-2 text-xs leading-relaxed text-slate-300">
-                  {project.description}
-                </p>
-
-                <div className="mt-4 flex flex-wrap gap-1.5">
-                  {project.stack.map((tech) => (
-                    <span
-                      key={tech}
-                      className="rounded bg-slate-800/90 px-2 py-0.5 text-[11px] font-medium text-slate-300"
-                    >
-                      {tech}
-                    </span>
-                  ))}
+                  <div>
+                    <h4 className="font-mono text-xs text-zinc-500 uppercase tracking-wider mb-2">
+                      Verified Technology Core:
+                    </h4>
+                    <div className="flex flex-wrap gap-1.5 font-mono text-xs">
+                      {activeProject.stack.map((item) => (
+                        <span
+                          key={item}
+                          className="px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
-                {project.links.live && (
-                  <a
-                    href={project.links.live}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition-colors"
+              {/* Technical Inspection Tabs */}
+              <div className="border-t border-white/[0.08] pt-6">
+                <div className="flex items-center gap-2 border-b border-white/[0.08] pb-3 font-mono text-xs">
+                  <button
+                    onClick={() => setActiveTab('architecture')}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded transition-colors ${
+                      activeTab === 'architecture'
+                        ? 'bg-white/[0.08] text-[#E6A838] border border-white/[0.1]'
+                        : 'text-zinc-400 hover:text-white'
+                    }`}
                   >
-                    <ExternalLink className="h-3.5 w-3.5" />
-                    Live App
-                  </a>
-                )}
-                {project.links.code && (
-                  <a
-                    href={project.links.code}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs font-medium text-slate-400 hover:text-slate-200 transition-colors"
+                    <Cpu className="h-3.5 w-3.5" />
+                    <span>01 // TOPOLOGY &amp; FLOW</span>
+                  </button>
+
+                  <button
+                    onClick={() => setActiveTab('invariants')}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded transition-colors ${
+                      activeTab === 'invariants'
+                        ? 'bg-white/[0.08] text-[#E6A838] border border-white/[0.1]'
+                        : 'text-zinc-400 hover:text-white'
+                    }`}
                   >
-                    <Github className="h-3.5 w-3.5" />
-                    Code
-                  </a>
-                )}
+                    <Check className="h-3.5 w-3.5" />
+                    <span>02 // CORE INVARIANTS</span>
+                  </button>
+
+                  <button
+                    onClick={() => setActiveTab('stack')}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded transition-colors ${
+                      activeTab === 'stack'
+                        ? 'bg-white/[0.08] text-[#E6A838] border border-white/[0.1]'
+                        : 'text-zinc-400 hover:text-white'
+                    }`}
+                  >
+                    <Terminal className="h-3.5 w-3.5" />
+                    <span>03 // DEPLOYMENT SPECS</span>
+                  </button>
+                </div>
+
+                {/* Tab Views */}
+                <div className="mt-5">
+                  {activeTab === 'architecture' && (
+                    <div className="rounded border border-white/[0.06] bg-black/40 p-5 font-mono text-xs space-y-3">
+                      <div className="text-zinc-500 uppercase tracking-widest text-[10px]">
+                        SYSTEM DATA FLOW &amp; STATE BOUNDARIES
+                      </div>
+                      <p className="text-zinc-300 font-sans text-sm leading-relaxed">
+                        {activeProject.slug === 'sudoku' &&
+                          'Clients interface with ASP.NET Core Web API endpoints to request uniquely generated 9x9 boards. The solver algorithm executes deterministic backtracking constraint verification to ensure every board has exactly one mathematical solution before client dispatch.'}
+                        {activeProject.slug === 'blackjack' &&
+                          'Spring Boot manages server-side state isolation across authenticated player sessions. Betting lifecycle, dealer hit-on-soft-17 rules, splits, and insurance payouts are executed in a state machine preventing client tampering.'}
+                        {activeProject.slug === 'nerdle' &&
+                          'Node.js/Express backend provides server-side guess validation against curated dictionaries with persistent player telemetry across multiple word-length challenge modes.'}
+                        {activeProject.slug === 'brick-breaker' &&
+                          'Browser-based compiler pipeline utilizing Mammoth.js to extract raw XML AST from uploaded binary .docx documents, mapping typography density into procedurally generated brick structures.'}
+                      </p>
+                      <div className="pt-2 text-[11px] text-[#E6A838]">
+                        ✓ State decoupled from client DOM · Server-side validation enforced
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === 'invariants' && (
+                    <div className="space-y-3">
+                      <p className="font-mono text-xs text-zinc-400">
+                        Operational requirements verified in test suites:
+                      </p>
+                      <ul className="space-y-2.5">
+                        {activeProject.features.map((feature, fIdx) => (
+                          <li
+                            key={fIdx}
+                            className="flex items-start gap-3 rounded border border-white/[0.06] bg-black/30 p-3 font-mono text-xs text-zinc-300"
+                          >
+                            <span className="text-[#00E599] font-bold">[{fIdx + 1}]</span>
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {activeTab === 'stack' && (
+                    <div className="rounded border border-white/[0.06] bg-black/40 p-5 font-mono text-xs space-y-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <span className="text-zinc-500 block text-[10px] uppercase">
+                            EXECUTION ENVIRONMENT
+                          </span>
+                          <span className="text-[#F3F2EE] font-semibold text-sm">
+                            Linux VM / Nginx Reverse Proxy
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-zinc-500 block text-[10px] uppercase">
+                            CLIENT BUNDLER
+                          </span>
+                          <span className="text-[#F3F2EE] font-semibold text-sm">
+                            Vite / Production Minified Chunk Splitting
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-zinc-500 block text-[10px] uppercase">
+                            CI / AUTOMATION
+                          </span>
+                          <span className="text-[#F3F2EE] font-semibold text-sm">
+                            Automated Build &amp; Test Verification
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-zinc-500 block text-[10px] uppercase">
+                            SOURCE REPOSITORY
+                          </span>
+                          <a
+                            href={activeProject.links.code}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#E6A838] hover:underline flex items-center gap-1 font-semibold text-sm"
+                          >
+                            <span>Inspect on GitHub</span>
+                            <ArrowUpRight className="h-3 w-3" />
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </section>

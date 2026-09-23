@@ -1,118 +1,154 @@
-import { ArrowDown, FileText, Mail, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { ArrowDown, FileText, Mail, Terminal, ArrowUpRight } from 'lucide-react';
 
 export const Hero = () => {
   return (
-    <section className="relative overflow-hidden pt-12 pb-16 md:pt-20 md:pb-24">
-      {/* Subtle Background Glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-cyan-500/10 via-emerald-500/5 to-transparent blur-3xl pointer-events-none -z-10" />
+    <section className="relative pt-12 pb-16 md:pt-20 md:pb-24 border-b border-white/[0.08]">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.9fr] gap-12 items-start">
+          {/* Left Column: Monolithic Typographic Statement */}
+          <div>
+            {/* System Coordinate Tag */}
+            <div className="inline-flex items-center gap-2 font-mono text-[11px] text-[#E6A838] tracking-widest uppercase mb-6 bg-white/[0.03] border border-white/[0.08] px-3 py-1 rounded">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#E6A838]" />
+              <span>SYS_CORE // SENIOR SOFTWARE ENGINEER // NYC METRO</span>
+            </div>
 
-      <div className="container mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="max-w-3xl">
-          {/* Eyebrow badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-950/40 px-3.5 py-1 text-xs font-semibold text-cyan-300 mb-6">
-            <ShieldCheck className="h-3.5 w-3.5 text-cyan-400" />
-            <span>Enterprise Distributed Systems &amp; Financial Platforms</span>
-          </div>
+            <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#F3F2EE] leading-[1.08]">
+              High-Integrity Distributed Systems &amp; Transaction Platforms.
+            </h1>
 
-          {/* Primary Headline */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-slate-100 leading-[1.1]">
-            Senior Software Engineer
-          </h1>
+            <p className="mt-6 text-base sm:text-lg text-zinc-300 leading-relaxed max-w-2xl font-sans">
+              7+ years building production software across <strong>Nelnet</strong>, <strong>Amazon</strong>, and <strong>Radian Group</strong>. 
+              Currently engineering greenfield multi-tenant payment plan workflows, billing microservices, and event-driven returned-payment state machines using 
+              C#, .NET, Angular, TypeScript, MongoDB, and AWS.
+            </p>
 
-          <p className="mt-4 text-xl sm:text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-emerald-300 to-teal-200">
-            C# / .NET · Angular · Microservices · Payments &amp; Risk
-          </p>
+            {/* Verified Stack Chips */}
+            <div className="mt-8">
+              <p className="font-mono text-[11px] uppercase tracking-wider text-zinc-500 mb-2.5">
+                Verified Production Stack:
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  'C#',
+                  '.NET Core',
+                  'Angular',
+                  'TypeScript',
+                  'MongoDB',
+                  'AWS',
+                  'Azure',
+                  'Microservices',
+                  'SQL',
+                  'REST APIs',
+                ].map((skill) => (
+                  <span
+                    key={skill}
+                    className="font-mono text-xs px-2.5 py-1 rounded bg-white/[0.04] border border-white/[0.08] text-zinc-300 hover:border-[#E6A838]/60 transition-colors"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
 
-          <p className="mt-5 text-base sm:text-lg leading-relaxed text-slate-300">
-            7+ years building resilient production software across <strong>Nelnet</strong>, <strong>Amazon</strong>, and <strong>Radian Group</strong>. 
-            Currently engineering payment plan workflows, billing microservices, and event-driven returned-payment systems using C#, .NET, Angular, TypeScript, MongoDB, and AWS.
-          </p>
-
-          {/* Verified Stack Pills */}
-          <div className="mt-6 flex flex-wrap items-center gap-2">
-            {[
-              'C# / .NET',
-              'Angular',
-              'TypeScript',
-              'MongoDB',
-              'AWS',
-              'Azure',
-              'Microservices',
-              'REST APIs',
-              'SQL',
-            ].map((skill) => (
-              <span
-                key={skill}
-                className="rounded-md border border-slate-800 bg-slate-900/80 px-2.5 py-1 text-xs font-medium text-slate-300 shadow-sm"
+            {/* Action Buttons */}
+            <div className="mt-10 flex flex-wrap items-center gap-3.5">
+              <a
+                href="#systems"
+                className="inline-flex items-center gap-2 rounded bg-[#E6A838] hover:bg-[#f3b544] text-black px-5 py-3 font-mono text-xs font-bold uppercase tracking-wider transition-all shadow-md"
               >
-                {skill}
+                <span>Inspect Systems</span>
+                <ArrowDown className="h-4 w-4" />
+              </a>
+
+              <a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded border border-white/[0.15] bg-white/[0.03] hover:bg-white/[0.08] px-5 py-3 font-mono text-xs font-medium text-[#F3F2EE] transition-colors"
+              >
+                <FileText className="h-4 w-4 text-[#E6A838]" />
+                <span>Resume (PDF)</span>
+                <ArrowUpRight className="h-3.5 w-3.5 opacity-60" />
+              </a>
+
+              <a
+                href="#dispatch"
+                className="inline-flex items-center gap-2 rounded border border-white/[0.08] hover:border-white/[0.2] px-5 py-3 font-mono text-xs font-medium text-zinc-400 hover:text-zinc-200 transition-colors"
+              >
+                <Mail className="h-4 w-4" />
+                <span>Dispatch</span>
+              </a>
+            </div>
+          </div>
+
+          {/* Right Column: Architectural Telemetry Ledger */}
+          <div className="rounded-lg border border-white/[0.1] bg-[#0E1015] p-6 lg:p-7 shadow-2xl relative">
+            <div className="flex items-center justify-between border-b border-white/[0.08] pb-4 mb-5">
+              <div className="flex items-center gap-2 font-mono text-xs font-semibold text-zinc-300">
+                <Terminal className="h-4 w-4 text-[#E6A838]" />
+                <span>TELEMETRY &amp; AUDIT LEDGER</span>
+              </div>
+              <span className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">
+                VERIFIED_DATA
               </span>
-            ))}
-          </div>
-
-          {/* Action CTAs */}
-          <div className="mt-8 flex flex-wrap items-center gap-3.5">
-            <a
-              href="#projects"
-              className="inline-flex items-center gap-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition-all shadow-lg shadow-cyan-500/20"
-            >
-              Explore Live Systems
-              <ArrowDown className="h-4 w-4" />
-            </a>
-
-            <a
-              href="/resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-900/90 hover:bg-slate-800 hover:border-slate-600 px-5 py-3 text-sm font-semibold text-slate-200 transition-colors shadow-sm"
-            >
-              <FileText className="h-4 w-4 text-cyan-400" />
-              Resume (PDF)
-            </a>
-
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-2 rounded-lg border border-slate-800 hover:bg-slate-900 px-5 py-3 text-sm font-semibold text-slate-300 transition-colors"
-            >
-              <Mail className="h-4 w-4 text-slate-400" />
-              Get in Touch
-            </a>
-          </div>
-        </div>
-
-        {/* Highlight Metrics Strip */}
-        <div className="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-4 pt-8 border-t border-slate-800/80">
-          <div className="rounded-xl border border-slate-800/80 bg-slate-900/40 p-4">
-            <div className="flex items-center gap-2 text-cyan-300 text-xs font-semibold uppercase tracking-wider">
-              <CheckCircle2 className="h-4 w-4 text-cyan-400" />
-              Experience
             </div>
-            <p className="mt-1.5 text-2xl font-bold text-slate-100">7+ Years</p>
-            <p className="mt-0.5 text-xs text-slate-400 leading-relaxed">
-              Enterprise full-stack engineering across finance, billing, and risk.
-            </p>
-          </div>
 
-          <div className="rounded-xl border border-slate-800/80 bg-slate-900/40 p-4">
-            <div className="flex items-center gap-2 text-emerald-300 text-xs font-semibold uppercase tracking-wider">
-              <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-              Cloud Reliability
-            </div>
-            <p className="mt-1.5 text-2xl font-bold text-slate-100">100+ Envs</p>
-            <p className="mt-0.5 text-xs text-slate-400 leading-relaxed">
-              Executed zero-downtime AWS EC2 host migrations across 10+ apps at Amazon.
-            </p>
-          </div>
+            <div className="space-y-4 font-mono text-xs">
+              {/* Row 1 */}
+              <div className="border border-white/[0.06] bg-black/30 rounded p-3.5">
+                <div className="flex items-center justify-between text-zinc-500 text-[10px]">
+                  <span>01 // CURRENT FOCUS</span>
+                  <span className="text-[#00E599]">ACTIVE</span>
+                </div>
+                <p className="mt-1 text-sm font-semibold text-[#F3F2EE] font-sans">
+                  Nelnet: Multi-Tenant Billing Platform
+                </p>
+                <p className="mt-1 text-zinc-400 text-xs font-sans leading-relaxed">
+                  C#/.NET microservices, Angular schedule calculation engine, and event-driven returned-payment rescheduling.
+                </p>
+              </div>
 
-          <div className="rounded-xl border border-slate-800/80 bg-slate-900/40 p-4">
-            <div className="flex items-center gap-2 text-teal-300 text-xs font-semibold uppercase tracking-wider">
-              <CheckCircle2 className="h-4 w-4 text-teal-400" />
-              Domain Focus
+              {/* Row 2 */}
+              <div className="border border-white/[0.06] bg-black/30 rounded p-3.5">
+                <div className="flex items-center justify-between text-zinc-500 text-[10px]">
+                  <span>02 // HIGH-RELIABILITY CUTOVER</span>
+                  <span className="text-[#E6A838]">100+ ENVS</span>
+                </div>
+                <p className="mt-1 text-sm font-semibold text-[#F3F2EE] font-sans">
+                  Amazon: Zero-Downtime AWS Migrations
+                </p>
+                <p className="mt-1 text-zinc-400 text-xs font-sans leading-relaxed">
+                  Executed host migrations across 10+ applications in IAD/PDX availability zones with real-time CloudWatch alarm telemetry.
+                </p>
+              </div>
+
+              {/* Row 3 */}
+              <div className="border border-white/[0.06] bg-black/30 rounded p-3.5">
+                <div className="flex items-center justify-between text-zinc-500 text-[10px]">
+                  <span>03 // RISK COMPLIANCE</span>
+                  <span className="text-cyan-400">SANCTIONS / AML</span>
+                </div>
+                <p className="mt-1 text-sm font-semibold text-[#F3F2EE] font-sans">
+                  Financial Crime Risk Screening
+                </p>
+                <p className="mt-1 text-zinc-400 text-xs font-sans leading-relaxed">
+                  Screened high-throughput seller traffic against denied-party regulatory watchlists and anti-money laundering signals.
+                </p>
+              </div>
+
+              {/* Quick stats footer */}
+              <div className="grid grid-cols-2 gap-3 pt-2 text-center text-[11px]">
+                <div className="border border-white/[0.08] bg-white/[0.02] p-2.5 rounded">
+                  <span className="text-zinc-500 block text-[10px]">TOTAL EXP</span>
+                  <span className="text-[#F3F2EE] font-bold text-base">7+ YEARS</span>
+                </div>
+                <div className="border border-white/[0.08] bg-white/[0.02] p-2.5 rounded">
+                  <span className="text-zinc-500 block text-[10px]">LOCATION</span>
+                  <span className="text-[#F3F2EE] font-bold text-base">NYC METRO</span>
+                </div>
+              </div>
             </div>
-            <p className="mt-1.5 text-2xl font-bold text-slate-100">Payments &amp; Billing</p>
-            <p className="mt-0.5 text-xs text-slate-400 leading-relaxed">
-              Payment calculators, event-driven returned payments, and sanctions screening.
-            </p>
           </div>
         </div>
       </div>
