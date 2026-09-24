@@ -87,7 +87,7 @@ const Hero = () => {
       <div className="relative z-10 container px-4 mx-auto text-center animate-fade-in">
         <div className="max-w-4xl mx-auto space-y-8">
 
-          <h1 className="text-6xl md:text-8xl font-bold tracking-tight">
+          <h1 className="text-5xl sm:text-6xl md:text-8xl font-bold tracking-tight font-heading">
             Hi, I'm <span className="gradient-text">Nathan</span> <span className="inline-block animate-wave origin-bottom-right">👋</span>
           </h1>
 
@@ -96,10 +96,10 @@ const Hero = () => {
             className="text-2xl md:text-3xl text-muted-foreground font-light h-[1.5em]"
             aria-label={fullRolesText}
           >
-            <span aria-hidden="true" className="inline-flex items-center">
+            <span aria-hidden="true" className="inline-flex items-center font-heading">
               {displayText}
               <span
-                className="inline-block w-[3px] h-[1em] bg-primary ml-1 animate-blink"
+                className="inline-block w-[3px] h-[1em] bg-sky-400 ml-1 animate-blink"
                 aria-hidden="true"
               />
             </span>
@@ -112,10 +112,10 @@ const Hero = () => {
           </p>
 
           <div className="pt-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center justify-items-center">
+            <div className="flex flex-wrap items-center justify-center gap-4">
               <Button
                 size="lg"
-                className="h-12 px-8 text-lg rounded-full shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all duration-300 hover:-translate-y-1 sm:justify-self-end"
+                className="h-12 px-8 text-base rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all duration-300 hover:-translate-y-0.5"
                 onClick={() => scrollToSection("projects")}
               >
                 View My Work
@@ -123,7 +123,7 @@ const Hero = () => {
               <Button
                 size="lg"
                 variant="outline"
-                className="h-12 px-8 text-lg rounded-full border border-slate-300 dark:border-white/15 bg-white/80 dark:bg-white/5 hover:bg-white/90 dark:hover:bg-white/10 text-foreground backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 sm:justify-self-start"
+                className="h-12 px-8 text-base rounded-full border border-slate-300 dark:border-white/15 bg-white/80 dark:bg-white/5 hover:bg-white/90 dark:hover:bg-white/10 text-foreground backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5"
                 onClick={() => scrollToSection("contact")}
               >
                 Get In Touch
@@ -132,13 +132,13 @@ const Hero = () => {
 
             <button
               onClick={() => scrollToSection("about")}
-              className="mt-8 mx-auto block text-muted-foreground hover:text-primary transition-colors animate-bounce"
+              className="mt-10 mx-auto block text-muted-foreground hover:text-sky-400 transition-colors animate-bounce"
               aria-label="Scroll to about section"
             >
-              <ArrowDown className="w-8 h-8" />
+              <ArrowDown className="w-7 h-7" />
             </button>
 
-            <div className="flex items-center justify-center gap-8 pt-6">
+            <div className="flex items-center justify-center gap-4 pt-4">
               {[
                 { href: "https://github.com/natezimm", icon: Github, label: "GitHub" },
                 {
@@ -152,10 +152,10 @@ const Hero = () => {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary transition-all duration-300 hover:scale-110"
+                  className="flex items-center justify-center w-11 h-11 rounded-full border border-white/10 bg-white/5 text-muted-foreground hover:text-foreground hover:border-sky-400/40 hover:bg-white/10 transition-all duration-300 hover:scale-110 shadow-sm"
                   aria-label={label}
                 >
-                  <Icon className="w-8 h-8" />
+                  <Icon className="w-5 h-5" />
                 </a>
               ))}
             </div>

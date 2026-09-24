@@ -1,92 +1,108 @@
 import { experienceItems, type ViewMode } from '@/data/portfolioData';
+import { Briefcase, Calendar, Building2, Sparkles, CheckCircle2 } from 'lucide-react';
 
 type ExperienceProps = {
-  viewMode: ViewMode;
+  viewMode?: ViewMode;
 };
 
-const Experience = ({ viewMode }: ExperienceProps) => {
+const Experience = ({ viewMode: _viewMode }: ExperienceProps) => {
   return (
     <section
       id="experience"
-      className="retro-section experience-zone py-16 md:py-20"
+      className="py-28 relative overflow-hidden scroll-mt-16"
     >
-      <div className="container mx-auto px-4">
-        <div className="mx-auto max-w-7xl">
-          <h2 className="retro-heading text-center text-4xl text-violet-300 md:text-5xl">
-            EXPERIENCE
-          </h2>
+      {/* Background ambient glow */}
+      <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-10 left-0 w-[400px] h-[400px] bg-purple-500/5 rounded-full blur-[100px] pointer-events-none" />
 
-          <div
-            className={
-              viewMode === 'map'
-                ? 'experience-board mt-8 rounded-md border border-amber-900/40 bg-amber-50/90 p-5 text-slate-900 md:p-8'
-                : 'experience-board mt-8 rounded-md border border-cyan-300/28 bg-slate-950/75 p-5 text-slate-100 md:p-8'
-            }
-          >
-            <div className="space-y-6">
-              {experienceItems.map((item) => (
-                <article
-                  key={`${item.title}-${item.company}`}
-                  className={
-                    viewMode === 'map'
-                      ? 'rounded-sm border border-amber-950/30 bg-amber-100/65 p-4'
-                      : 'rounded-sm border border-cyan-300/18 bg-slate-900/75 p-4'
-                  }
-                >
-                  <div>
-                    <p
-                      className={
-                        viewMode === 'map'
-                          ? 'retro-ui text-xs text-emerald-800'
-                          : 'retro-ui text-xs text-emerald-300'
-                      }
-                    >
-                      {item.period}
-                    </p>
-                    <h3
-                      className={
-                        viewMode === 'map'
-                          ? 'retro-ui mt-1 text-lg text-violet-800'
-                          : 'retro-ui mt-1 text-lg text-cyan-100'
-                      }
-                    >
-                      {item.title}
-                    </h3>
-                    <p
-                      className={
-                        viewMode === 'map'
-                          ? 'text-sm font-semibold text-slate-800'
-                          : 'text-sm font-semibold text-slate-300'
-                      }
-                    >
-                      {item.company}
-                    </p>
-                  </div>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {item.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className={
-                          viewMode === 'map'
-                            ? 'retro-ui rounded-sm border border-violet-400/40 bg-violet-500/10 px-2 py-1 text-[11px] text-violet-700'
-                            : 'retro-ui rounded-sm border border-cyan-300/35 bg-cyan-500/10 px-2 py-1 text-[11px] text-cyan-100'
-                        }
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <p
-                    className={
-                      viewMode === 'map'
-                        ? 'mt-3 text-sm leading-relaxed text-slate-800'
-                        : 'mt-3 text-sm leading-relaxed text-slate-200'
-                    }
+      <div className="container px-4 sm:px-6 mx-auto relative z-10">
+        <div className="max-w-5xl mx-auto">
+          {/* Section Header */}
+          <div className="text-center mb-16 animate-fade-in">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 font-heading tracking-tight">
+              Work <span className="gradient-text">Experience</span>
+            </h2>
+            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Software engineering roles across enterprise fintech, cloud systems, and high-scale platforms.
+            </p>
+          </div>
+
+          {/* Timeline Container */}
+          <div className="relative">
+            {/* Vertical timeline spine */}
+            <div className="hidden md:block absolute left-8 top-4 bottom-4 w-px bg-gradient-to-b from-sky-400/40 via-purple-500/30 to-transparent" />
+
+            <div className="space-y-8">
+              {experienceItems.map((item) => {
+                const isCurrent = item.period.includes('Present');
+
+                return (
+                  <div
+                    key={`${item.title}-${item.company}`}
+                    className="relative md:pl-20 group"
                   >
-                    {item.summary}
-                  </p>
-                </article>
-              ))}
+                    {/* Timeline Node Icon (Desktop) */}
+                    <div
+                      className={`hidden md:flex absolute left-4 -translate-x-1/2 top-6 w-9 h-9 rounded-full items-center justify-center border transition-all duration-300 ${
+                        isCurrent
+                          ? 'border-emerald-400/60 bg-emerald-500/20 text-emerald-400 shadow-[0_0_16px_rgba(52,211,153,0.35)]'
+                          : 'border-white/20 bg-background/80 text-muted-foreground group-hover:border-sky-400/50 group-hover:text-sky-400'
+                      }`}
+                    >
+                      {isCurrent ? (
+                        <span className="relative flex h-2.5 w-2.5">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400" />
+                        </span>
+                      ) : (
+                        <Building2 className="w-4 h-4" />
+                      )}
+                    </div>
+
+                    {/* Experience Card */}
+                    <article className="glass-card rounded-2xl p-6 sm:p-8 border border-white/10 hover:border-sky-400/30 transition-all duration-300 card-glow">
+                      {/* Top Header Row */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                        <div>
+                          <h3 className="text-xl sm:text-2xl font-bold text-foreground group-hover:text-primary transition-colors font-heading">
+                            {item.title}
+                          </h3>
+                          <div className="flex items-center gap-2 text-sky-400 font-medium text-base mt-1">
+                            <Building2 className="w-4 h-4" />
+                            <span>{item.company}</span>
+                          </div>
+                        </div>
+
+                        {/* Period Badge */}
+                        <div className="inline-flex items-center gap-1.5 self-start sm:self-auto rounded-full bg-secondary/60 border border-white/10 px-3 py-1 text-xs font-medium text-muted-foreground">
+                          <Calendar className="w-3.5 h-3.5 text-sky-400" />
+                          <span>{item.period}</span>
+                        </div>
+                      </div>
+
+                      {/* Summary */}
+                      <p className="text-foreground/85 text-base leading-relaxed mb-6">
+                        {item.summary}
+                      </p>
+
+                      {/* Tech Stack Tags */}
+                      <div className="flex items-center gap-2 flex-wrap pt-2 border-t border-border/40">
+                        <span className="text-xs font-semibold text-muted-foreground mr-1">
+                          Stack:
+                        </span>
+                        {item.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="px-2.5 py-0.5 text-xs font-medium rounded-md bg-secondary/80 text-foreground/90 border border-white/10 transition-all duration-200 hover:border-sky-400/40 hover:bg-sky-500/10"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </article>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
