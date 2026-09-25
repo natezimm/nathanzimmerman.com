@@ -26,7 +26,7 @@ const getCategoryIcon = (label: string) => {
 
 const Skills = ({ viewMode: _viewMode }: SkillsProps) => {
   return (
-    <section id="skills" className="py-24 relative overflow-hidden scroll-mt-16 bg-secondary/20">
+    <section id="skills" className="py-16 md:py-20 relative overflow-hidden scroll-mt-4 bg-secondary/20">
       {/* Background ambient lighting */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-sky-500/5 rounded-full blur-[140px] pointer-events-none" />
 

@@ -73,7 +73,7 @@ const Projects = () => {
   ];
 
   return (
-    <section id="projects" className="py-28 relative scroll-mt-16">
+    <section id="projects" className="py-16 md:py-20 relative scroll-mt-4">
       {/* Background decoration */}
       <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-sky-500/5 rounded-full blur-[120px] -translate-y-1/2 pointer-events-none" />
       <div className="absolute bottom-10 right-0 w-[450px] h-[450px] bg-purple-500/5 rounded-full blur-[120px] pointer-events-none" />

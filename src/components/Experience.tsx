@@ -9,7 +9,7 @@ const Experience = ({ viewMode: _viewMode }: ExperienceProps) => {
   return (
     <section
       id="experience"
-      className="py-28 relative overflow-hidden scroll-mt-16"
+      className="py-16 md:py-20 relative overflow-hidden scroll-mt-4"
     >
       {/* Background ambient glow */}
       <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-cyan-500/5 rounded-full blur-[120px] pointer-events-none" />

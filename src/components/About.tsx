@@ -30,7 +30,7 @@ const About = () => {
   ];
 
   return (
-    <section id="about" className="py-24 bg-secondary/30 relative overflow-hidden scroll-mt-16">
+    <section id="about" className="py-16 md:py-20 bg-secondary/30 relative overflow-hidden scroll-mt-4">
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-[550px] h-[550px] bg-purple-500/5 rounded-full blur-[140px] translate-x-1/3 -translate-y-1/3 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[450px] h-[450px] bg-cyan-500/5 rounded-full blur-[120px] -translate-x-1/3 translate-y-1/3 pointer-events-none" />
