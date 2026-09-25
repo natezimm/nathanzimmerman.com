@@ -73,7 +73,7 @@ describe("Hero section", () => {
     it("provides accessible text for screen readers", () => {
       render(<Hero />);
 
-      const srOnlyText = screen.getByText("Full-Stack Engineer • Product-Minded Builder • Former Special-Ed Teacher");
+      const srOnlyText = screen.getByText("Full-Stack Engineer • Product-Minded Builder • C# & TypeScript Developer");
       expect(srOnlyText).toBeInTheDocument();
       expect(srOnlyText).toHaveClass("sr-only");
     });
@@ -81,7 +81,7 @@ describe("Hero section", () => {
     it("has aria-label with full roles text", () => {
       render(<Hero />);
 
-      const typingParagraph = screen.getByLabelText("Full-Stack Engineer • Product-Minded Builder • Former Special-Ed Teacher");
+      const typingParagraph = screen.getByLabelText("Full-Stack Engineer • Product-Minded Builder • C# & TypeScript Developer");
       expect(typingParagraph).toBeInTheDocument();
     });
 
@@ -92,7 +92,7 @@ describe("Hero section", () => {
         vi.advanceTimersByTime(80 * 5);
       });
 
-      const typingContainer = screen.getByLabelText("Full-Stack Engineer • Product-Minded Builder • Former Special-Ed Teacher");
+      const typingContainer = screen.getByLabelText("Full-Stack Engineer • Product-Minded Builder • C# & TypeScript Developer");
       expect(typingContainer.textContent).toContain("Full-");
     });
 
@@ -137,8 +137,18 @@ describe("Hero section", () => {
         vi.advanceTimersByTime(100);
       });
 
-      const typingContainer = screen.getByLabelText("Full-Stack Engineer • Product-Minded Builder • Former Special-Ed Teacher");
+      const typingContainer = screen.getByLabelText("Full-Stack Engineer • Product-Minded Builder • C# & TypeScript Developer");
       expect(typingContainer.textContent).toContain("Full-Stack Engineer");
+    });
+  });
+
+  describe("Portrait card", () => {
+    it("renders system line and both real and vector portrait images for crossfade", () => {
+      render(<Hero />);
+
+      expect(screen.getByText("nathan_zimmerman.dev")).toBeInTheDocument();
+      expect(screen.getByAltText("Nathan Zimmerman - Software Engineer")).toBeInTheDocument();
+      expect(screen.getByAltText("Nathan Zimmerman - Illustrated Vector Portrait")).toBeInTheDocument();
     });
   });
 });

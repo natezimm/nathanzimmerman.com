@@ -12,7 +12,7 @@ describe("Index page", () => {
     );
 
     expect(
-      screen.getByRole("heading", { name: /Hi, I'm Nathan/ })
+      screen.getByRole("heading", { name: /Hi, my name is Nathan/ })
     ).toBeInTheDocument();
     
     await waitFor(() => {
