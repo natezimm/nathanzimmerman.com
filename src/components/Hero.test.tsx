@@ -143,12 +143,12 @@ describe("Hero section", () => {
   });
 
   describe("Portrait card", () => {
-    it("renders system line and both real and vector portrait images for crossfade", () => {
+    it("renders system line and both real and vector portrait images for crossfade across themes", () => {
       render(<Hero />);
 
       expect(screen.getByText("nathan_zimmerman.dev")).toBeInTheDocument();
       expect(screen.getByAltText("Nathan Zimmerman - Software Engineer")).toBeInTheDocument();
-      expect(screen.getByAltText("Nathan Zimmerman - Illustrated Vector Portrait")).toBeInTheDocument();
+      expect(screen.getAllByAltText("Nathan Zimmerman - Illustrated Vector Portrait")).toHaveLength(2);
     });
   });
 });

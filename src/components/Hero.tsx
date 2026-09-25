@@ -5,6 +5,7 @@ import nathanPortraitAvif from "@/assets/nathan-portrait.avif";
 import nathanPortraitWebp from "@/assets/nathan-portrait.webp";
 import nathanPortraitJpg from "@/assets/nathan-portrait.jpg";
 import nathanVectorJpg from "@/assets/nathan-vector.jpg";
+import nathanVectorLightJpg from "@/assets/nathan-vector-light.jpg";
 
 const ROLES = ["Full-Stack Engineer", "Product-Minded Builder", "C# & TypeScript Developer"] as const;
 const TYPING_SPEED = 80;
@@ -242,17 +243,26 @@ const Hero = () => {
                     />
                   </picture>
 
-                  {/* Illustrated Vector Portrait (Reveals on Hover) */}
+                  {/* Illustrated Vector Portrait - Dark Theme (Reveals on Hover) */}
                   <img
                     src={nathanVectorJpg}
                     alt="Nathan Zimmerman - Illustrated Vector Portrait"
                     width={480}
                     height={600}
-                    className="absolute inset-0 w-full h-full object-cover object-top select-none opacity-0 transition-opacity duration-700 group-hover:opacity-100"
+                    className="hidden dark:block absolute inset-0 w-full h-full object-cover object-top select-none opacity-0 transition-opacity duration-700 group-hover:opacity-100"
+                  />
+
+                  {/* Illustrated Vector Portrait - Light Theme (Reveals on Hover) */}
+                  <img
+                    src={nathanVectorLightJpg}
+                    alt="Nathan Zimmerman - Illustrated Vector Portrait"
+                    width={480}
+                    height={600}
+                    className="block dark:hidden absolute inset-0 w-full h-full object-cover object-top select-none opacity-0 transition-opacity duration-700 group-hover:opacity-100"
                   />
 
                   {/* Subtle inner shadow / gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/10 dark:from-slate-950/60 via-transparent to-transparent pointer-events-none" />
                 </div>
               </div>
 
