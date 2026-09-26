@@ -1,6 +1,11 @@
 import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import {
+  fireEvent,
+  render,
+  screen,
+  act,
+  waitFor,
+} from '@testing-library/react';
 import Hero from './Hero';
 
 const createMockElement = () => {
@@ -9,15 +14,40 @@ const createMockElement = () => {
   return element;
 };
 
+const mockMatchMedia = (prefersReducedMotion: boolean) => {
+  const listeners: ((e: MediaQueryListEvent) => void)[] = [];
+
+  return vi.fn().mockImplementation((query: string) => ({
+    matches:
+      query === '(prefers-reduced-motion: reduce)'
+        ? prefersReducedMotion
+        : false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: (
+      _event: string,
+      callback: (e: MediaQueryListEvent) => void
+    ) => {
+      listeners.push(callback);
+    },
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  }));
+};
+
 describe('Hero section', () => {
   const projectsElement = createMockElement();
   const contactElement = createMockElement();
   const aboutElement = createMockElement();
-  const onViewModeChange = vi.fn();
   let getElementSpy: ReturnType<typeof vi.spyOn>;
+  let originalMatchMedia: typeof window.matchMedia;
 
   beforeEach(() => {
-    onViewModeChange.mockReset();
+    vi.useFakeTimers();
+    originalMatchMedia = window.matchMedia;
+    window.matchMedia = mockMatchMedia(false);
 
     getElementSpy = vi
       .spyOn(document, 'getElementById')
@@ -30,147 +60,121 @@ describe('Hero section', () => {
   });
 
   afterEach(() => {
+    vi.useRealTimers();
+    window.matchMedia = originalMatchMedia;
     projectsElement.scrollIntoView = vi.fn();
     contactElement.scrollIntoView = vi.fn();
     aboutElement.scrollIntoView = vi.fn();
     getElementSpy.mockRestore();
   });
 
-  it('renders the overworld hero messaging', () => {
-    render(
-      <MemoryRouter>
-        <Hero viewMode="map" onViewModeChange={onViewModeChange} />
-      </MemoryRouter>
-    );
+  it('scrolls to featured sections', () => {
+    render(<Hero />);
 
-    expect(
-      screen.getByRole('heading', { name: /Nathan's World/i })
-    ).toBeInTheDocument();
-    expect(screen.getByAltText(/Retro overworld map/i)).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: /PRESS START/i })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole('button', { name: /HOMESTEAD/i })
-    ).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'View My Work' }));
+    expect(projectsElement.scrollIntoView).toHaveBeenCalled();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Get In Touch' }));
+    expect(contactElement.scrollIntoView).toHaveBeenCalled();
+
+    fireEvent.click(screen.getByLabelText('Scroll to about section'));
+    expect(aboutElement.scrollIntoView).toHaveBeenCalled();
   });
 
-  it('scrolls when press start is clicked', () => {
-    render(
-      <MemoryRouter>
-        <Hero viewMode="map" onViewModeChange={onViewModeChange} />
-      </MemoryRouter>
-    );
+  describe('Typing effect', () => {
+    it('provides accessible text for screen readers', () => {
+      render(<Hero />);
 
-    fireEvent.click(screen.getByRole('button', { name: /PRESS START/i }));
-    expect(projectsElement.scrollIntoView).toHaveBeenCalledWith({
-      behavior: 'smooth',
-      block: 'start',
+      const srOnlyText = screen.getByText(
+        'Full-Stack Engineer • Product-Minded Builder • C# & TypeScript Developer'
+      );
+      expect(srOnlyText).toBeInTheDocument();
+      expect(srOnlyText).toHaveClass('sr-only');
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /HOMESTEAD/i }));
-    expect(aboutElement.scrollIntoView).toHaveBeenCalledWith({
-      behavior: 'smooth',
-      block: 'start',
+    it('has aria-label with full roles text', () => {
+      render(<Hero />);
+
+      const typingParagraph = screen.getByLabelText(
+        'Full-Stack Engineer • Product-Minded Builder • C# & TypeScript Developer'
+      );
+      expect(typingParagraph).toBeInTheDocument();
+    });
+
+    it('starts typing the first role', async () => {
+      render(<Hero />);
+
+      await act(async () => {
+        vi.advanceTimersByTime(80 * 5);
+      });
+
+      const typingContainer = screen.getByLabelText(
+        'Full-Stack Engineer • Product-Minded Builder • C# & TypeScript Developer'
+      );
+      expect(typingContainer.textContent).toContain('Full-');
+    });
+
+    it('displays cursor element with blink animation class', () => {
+      render(<Hero />);
+
+      const cursor = document.querySelector('.animate-blink');
+      expect(cursor).toBeInTheDocument();
+    });
+
+    it('types and deletes text cycling through roles', async () => {
+      render(<Hero />);
+
+      const advanceTimeBy = async (ms: number) => {
+        const steps = Math.ceil(ms / 80);
+        for (let i = 0; i < steps; i++) {
+          await act(async () => {
+            vi.advanceTimersByTime(80);
+          });
+        }
+      };
+
+      await advanceTimeBy(19 * 80);
+
+      const visibleTypingSpan = document.querySelector(
+        '[aria-hidden="true"].inline-flex'
+      );
+      expect(visibleTypingSpan?.textContent).toContain('Full-Stack Engineer');
+      await advanceTimeBy(2000);
+      await advanceTimeBy(50 * 10);
+
+      const textAfterDelete = visibleTypingSpan?.textContent || '';
+      expect(textAfterDelete.length).toBeLessThan('Full-Stack Engineer'.length);
     });
   });
 
-  it('shows destination details in the bottom status bar on hover', () => {
-    render(
-      <MemoryRouter>
-        <Hero viewMode="map" onViewModeChange={onViewModeChange} />
-      </MemoryRouter>
-    );
+  describe('Reduced motion preference', () => {
+    it('shows static text when user prefers reduced motion', async () => {
+      window.matchMedia = mockMatchMedia(true);
 
-    expect(screen.getByText(/Hover or tap a destination/i)).toBeInTheDocument();
+      render(<Hero />);
 
-    fireEvent.pointerEnter(
-      screen.getByRole('button', { name: /ARCADE DISTRICT/i })
-    );
+      await act(async () => {
+        vi.advanceTimersByTime(100);
+      });
 
-    expect(screen.getByText('DESTINATION:')).toBeInTheDocument();
-    expect(
-      screen.getByText(/ARCADE DISTRICT - Brick Breaker Resume/i)
-    ).toBeInTheDocument();
+      const typingContainer = screen.getByLabelText(
+        'Full-Stack Engineer • Product-Minded Builder • C# & TypeScript Developer'
+      );
+      expect(typingContainer.textContent).toContain('Full-Stack Engineer');
+    });
   });
 
-  it('shows a mobile view toggle in the hero', () => {
-    render(
-      <MemoryRouter>
-        <Hero viewMode="map" onViewModeChange={onViewModeChange} />
-      </MemoryRouter>
-    );
+  describe('Portrait card', () => {
+    it('renders system line and both real and vector portrait images for crossfade across themes', () => {
+      render(<Hero />);
 
-    fireEvent.click(
-      screen.getByRole('button', { name: 'Switch to resume view' })
-    );
-
-    expect(onViewModeChange).toHaveBeenCalledWith('grid');
-  });
-
-  it('locks manual controls to available path directions', () => {
-    render(
-      <MemoryRouter>
-        <Hero viewMode="map" onViewModeChange={onViewModeChange} />
-      </MemoryRouter>
-    );
-
-    expect(screen.getByRole('button', { name: 'Move down' })).toBeDisabled();
-    expect(
-      screen.getByRole('button', { name: 'Move left' })
-    ).not.toBeDisabled();
-
-    fireEvent.keyDown(window, { key: 'ArrowLeft' });
-
-    expect(
-      screen.getByRole('button', { name: 'Move down' })
-    ).not.toBeDisabled();
-  });
-
-  it('opens Nerdle after keyboard movement reaches its location', () => {
-    render(
-      <MemoryRouter>
-        <Hero viewMode="map" onViewModeChange={onViewModeChange} />
-      </MemoryRouter>
-    );
-
-    fireEvent.keyDown(window, { key: 'ArrowLeft' });
-    fireEvent.keyDown(window, { key: 'ArrowDown' });
-    fireEvent.keyDown(window, { key: 'ArrowLeft' });
-    fireEvent.keyDown(window, { key: 'Enter' });
-
-    expect(screen.getByRole('dialog')).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'NERDLE' })).toBeInTheDocument();
-  });
-
-  it('opens Sudoku after keyboard movement reaches its location', () => {
-    render(
-      <MemoryRouter>
-        <Hero viewMode="map" onViewModeChange={onViewModeChange} />
-      </MemoryRouter>
-    );
-
-    fireEvent.keyDown(window, { key: 'ArrowRight' });
-    fireEvent.keyDown(window, { key: 'ArrowRight' });
-    fireEvent.keyDown(window, { key: 'ArrowRight' });
-    fireEvent.keyDown(window, { key: 'Enter' });
-
-    expect(screen.getByRole('dialog')).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'SUDOKU' })).toBeInTheDocument();
-  });
-
-  it('closes destination popups with Escape', () => {
-    render(
-      <MemoryRouter>
-        <Hero viewMode="map" onViewModeChange={onViewModeChange} />
-      </MemoryRouter>
-    );
-
-    fireEvent.click(screen.getByRole('button', { name: /ARCADE DISTRICT/i }));
-    expect(screen.getByRole('dialog')).toBeInTheDocument();
-
-    fireEvent.keyDown(window, { key: 'Escape' });
-
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+      expect(screen.getByText('nathan_zimmerman.dev')).toBeInTheDocument();
+      expect(
+        screen.getByAltText('Nathan Zimmerman - Software Engineer')
+      ).toBeInTheDocument();
+      expect(
+        screen.getAllByAltText('Nathan Zimmerman - Illustrated Vector Portrait')
+      ).toHaveLength(2);
+    });
   });
 });

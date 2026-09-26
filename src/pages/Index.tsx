@@ -1,39 +1,32 @@
-import { useState } from 'react';
 import Navigation from '@/components/Navigation';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
 import Experience from '@/components/Experience';
-import Skills from '@/components/Skills';
 import Projects from '@/components/Projects';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
-import { type ViewMode } from '@/data/portfolioData';
-
-const MOBILE_RESUME_VIEW_QUERY = '(max-width: 767px)';
-
-const getInitialViewMode = (): ViewMode => {
-  if (typeof window === 'undefined' || !window.matchMedia) {
-    return 'map';
-  }
-
-  return window.matchMedia(MOBILE_RESUME_VIEW_QUERY).matches ? 'grid' : 'map';
-};
 
 const Index = () => {
-  const [viewMode, setViewMode] = useState<ViewMode>(getInitialViewMode);
-
   return (
-    <div className="retro-shell min-h-screen" data-view-mode={viewMode}>
-      <Navigation viewMode={viewMode} onViewModeChange={setViewMode} />
-      <main>
-        <Hero viewMode={viewMode} onViewModeChange={setViewMode} />
-        <About viewMode={viewMode} />
-        <Projects viewMode={viewMode} />
-        <Experience viewMode={viewMode} />
-        <Skills viewMode={viewMode} />
-        <Contact viewMode={viewMode} />
-      </main>
-      <Footer />
+    <div className="min-h-screen bg-background text-foreground selection:bg-sky-500/20 selection:text-sky-300 relative">
+      {/* Ambient page illumination */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-radial from-sky-500/12 via-indigo-500/6 to-transparent blur-3xl opacity-75" />
+        <div className="absolute top-[38%] -left-32 w-[600px] h-[600px] bg-gradient-radial from-cyan-500/8 via-transparent to-transparent blur-3xl opacity-60" />
+        <div className="absolute top-[72%] -right-32 w-[600px] h-[600px] bg-gradient-radial from-purple-500/8 via-transparent to-transparent blur-3xl opacity-60" />
+      </div>
+
+      <div className="relative z-10">
+        <Navigation />
+        <main>
+          <Hero />
+          <About />
+          <Experience />
+          <Projects />
+          <Contact />
+        </main>
+        <Footer />
+      </div>
     </div>
   );
 };

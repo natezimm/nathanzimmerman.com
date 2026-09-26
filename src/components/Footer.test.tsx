@@ -10,11 +10,5 @@ describe('Footer', () => {
     expect(
       screen.getByText((content) => content.includes(year))
     ).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        'Thanks for stopping by! Built with React, TypeScript, and Tailwind.'
-      )
-    ).toBeInTheDocument();
-    expect(screen.queryByText('❤')).not.toBeInTheDocument();
   });
 });

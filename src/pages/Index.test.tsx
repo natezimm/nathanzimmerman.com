@@ -1,76 +1,24 @@
-import { afterEach, describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
 import Index from './Index';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 
 describe('Index page', () => {
-  afterEach(() => {
-    vi.unstubAllGlobals();
-  });
-
-  it('defaults to map view', () => {
-    render(
-      <MemoryRouter>
-        <Index />
-      </MemoryRouter>
-    );
-
-    const mapToggle = screen.getByRole('button', { name: 'MAP VIEW' });
-    expect(mapToggle).toHaveAttribute('aria-pressed', 'true');
-  });
-
-  it('falls back to map view when matchMedia is unavailable', () => {
-    vi.stubGlobal('matchMedia', undefined);
-
-    render(
-      <MemoryRouter>
-        <Index />
-      </MemoryRouter>
-    );
-
-    const mapToggle = screen.getByRole('button', { name: 'MAP VIEW' });
-    expect(mapToggle).toHaveAttribute('aria-pressed', 'true');
-  });
-
-  it('defaults small screens to resume view', () => {
-    vi.stubGlobal(
-      'matchMedia',
-      vi.fn().mockImplementation((query: string) => ({
-        matches: query === '(max-width: 767px)',
-        media: query,
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        addListener: vi.fn(),
-        removeListener: vi.fn(),
-        dispatchEvent: vi.fn(),
-      }))
-    );
-
-    render(
-      <MemoryRouter>
-        <Index />
-      </MemoryRouter>
-    );
-
-    const resumeToggle = screen.getByRole('button', { name: 'RESUME VIEW' });
-    expect(resumeToggle).toHaveAttribute('aria-pressed', 'true');
-  });
-
   it('renders the main sections', async () => {
     render(
-      <MemoryRouter>
+      <ThemeProvider>
         <Index />
-      </MemoryRouter>
+      </ThemeProvider>
     );
 
     expect(
-      screen.getByRole('heading', { name: /Nathan's World/i })
+      screen.getByRole('heading', { name: /Hi, my name is Nathan/ })
     ).toBeInTheDocument();
 
     await waitFor(
       () => {
         expect(
-          screen.getByRole('heading', { name: /FEATURED PROJECTS/i })
+          screen.getByRole('heading', { name: /Featured Projects/ })
         ).toBeInTheDocument();
       },
       { timeout: 5000 }
@@ -78,7 +26,7 @@ describe('Index page', () => {
     await waitFor(
       () => {
         expect(
-          screen.getByRole('heading', { name: /EXPERIENCE/i })
+          screen.getByRole('heading', { name: /About Me/ })
         ).toBeInTheDocument();
       },
       { timeout: 5000 }

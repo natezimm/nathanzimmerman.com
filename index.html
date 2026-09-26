@@ -2,6 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      var t = localStorage.getItem('theme');
+      document.documentElement.classList.add(t === 'light' ? 'light' : 'dark');
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -9,25 +13,34 @@
     <link
       rel="preload"
       as="style"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Press+Start+2P&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
     />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Press+Start+2P&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
       media="print"
       onload="this.media = 'all'"
     />
 
     <style>
       :root {
-        --background: 228 58% 7%;
+        --background: 224 71% 4%;
         --foreground: 213 31% 91%;
+      }
+
+      html.light {
+        --background: 0 0% 98%;
+        --foreground: 222.2 47.4% 11.2%;
       }
 
       body {
         background: hsl(var(--background));
         color: hsl(var(--foreground));
         margin: 0;
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
       }
 
       #root {
@@ -38,44 +51,21 @@
     <title>Nathan Zimmerman | Software Engineer</title>
     <meta
       name="description"
-      content="Nathan Zimmerman's retro RPG portfolio featuring full-stack engineering work, interactive projects, experience, skills, and resume links."
+      content="Nathan Zimmerman – Software Engineer specializing in React, Angular, TypeScript, Java, .NET, Node.js, MongoDB, AWS, and Azure."
     />
     <meta name="author" content="Nathan Zimmerman" />
     <meta
       name="keywords"
       content="Nathan Zimmerman, software engineer, React, Angular, TypeScript, Java, .NET, Node.js, MongoDB, AWS, Azure, web developer"
     />
-    <meta name="theme-color" content="#0b1224" />
 
     <meta property="og:title" content="Nathan Zimmerman | Software Engineer" />
     <meta
       property="og:description"
-      content="Explore Nathan Zimmerman's retro RPG portfolio, projects, experience, skills, and resume."
+      content="Nathan Zimmerman – Software Engineer specializing in React, Angular, TypeScript, Java, .NET, Node.js, MongoDB, AWS, and Azure."
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://nathanzimmerman.com/" />
-    <meta property="og:site_name" content="Nathan Zimmerman's World" />
-    <meta
-      property="og:image"
-      content="https://nathanzimmerman.com/og-image.jpg"
-    />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta
-      property="og:image:alt"
-      content="Nathan Zimmerman's retro RPG portfolio world map."
-    />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Nathan Zimmerman | Software Engineer" />
-    <meta
-      name="twitter:description"
-      content="Explore Nathan Zimmerman's retro RPG portfolio, projects, experience, skills, and resume."
-    />
-    <meta
-      name="twitter:image"
-      content="https://nathanzimmerman.com/og-image.jpg"
-    />
 
     <!-- Canonical URL for SEO - tells search engines the preferred URL -->
     <link rel="canonical" href="https://nathanzimmerman.com/" />
@@ -105,9 +95,24 @@
       }
     </script>
 
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/favicon-32x32.png?v=2"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/favicon-16x16.png?v=2"
+    />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/apple-touch-icon.png?v=2"
+    />
   </head>
 
   <body>
@@ -116,7 +121,7 @@
     <noscript>
       <link
         rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Press+Start+2P&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap"
       />
     </noscript>
   </body>
