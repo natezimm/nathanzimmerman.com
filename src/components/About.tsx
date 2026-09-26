@@ -68,7 +68,7 @@ const About = () => {
                 return (
                   <Card
                     key={skill.title}
-                    className="glass-card rounded-2xl border border-white/10 hover:border-sky-400/30 transition-all duration-300 card-glow"
+                    className="glass-card rounded-2xl border border-slate-200/90 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 card-glow shadow-sm"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
                     <CardContent className="p-6">

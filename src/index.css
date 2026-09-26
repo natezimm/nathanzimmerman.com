@@ -114,11 +114,11 @@
   }
 
   .glass {
-    @apply bg-background/60 backdrop-blur-lg border border-white/10;
+    @apply bg-background/85 dark:bg-background/60 backdrop-blur-lg border border-slate-200/80 dark:border-white/10;
   }
 
   .glass-card {
-    @apply bg-card/50 backdrop-blur-sm border border-white/15 hover:border-white/25 transition-all duration-300;
+    @apply bg-card/90 dark:bg-card/50 backdrop-blur-md border border-slate-200/80 dark:border-white/15 hover:border-slate-300 dark:hover:border-white/25 transition-all duration-300;
   }
 
   .card-glow {

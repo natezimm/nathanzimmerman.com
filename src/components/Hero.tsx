@@ -95,7 +95,7 @@ const Hero = () => {
           {/* Left Column: Headlines, Role typing, Bio, CTAs */}
           <div className="lg:col-span-7 text-center lg:text-left space-y-6">
             {/* Live Role Badge */}
-            <div className="inline-flex items-center gap-2.5 rounded-full border border-sky-400/35 bg-sky-500/15 px-4 py-1.5 text-xs sm:text-sm font-medium text-sky-200 shadow-sm backdrop-blur-md">
+            <div className="inline-flex items-center gap-2.5 rounded-full border border-sky-400/40 dark:border-sky-400/35 bg-sky-500/10 dark:bg-sky-500/15 px-4 py-1.5 text-xs sm:text-sm font-semibold sm:font-medium text-sky-700 dark:text-sky-200 shadow-sm backdrop-blur-md">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
@@ -142,7 +142,7 @@ const Hero = () => {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="h-12 px-8 text-base rounded-full border border-white/20 bg-white/5 hover:bg-white/10 text-foreground backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5"
+                  className="h-12 px-8 text-base rounded-full border border-slate-300 dark:border-white/20 bg-slate-100/70 dark:bg-white/5 hover:bg-slate-200/70 dark:hover:bg-white/10 text-foreground backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 shadow-sm"
                   onClick={() => scrollToSection("contact")}
                 >
                   Get In Touch
@@ -162,7 +162,7 @@ const Hero = () => {
                       href={href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-center w-11 h-11 rounded-full border border-white/15 bg-white/5 text-muted-foreground hover:text-foreground hover:border-sky-400/50 hover:bg-white/10 transition-all duration-300 hover:scale-105 shadow-sm"
+                      className="flex items-center justify-center w-11 h-11 rounded-full border border-slate-300 dark:border-white/15 bg-slate-100/70 dark:bg-white/5 text-muted-foreground hover:text-foreground hover:border-sky-500 dark:hover:border-sky-400/50 hover:bg-slate-200/70 dark:hover:bg-white/10 transition-all duration-300 hover:scale-105 shadow-sm"
                       aria-label={label}
                     >
                       <Icon className="w-5 h-5" />
@@ -181,7 +181,7 @@ const Hero = () => {
               <div className="absolute inset-0 -m-6 sm:-m-10 rounded-full bg-gradient-to-tr from-cyan-500/25 via-sky-500/20 to-purple-600/25 blur-3xl opacity-80 pointer-events-none" />
 
               {/* Floating Top Telemetry Pill */}
-              <div className="animate-float-slow absolute -top-4 -right-2 sm:-top-6 sm:-right-4 z-20 glass-card rounded-2xl p-3 sm:p-3.5 border border-white/20 shadow-xl backdrop-blur-md flex items-center gap-3">
+              <div className="animate-float-slow absolute -top-4 -right-2 sm:-top-6 sm:-right-4 z-20 bg-white/60 dark:bg-card/50 backdrop-blur-md rounded-2xl p-3 sm:p-3.5 border border-slate-200/90 dark:border-white/20 shadow-xl shadow-slate-900/10 dark:shadow-slate-950/50 flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
                   <Activity className="w-4 h-4" />
                 </div>
@@ -189,16 +189,16 @@ const Hero = () => {
                   <div className="text-xs font-semibold text-foreground flex items-center gap-1.5 font-heading">
                     Enterprise Fintech
                   </div>
-                  <div className="text-[11px] text-emerald-400 font-medium">
+                  <div className="text-[11px] text-emerald-500 dark:text-emerald-400 font-medium">
                     Payments & Microservices
                   </div>
                 </div>
               </div>
 
               {/* Floating Bottom Architecture Card */}
-              <div className="animate-float-reverse absolute -bottom-4 -left-2 sm:-bottom-6 sm:-left-4 z-20 glass-card rounded-2xl p-3 sm:p-3.5 border border-white/20 shadow-xl backdrop-blur-md">
+              <div className="animate-float-reverse absolute -bottom-4 -left-2 sm:-bottom-6 sm:-left-4 z-20 bg-white/60 dark:bg-card/50 backdrop-blur-md rounded-2xl p-3 sm:p-3.5 border border-slate-200/90 dark:border-white/20 shadow-xl shadow-slate-900/10 dark:shadow-slate-950/50">
                 <div className="flex items-center gap-2 mb-1.5">
-                  <div className="w-7 h-7 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400">
+                  <div className="w-7 h-7 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-500 dark:text-sky-400">
                     <Cpu className="w-3.5 h-3.5" />
                   </div>
                   <span className="text-xs font-semibold text-foreground font-heading">
@@ -209,7 +209,7 @@ const Hero = () => {
                   {[".NET", "C#", "Angular", "AWS"].map((tag) => (
                     <span
                       key={tag}
-                      className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-secondary/80 text-foreground/90 border border-white/10"
+                      className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 dark:bg-secondary/80 text-foreground border border-slate-200 dark:border-white/10"
                     >
                       {tag}
                     </span>
@@ -218,11 +218,11 @@ const Hero = () => {
               </div>
 
               {/* Central Portrait Card */}
-              <div className="relative rounded-[2rem] p-3 sm:p-3.5 bg-gradient-to-b from-card/90 via-card/70 to-card/95 border border-white/20 group-hover:border-sky-400/30 backdrop-blur-xl shadow-2xl shadow-slate-950/50 group overflow-hidden transition-all duration-500">
+              <div className="relative rounded-[2rem] p-3 sm:p-3.5 bg-gradient-to-b from-card/95 via-card/85 to-card/95 border border-slate-200/90 dark:border-white/20 group-hover:border-sky-400/30 backdrop-blur-xl shadow-2xl shadow-slate-900/10 dark:shadow-slate-950/50 group overflow-hidden transition-all duration-500">
                 {/* Header System Line */}
-                <div className="flex items-center gap-2 px-3 py-1.5 mb-2.5 rounded-xl bg-secondary/60 border border-white/10 text-[11px] font-mono text-muted-foreground transition-colors group-hover:border-sky-400/30">
+                <div className="flex items-center gap-2 px-3 py-1.5 mb-2.5 rounded-xl bg-slate-100/90 dark:bg-secondary/60 border border-slate-200/80 dark:border-white/10 text-[11px] font-mono text-muted-foreground transition-colors group-hover:border-sky-400/30">
                   <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                  <span className="font-semibold text-foreground/80 group-hover:text-sky-400 transition-colors">
+                  <span className="font-semibold text-foreground/80 group-hover:text-sky-500 dark:group-hover:text-sky-400 transition-colors">
                     nathan_zimmerman.dev
                   </span>
                 </div>

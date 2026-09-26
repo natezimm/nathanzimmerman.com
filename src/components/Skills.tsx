@@ -51,11 +51,11 @@ const Skills = ({ viewMode: _viewMode }: SkillsProps) => {
             {skillGroups.map((group) => (
               <article
                 key={group.label}
-                className="glass-card rounded-2xl border border-white/10 p-6 flex flex-col justify-between card-glow hover:border-sky-400/30 transition-all duration-300"
+                className="glass-card rounded-2xl border border-slate-200/90 dark:border-white/10 p-6 flex flex-col justify-between card-glow hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 shadow-sm"
               >
                 <div>
                   <div className="flex items-center gap-2.5 mb-5 pb-3 border-b border-border/40">
-                    <div className="p-2 rounded-lg bg-white/5 border border-white/10">
+                    <div className="p-2 rounded-lg bg-slate-100/90 dark:bg-white/5 border border-slate-200/80 dark:border-white/10">
                       {getCategoryIcon(group.label)}
                     </div>
                     <h3 className="text-sm font-semibold tracking-wider text-foreground uppercase font-heading">
@@ -70,7 +70,7 @@ const Skills = ({ viewMode: _viewMode }: SkillsProps) => {
                           <span className="font-medium text-foreground/90">{item.name}</span>
                           <span className="text-muted-foreground font-mono text-[11px]">{item.years}</span>
                         </div>
-                        <div className="h-1.5 w-full rounded-full bg-secondary/80 overflow-hidden">
+                        <div className="h-1.5 w-full rounded-full bg-slate-200/80 dark:bg-secondary/80 overflow-hidden">
                           <div
                             role="meter"
                             aria-label={`${item.name} experience`}

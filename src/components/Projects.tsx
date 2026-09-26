@@ -94,12 +94,12 @@ const Projects = () => {
             {projects.map((project, index) => (
               <Card
                 key={project.title}
-                className="glass-card overflow-hidden group border border-white/10 rounded-2xl flex flex-col justify-between card-glow hover:border-sky-400/30 transition-all duration-300"
+                className="glass-card overflow-hidden group border border-slate-200/90 dark:border-white/10 rounded-2xl flex flex-col justify-between card-glow hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 shadow-sm"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <div>
                   {/* Media Preview Box */}
-                  <div className="relative overflow-hidden border-b border-white/10 aspect-[16/9] w-full">
+                  <div className="relative overflow-hidden border-b border-slate-200/80 dark:border-white/10 aspect-[16/9] w-full">
                     <picture className="w-full h-full">
                       <source
                         srcSet={project.imageSmallAvif ? `${project.imageSmallAvif} 600w, ${project.imageAvif} 1200w` : project.imageAvif}
@@ -139,7 +139,7 @@ const Projects = () => {
                     {project.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-2.5 py-0.5 text-xs font-medium bg-secondary/80 text-foreground/90 border border-white/10 rounded-md transition-all duration-200 hover:border-sky-400/40 hover:bg-sky-500/10 cursor-default"
+                        className="px-2.5 py-0.5 text-xs font-medium bg-slate-100/90 dark:bg-secondary/80 text-foreground/90 border border-slate-200/80 dark:border-white/10 rounded-md transition-all duration-200 hover:border-sky-500/40 dark:hover:border-sky-400/40 hover:bg-sky-500/10 cursor-default"
                       >
                         {tag}
                       </span>
@@ -151,7 +151,7 @@ const Projects = () => {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="rounded-lg border-white/15 bg-white/5 hover:bg-white/10 text-foreground hover:border-sky-400/50 transition-all text-xs font-medium"
+                      className="rounded-lg border-slate-300 dark:border-white/15 bg-slate-100/80 dark:bg-white/5 hover:bg-slate-200/80 dark:hover:bg-white/10 text-foreground hover:border-sky-500 dark:hover:border-sky-400/50 transition-all text-xs font-medium shadow-sm"
                       asChild
                     >
                       <a

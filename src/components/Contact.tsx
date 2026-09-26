@@ -125,14 +125,14 @@ const Contact = () => {
               </div>
 
               <div className="space-y-6">
-                <Card className="glass-card rounded-2xl border border-white/10 hover:border-sky-400/30 transition-all duration-300 card-glow">
+                <Card className="glass-card rounded-2xl border border-slate-200/90 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 card-glow shadow-sm">
                   <CardContent className="flex items-center gap-4 p-6">
-                    <Mail className="w-8 h-8 text-cyan-400 flex-shrink-0" />
+                    <Mail className="w-8 h-8 text-sky-500 dark:text-cyan-400 flex-shrink-0" />
                     <div>
                       <h4 className="font-semibold mb-1 text-base text-foreground font-heading">Email</h4>
                       <a
                         href="mailto:nathan.a.zimmerman@gmail.com"
-                        className="text-muted-foreground hover:text-sky-400 transition-colors text-sm font-mono"
+                        className="text-muted-foreground hover:text-sky-500 dark:hover:text-sky-400 transition-colors text-sm font-mono"
                       >
                         nathan.a.zimmerman@gmail.com
                       </a>
@@ -140,9 +140,9 @@ const Contact = () => {
                   </CardContent>
                 </Card>
 
-                <Card className="glass-card rounded-2xl border border-white/10 hover:border-sky-400/30 transition-all duration-300 card-glow">
+                <Card className="glass-card rounded-2xl border border-slate-200/90 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 card-glow shadow-sm">
                   <CardContent className="flex items-center gap-4 p-6">
-                    <MapPin className="w-8 h-8 text-cyan-400 flex-shrink-0" />
+                    <MapPin className="w-8 h-8 text-sky-500 dark:text-cyan-400 flex-shrink-0" />
                     <div>
                       <h4 className="font-semibold mb-1 text-base text-foreground font-heading">Location</h4>
                       <p className="text-muted-foreground text-sm">
@@ -155,7 +155,7 @@ const Contact = () => {
             </div>
 
             <div className="animate-fade-in delay-200">
-              <Card className="glass-card rounded-2xl border border-white/10 p-6 md:p-8 card-glow">
+              <Card className="glass-card rounded-2xl border border-slate-200/90 dark:border-white/10 p-6 md:p-8 card-glow shadow-sm">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="space-y-2">
                     <label htmlFor="name" className="text-sm font-medium">

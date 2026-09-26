@@ -73,9 +73,9 @@ const Navigation = () => {
               href="/resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 hover:bg-white/10 text-xs font-medium text-foreground px-3.5 py-1.5 transition-all hover:scale-105"
+              className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 dark:border-white/15 bg-slate-100/70 dark:bg-white/5 hover:bg-slate-200/70 dark:hover:bg-white/10 text-xs font-medium text-foreground px-3.5 py-1.5 transition-all hover:scale-105 shadow-sm"
             >
-              <FileText className="w-3.5 h-3.5 text-sky-400" />
+              <FileText className="w-3.5 h-3.5 text-sky-500 dark:text-sky-400" />
               <span>Resume</span>
               <ArrowUpRight className="w-3 h-3 opacity-60" />
             </a>
