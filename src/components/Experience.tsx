@@ -1,5 +1,11 @@
 import { experienceItems, type ViewMode } from '@/data/portfolioData';
-import { Briefcase, Calendar, Building2, Sparkles, CheckCircle2 } from 'lucide-react';
+import {
+  Briefcase,
+  Calendar,
+  Building2,
+  Sparkles,
+  CheckCircle2,
+} from 'lucide-react';
 
 type ExperienceProps = {
   viewMode?: ViewMode;
@@ -23,7 +29,8 @@ const Experience = ({ viewMode: _viewMode }: ExperienceProps) => {
               Work <span className="gradient-text">Experience</span>
             </h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Software engineering roles across enterprise fintech, cloud systems, and high-scale platforms.
+              Software engineering roles across enterprise fintech, cloud
+              systems, and high-scale platforms.
             </p>
           </div>
 

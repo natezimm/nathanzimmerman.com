@@ -1,33 +1,44 @@
-import { Github, Linkedin, ArrowDown, Activity, Cpu, ShieldCheck } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useState, useEffect, useCallback } from "react";
-import nathanPortraitAvif from "@/assets/nathan-portrait.avif";
-import nathanPortraitWebp from "@/assets/nathan-portrait.webp";
-import nathanPortraitJpg from "@/assets/nathan-portrait.jpg";
-import nathanVectorJpg from "@/assets/nathan-vector.jpg";
-import nathanVectorLightJpg from "@/assets/nathan-vector-light.jpg";
+import {
+  Github,
+  Linkedin,
+  ArrowDown,
+  Activity,
+  Cpu,
+  ShieldCheck,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useState, useEffect, useCallback } from 'react';
+import nathanPortraitAvif from '@/assets/nathan-portrait.avif';
+import nathanPortraitWebp from '@/assets/nathan-portrait.webp';
+import nathanPortraitJpg from '@/assets/nathan-portrait.jpg';
+import nathanVectorJpg from '@/assets/nathan-vector.jpg';
+import nathanVectorLightJpg from '@/assets/nathan-vector-light.jpg';
 
-const ROLES = ["Full-Stack Engineer", "Product-Minded Builder", "C# & TypeScript Developer"] as const;
+const ROLES = [
+  'Full-Stack Engineer',
+  'Product-Minded Builder',
+  'C# & TypeScript Developer',
+] as const;
 const TYPING_SPEED = 80;
 const DELETING_SPEED = 50;
 const PAUSE_DURATION = 2000;
 
 const Hero = () => {
-  const [displayText, setDisplayText] = useState("");
+  const [displayText, setDisplayText] = useState('');
   const [roleIndex, setRoleIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     setPrefersReducedMotion(mediaQuery.matches);
 
     const handleChange = (e: MediaQueryListEvent) => {
       setPrefersReducedMotion(e.matches);
     };
 
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
   const typeEffect = useCallback(() => {
@@ -63,10 +74,10 @@ const Hero = () => {
   }, [typeEffect, isDeleting, prefersReducedMotion, roleIndex]);
 
   const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const fullRolesText = ROLES.join(" • ");
+  const fullRolesText = ROLES.join(' • ');
 
   return (
     <section
@@ -91,7 +102,6 @@ const Hero = () => {
       {/* Hero Content */}
       <div className="relative z-10 container px-4 sm:px-6 mx-auto animate-fade-in">
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center max-w-6xl mx-auto">
-
           {/* Left Column: Headlines, Role typing, Bio, CTAs */}
           <div className="lg:col-span-7 text-center lg:text-left space-y-6">
             {/* Live Role Badge */}
@@ -113,7 +123,10 @@ const Hero = () => {
               className="text-xl sm:text-2xl md:text-3xl text-muted-foreground font-light min-h-[1.5em]"
               aria-label={fullRolesText}
             >
-              <span aria-hidden="true" className="inline-flex items-center font-heading">
+              <span
+                aria-hidden="true"
+                className="inline-flex items-center font-heading"
+              >
                 {displayText}
                 <span
                   className="inline-block w-[3px] h-[1em] bg-sky-400 ml-1 animate-blink"
@@ -126,7 +139,10 @@ const Hero = () => {
 
             {/* Bio Paragraph */}
             <p className="text-base sm:text-lg text-foreground/85 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-              Former special education teacher turned software engineer, bringing empathy and clear thinking to enterprise fintech. I build clean, reliable systems from frontend interfaces to backend microservices.
+              Former special education teacher turned software engineer,
+              bringing empathy and clear thinking to enterprise fintech. I build
+              clean, reliable systems from frontend interfaces to backend
+              microservices.
             </p>
 
             {/* Buttons & Socials */}
@@ -135,7 +151,7 @@ const Hero = () => {
                 <Button
                   size="lg"
                   className="h-12 px-8 text-base rounded-full bg-primary text-primary-foreground font-medium shadow-lg shadow-sky-500/20 hover:shadow-sky-500/35 transition-all duration-300 hover:-translate-y-0.5"
-                  onClick={() => scrollToSection("projects")}
+                  onClick={() => scrollToSection('projects')}
                 >
                   View My Work
                 </Button>
@@ -143,18 +159,22 @@ const Hero = () => {
                   size="lg"
                   variant="outline"
                   className="h-12 px-8 text-base rounded-full border border-slate-300 dark:border-white/20 bg-slate-100/70 dark:bg-white/5 hover:bg-slate-200/70 dark:hover:bg-white/10 text-foreground backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 shadow-sm"
-                  onClick={() => scrollToSection("contact")}
+                  onClick={() => scrollToSection('contact')}
                 >
                   Get In Touch
                 </Button>
 
                 <div className="flex items-center gap-2.5 pl-1">
                   {[
-                    { href: "https://github.com/natezimm", icon: Github, label: "GitHub" },
                     {
-                      href: "https://www.linkedin.com/in/zimmermannathan",
+                      href: 'https://github.com/natezimm',
+                      icon: Github,
+                      label: 'GitHub',
+                    },
+                    {
+                      href: 'https://www.linkedin.com/in/zimmermannathan',
                       icon: Linkedin,
-                      label: "LinkedIn",
+                      label: 'LinkedIn',
                     },
                   ].map(({ href, icon: Icon, label }) => (
                     <a
@@ -176,7 +196,6 @@ const Hero = () => {
           {/* Right Column: Visual Portrait & Fintech Hub Anchor */}
           <div className="lg:col-span-5 flex justify-center relative">
             <div className="relative w-full max-w-[380px] sm:max-w-[420px]">
-
               {/* Glowing Aura behind the card */}
               <div className="absolute inset-0 -m-6 sm:-m-10 rounded-full bg-gradient-to-tr from-cyan-500/25 via-sky-500/20 to-purple-600/25 blur-3xl opacity-80 pointer-events-none" />
 
@@ -206,7 +225,7 @@ const Hero = () => {
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 flex-wrap">
-                  {[".NET", "C#", "Angular", "AWS"].map((tag) => (
+                  {['.NET', 'C#', 'Angular', 'AWS'].map((tag) => (
                     <span
                       key={tag}
                       className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 dark:bg-secondary/80 text-foreground border border-slate-200 dark:border-white/10"
@@ -265,7 +284,6 @@ const Hero = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/10 dark:from-slate-950/60 via-transparent to-transparent pointer-events-none" />
                 </div>
               </div>
-
             </div>
           </div>
         </div>
@@ -273,14 +291,13 @@ const Hero = () => {
         {/* Scroll Indicator */}
         <div className="text-center pt-8 sm:pt-12">
           <button
-            onClick={() => scrollToSection("about")}
+            onClick={() => scrollToSection('about')}
             className="inline-block text-muted-foreground hover:text-sky-400 transition-colors animate-bounce p-2"
             aria-label="Scroll to about section"
           >
             <ArrowDown className="w-6 h-6 sm:w-7 sm:h-7" />
           </button>
         </div>
-
       </div>
     </section>
   );

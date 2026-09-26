@@ -1,9 +1,15 @@
-import { describe, expect, it, beforeEach, afterEach, vi } from "vitest";
-import { fireEvent, render, screen, act, waitFor } from "@testing-library/react";
-import Hero from "./Hero";
+import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest';
+import {
+  fireEvent,
+  render,
+  screen,
+  act,
+  waitFor,
+} from '@testing-library/react';
+import Hero from './Hero';
 
 const createMockElement = () => {
-  const element = document.createElement("div");
+  const element = document.createElement('div');
   element.scrollIntoView = vi.fn();
   return element;
 };
@@ -12,12 +18,18 @@ const mockMatchMedia = (prefersReducedMotion: boolean) => {
   const listeners: ((e: MediaQueryListEvent) => void)[] = [];
 
   return vi.fn().mockImplementation((query: string) => ({
-    matches: query === "(prefers-reduced-motion: reduce)" ? prefersReducedMotion : false,
+    matches:
+      query === '(prefers-reduced-motion: reduce)'
+        ? prefersReducedMotion
+        : false,
     media: query,
     onchange: null,
     addListener: vi.fn(),
     removeListener: vi.fn(),
-    addEventListener: (_event: string, callback: (e: MediaQueryListEvent) => void) => {
+    addEventListener: (
+      _event: string,
+      callback: (e: MediaQueryListEvent) => void
+    ) => {
       listeners.push(callback);
     },
     removeEventListener: vi.fn(),
@@ -25,7 +37,7 @@ const mockMatchMedia = (prefersReducedMotion: boolean) => {
   }));
 };
 
-describe("Hero section", () => {
+describe('Hero section', () => {
   const projectsElement = createMockElement();
   const contactElement = createMockElement();
   const aboutElement = createMockElement();
@@ -38,11 +50,11 @@ describe("Hero section", () => {
     window.matchMedia = mockMatchMedia(false);
 
     getElementSpy = vi
-      .spyOn(document, "getElementById")
+      .spyOn(document, 'getElementById')
       .mockImplementation((id) => {
-        if (id === "projects") return projectsElement;
-        if (id === "contact") return contactElement;
-        if (id === "about") return aboutElement;
+        if (id === 'projects') return projectsElement;
+        if (id === 'contact') return contactElement;
+        if (id === 'about') return aboutElement;
         return null;
       });
   });
@@ -56,54 +68,60 @@ describe("Hero section", () => {
     getElementSpy.mockRestore();
   });
 
-  it("scrolls to featured sections", () => {
+  it('scrolls to featured sections', () => {
     render(<Hero />);
 
-    fireEvent.click(screen.getByRole("button", { name: "View My Work" }));
+    fireEvent.click(screen.getByRole('button', { name: 'View My Work' }));
     expect(projectsElement.scrollIntoView).toHaveBeenCalled();
 
-    fireEvent.click(screen.getByRole("button", { name: "Get In Touch" }));
+    fireEvent.click(screen.getByRole('button', { name: 'Get In Touch' }));
     expect(contactElement.scrollIntoView).toHaveBeenCalled();
 
-    fireEvent.click(screen.getByLabelText("Scroll to about section"));
+    fireEvent.click(screen.getByLabelText('Scroll to about section'));
     expect(aboutElement.scrollIntoView).toHaveBeenCalled();
   });
 
-  describe("Typing effect", () => {
-    it("provides accessible text for screen readers", () => {
+  describe('Typing effect', () => {
+    it('provides accessible text for screen readers', () => {
       render(<Hero />);
 
-      const srOnlyText = screen.getByText("Full-Stack Engineer • Product-Minded Builder • C# & TypeScript Developer");
+      const srOnlyText = screen.getByText(
+        'Full-Stack Engineer • Product-Minded Builder • C# & TypeScript Developer'
+      );
       expect(srOnlyText).toBeInTheDocument();
-      expect(srOnlyText).toHaveClass("sr-only");
+      expect(srOnlyText).toHaveClass('sr-only');
     });
 
-    it("has aria-label with full roles text", () => {
+    it('has aria-label with full roles text', () => {
       render(<Hero />);
 
-      const typingParagraph = screen.getByLabelText("Full-Stack Engineer • Product-Minded Builder • C# & TypeScript Developer");
+      const typingParagraph = screen.getByLabelText(
+        'Full-Stack Engineer • Product-Minded Builder • C# & TypeScript Developer'
+      );
       expect(typingParagraph).toBeInTheDocument();
     });
 
-    it("starts typing the first role", async () => {
+    it('starts typing the first role', async () => {
       render(<Hero />);
 
       await act(async () => {
         vi.advanceTimersByTime(80 * 5);
       });
 
-      const typingContainer = screen.getByLabelText("Full-Stack Engineer • Product-Minded Builder • C# & TypeScript Developer");
-      expect(typingContainer.textContent).toContain("Full-");
+      const typingContainer = screen.getByLabelText(
+        'Full-Stack Engineer • Product-Minded Builder • C# & TypeScript Developer'
+      );
+      expect(typingContainer.textContent).toContain('Full-');
     });
 
-    it("displays cursor element with blink animation class", () => {
+    it('displays cursor element with blink animation class', () => {
       render(<Hero />);
 
-      const cursor = document.querySelector(".animate-blink");
+      const cursor = document.querySelector('.animate-blink');
       expect(cursor).toBeInTheDocument();
     });
 
-    it("types and deletes text cycling through roles", async () => {
+    it('types and deletes text cycling through roles', async () => {
       render(<Hero />);
 
       const advanceTimeBy = async (ms: number) => {
@@ -117,18 +135,20 @@ describe("Hero section", () => {
 
       await advanceTimeBy(19 * 80);
 
-      const visibleTypingSpan = document.querySelector('[aria-hidden="true"].inline-flex');
-      expect(visibleTypingSpan?.textContent).toContain("Full-Stack Engineer");
+      const visibleTypingSpan = document.querySelector(
+        '[aria-hidden="true"].inline-flex'
+      );
+      expect(visibleTypingSpan?.textContent).toContain('Full-Stack Engineer');
       await advanceTimeBy(2000);
       await advanceTimeBy(50 * 10);
 
-      const textAfterDelete = visibleTypingSpan?.textContent || "";
-      expect(textAfterDelete.length).toBeLessThan("Full-Stack Engineer".length);
+      const textAfterDelete = visibleTypingSpan?.textContent || '';
+      expect(textAfterDelete.length).toBeLessThan('Full-Stack Engineer'.length);
     });
   });
 
-  describe("Reduced motion preference", () => {
-    it("shows static text when user prefers reduced motion", async () => {
+  describe('Reduced motion preference', () => {
+    it('shows static text when user prefers reduced motion', async () => {
       window.matchMedia = mockMatchMedia(true);
 
       render(<Hero />);
@@ -137,18 +157,24 @@ describe("Hero section", () => {
         vi.advanceTimersByTime(100);
       });
 
-      const typingContainer = screen.getByLabelText("Full-Stack Engineer • Product-Minded Builder • C# & TypeScript Developer");
-      expect(typingContainer.textContent).toContain("Full-Stack Engineer");
+      const typingContainer = screen.getByLabelText(
+        'Full-Stack Engineer • Product-Minded Builder • C# & TypeScript Developer'
+      );
+      expect(typingContainer.textContent).toContain('Full-Stack Engineer');
     });
   });
 
-  describe("Portrait card", () => {
-    it("renders system line and both real and vector portrait images for crossfade across themes", () => {
+  describe('Portrait card', () => {
+    it('renders system line and both real and vector portrait images for crossfade across themes', () => {
       render(<Hero />);
 
-      expect(screen.getByText("nathan_zimmerman.dev")).toBeInTheDocument();
-      expect(screen.getByAltText("Nathan Zimmerman - Software Engineer")).toBeInTheDocument();
-      expect(screen.getAllByAltText("Nathan Zimmerman - Illustrated Vector Portrait")).toHaveLength(2);
+      expect(screen.getByText('nathan_zimmerman.dev')).toBeInTheDocument();
+      expect(
+        screen.getByAltText('Nathan Zimmerman - Software Engineer')
+      ).toBeInTheDocument();
+      expect(
+        screen.getAllByAltText('Nathan Zimmerman - Illustrated Vector Portrait')
+      ).toHaveLength(2);
     });
   });
 });

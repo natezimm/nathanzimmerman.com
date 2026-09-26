@@ -1,11 +1,11 @@
-import { Mail, MapPin } from "lucide-react";
-import { toast } from "sonner";
-import { useState, useRef } from "react";
+import { Mail, MapPin } from 'lucide-react';
+import { toast } from 'sonner';
+import { useState, useRef } from 'react';
 import emailjs from '@emailjs/browser';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent } from '@/components/ui/card';
 
 const MAX_NAME_LENGTH = 100;
 const MAX_EMAIL_LENGTH = 254;
@@ -13,16 +13,14 @@ const MAX_MESSAGE_LENGTH = 2000;
 const SUBMIT_COOLDOWN_MS = 30000;
 
 const sanitizeInput = (input: string): string => {
-  return input
-    .replace(/[<>]/g, '')
-    .trim();
+  return input.replace(/[<>]/g, '').trim();
 };
 
 const Contact = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
+    name: '',
+    email: '',
+    message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const lastSubmitTime = useRef<number>(0);
@@ -32,8 +30,12 @@ const Contact = () => {
 
     const now = Date.now();
     if (now - lastSubmitTime.current < SUBMIT_COOLDOWN_MS) {
-      const remainingSeconds = Math.ceil((SUBMIT_COOLDOWN_MS - (now - lastSubmitTime.current)) / 1000);
-      toast.error(`Please wait ${remainingSeconds} seconds before sending another message.`);
+      const remainingSeconds = Math.ceil(
+        (SUBMIT_COOLDOWN_MS - (now - lastSubmitTime.current)) / 1000
+      );
+      toast.error(
+        `Please wait ${remainingSeconds} seconds before sending another message.`
+      );
       return;
     }
 
@@ -45,17 +47,28 @@ const Contact = () => {
       const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
       if (!serviceId || !templateId || !publicKey) {
-        toast.error("Contact form is not configured. Please email me directly.");
+        toast.error(
+          'Contact form is not configured. Please email me directly.'
+        );
         setIsSubmitting(false);
         return;
       }
 
-      const sanitizedName = sanitizeInput(formData.name).slice(0, MAX_NAME_LENGTH);
-      const sanitizedEmail = sanitizeInput(formData.email).slice(0, MAX_EMAIL_LENGTH);
-      const sanitizedMessage = sanitizeInput(formData.message).slice(0, MAX_MESSAGE_LENGTH);
+      const sanitizedName = sanitizeInput(formData.name).slice(
+        0,
+        MAX_NAME_LENGTH
+      );
+      const sanitizedEmail = sanitizeInput(formData.email).slice(
+        0,
+        MAX_EMAIL_LENGTH
+      );
+      const sanitizedMessage = sanitizeInput(formData.message).slice(
+        0,
+        MAX_MESSAGE_LENGTH
+      );
 
       if (!sanitizedName || !sanitizedEmail || !sanitizedMessage) {
-        toast.error("Please fill in all fields with valid content.");
+        toast.error('Please fill in all fields with valid content.');
         setIsSubmitting(false);
         return;
       }
@@ -66,25 +79,29 @@ const Contact = () => {
         day: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
-        timeZoneName: 'short'
+        timeZoneName: 'short',
       });
 
       const templateParams = {
         fname: sanitizedName,
         femail: sanitizedEmail,
         message: sanitizedMessage,
-        to_name: "Nathan Zimmerman",
+        to_name: 'Nathan Zimmerman',
         date: currentDate,
       };
 
       await emailjs.send(serviceId, templateId, templateParams, publicKey);
 
       lastSubmitTime.current = Date.now();
-      toast.success("Message sent! You'll receive a confirmation email shortly.");
-      setFormData({ name: "", email: "", message: "" });
+      toast.success(
+        "Message sent! You'll receive a confirmation email shortly."
+      );
+      setFormData({ name: '', email: '', message: '' });
     } catch (error) {
-      console.error("Form submission error:", error);
-      toast.error("Failed to send message. Please try again or email me directly.");
+      console.error('Form submission error:', error);
+      toast.error(
+        'Failed to send message. Please try again or email me directly.'
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -100,7 +117,10 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-16 md:py-20 relative overflow-hidden scroll-mt-4">
+    <section
+      id="contact"
+      className="py-16 md:py-20 relative overflow-hidden scroll-mt-4"
+    >
       {/* Background decoration */}
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[120px] -translate-x-1/2 translate-y-1/2 pointer-events-none" />
 
@@ -111,7 +131,8 @@ const Contact = () => {
               Get In <span className="gradient-text">Touch</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              I enjoy meeting new people and chatting about engineering or creative projects. Always happy to connect.
+              I enjoy meeting new people and chatting about engineering or
+              creative projects. Always happy to connect.
             </p>
           </div>
 
@@ -120,7 +141,8 @@ const Contact = () => {
               <div>
                 <h3 className="text-2xl font-semibold mb-6">Let's Connect</h3>
                 <p className="text-muted-foreground mb-8 text-lg leading-relaxed">
-                  Have an idea or just want to say hello? Send a message — I’d love to hear from you.
+                  Have an idea or just want to say hello? Send a message — I’d
+                  love to hear from you.
                 </p>
               </div>
 
@@ -129,7 +151,9 @@ const Contact = () => {
                   <CardContent className="flex items-center gap-4 p-6">
                     <Mail className="w-8 h-8 text-sky-500 dark:text-cyan-400 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold mb-1 text-base text-foreground font-heading">Email</h4>
+                      <h4 className="font-semibold mb-1 text-base text-foreground font-heading">
+                        Email
+                      </h4>
                       <a
                         href="mailto:nathan.a.zimmerman@gmail.com"
                         className="text-muted-foreground hover:text-sky-500 dark:hover:text-sky-400 transition-colors text-sm font-mono"
@@ -144,7 +168,9 @@ const Contact = () => {
                   <CardContent className="flex items-center gap-4 p-6">
                     <MapPin className="w-8 h-8 text-sky-500 dark:text-cyan-400 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold mb-1 text-base text-foreground font-heading">Location</h4>
+                      <h4 className="font-semibold mb-1 text-base text-foreground font-heading">
+                        Location
+                      </h4>
                       <p className="text-muted-foreground text-sm">
                         New Jersey
                       </p>
@@ -213,7 +239,7 @@ const Contact = () => {
                     disabled={isSubmitting}
                     className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20"
                   >
-                    {isSubmitting ? "Sending..." : "Send Message"}
+                    {isSubmitting ? 'Sending...' : 'Send Message'}
                   </Button>
                 </form>
               </Card>

@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from "react";
-import { cn } from "@/lib/utils";
-import ThemeToggle from "@/components/ThemeToggle";
-import { FileText, ArrowUpRight } from "lucide-react";
+import { useState, useEffect, useRef } from 'react';
+import { cn } from '@/lib/utils';
+import ThemeToggle from '@/components/ThemeToggle';
+import { FileText, ArrowUpRight } from 'lucide-react';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -17,38 +17,38 @@ const Navigation = () => {
       });
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener('scroll', handleScroll);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
   const scrollToSection = (id: string) => {
     setIsMobileMenuOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const navItems = [
-    { label: "Home", id: "home" },
-    { label: "About", id: "about" },
-    { label: "Experience", id: "experience" },
-    { label: "Projects", id: "projects" },
-    { label: "Contact", id: "contact" },
+    { label: 'Home', id: 'home' },
+    { label: 'About', id: 'about' },
+    { label: 'Experience', id: 'experience' },
+    { label: 'Projects', id: 'projects' },
+    { label: 'Contact', id: 'contact' },
   ];
 
   return (
     <nav
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        isScrolled ? "glass shadow-lg py-2.5" : "bg-transparent py-4"
+        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+        isScrolled ? 'glass shadow-lg py-2.5' : 'bg-transparent py-4'
       )}
     >
       <div className="container mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between">
           {/* Brand */}
           <button
-            onClick={() => scrollToSection("home")}
+            onClick={() => scrollToSection('home')}
             className="text-2xl font-bold gradient-text hover:opacity-85 transition-opacity font-heading tracking-tight"
           >
             NZ
@@ -95,20 +95,26 @@ const Navigation = () => {
               <div className="w-6 h-5 flex flex-col justify-between">
                 <span
                   className={cn(
-                    "block h-0.5 bg-foreground rounded-full transition-all duration-300 ease-in-out origin-left",
-                    isMobileMenuOpen ? "rotate-45 translate-x-[3px] -translate-y-[1px] w-[29px]" : "w-full"
+                    'block h-0.5 bg-foreground rounded-full transition-all duration-300 ease-in-out origin-left',
+                    isMobileMenuOpen
+                      ? 'rotate-45 translate-x-[3px] -translate-y-[1px] w-[29px]'
+                      : 'w-full'
                   )}
                 />
                 <span
                   className={cn(
-                    "block h-0.5 bg-foreground rounded-full transition-all duration-300 ease-in-out",
-                    isMobileMenuOpen ? "opacity-0 translate-x-4" : "opacity-100 w-full"
+                    'block h-0.5 bg-foreground rounded-full transition-all duration-300 ease-in-out',
+                    isMobileMenuOpen
+                      ? 'opacity-0 translate-x-4'
+                      : 'opacity-100 w-full'
                   )}
                 />
                 <span
                   className={cn(
-                    "block h-0.5 bg-foreground rounded-full transition-all duration-300 ease-in-out origin-left",
-                    isMobileMenuOpen ? "-rotate-45 translate-x-[3px] translate-y-[1px] w-[29px]" : "w-full"
+                    'block h-0.5 bg-foreground rounded-full transition-all duration-300 ease-in-out origin-left',
+                    isMobileMenuOpen
+                      ? '-rotate-45 translate-x-[3px] translate-y-[1px] w-[29px]'
+                      : 'w-full'
                   )}
                 />
               </div>

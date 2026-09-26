@@ -7,67 +7,64 @@ test.describe('portfolio experience', () => {
     await page.goto('/');
 
     await expect(page).toHaveTitle(/Nathan Zimmerman/);
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(
+      'Nathan'
+    );
     await expect(
-      page.getByRole('heading', { name: "Nathan's World" })
+      page.getByRole('heading', { name: /About Me/i })
     ).toBeVisible();
     await expect(
-      page.getByRole('heading', { name: 'PLAYER PROFILE' })
+      page.getByRole('heading', { name: /Work Experience/i })
     ).toBeVisible();
     await expect(
-      page.getByRole('heading', { name: 'FEATURED PROJECTS' })
+      page.getByRole('heading', { name: /Featured Projects/i })
     ).toBeVisible();
     await expect(
-      page.getByRole('heading', { name: 'EXPERIENCE' })
-    ).toBeVisible();
-    await expect(
-      page.getByRole('heading', { name: 'SKILLS & TECH' })
-    ).toBeVisible();
-    await expect(
-      page.getByRole('heading', { name: "LET'S CONNECT!" })
-    ).toBeVisible();
-    await expect(
-      page.getByRole('img', { name: 'BRICK BREAKER screenshot' })
+      page.getByRole('heading', { name: /Get In Touch/i })
     ).toBeVisible();
   });
 
-  test('switches between map and resume views', async ({ page }, testInfo) => {
-    const shell = page.locator('.retro-shell');
-
+  test('toggles between dark and light themes', async ({ page }, testInfo) => {
     await page.goto('/');
 
-    if (isMobileProject(testInfo.project.name)) {
-      await expect(shell).toHaveAttribute('data-view-mode', 'grid');
+    const html = page.locator('html');
+    const toggleButton = isMobileProject(testInfo.project.name)
+      ? page
+          .locator('.md\\:hidden')
+          .getByRole('button', { name: 'Toggle theme' })
+      : page
+          .locator('.md\\:flex')
+          .getByRole('button', { name: 'Toggle theme' });
 
-      await page.getByRole('button', { name: 'Switch to map view' }).click();
-      await expect(shell).toHaveAttribute('data-view-mode', 'map');
+    // Initial theme check
+    const initialClass = (await html.getAttribute('class')) || '';
 
-      await page.getByRole('button', { name: 'Switch to resume view' }).click();
-      await expect(shell).toHaveAttribute('data-view-mode', 'grid');
-      return;
-    }
+    // Click toggle
+    await toggleButton.click({ force: true });
+    const updatedClass = (await html.getAttribute('class')) || '';
+    expect(updatedClass).not.toEqual(initialClass);
 
-    await expect(shell).toHaveAttribute('data-view-mode', 'map');
-
-    await page.getByRole('button', { name: 'RESUME VIEW' }).click();
-    await expect(shell).toHaveAttribute('data-view-mode', 'grid');
-
-    await page.getByRole('button', { name: 'MAP VIEW' }).click();
-    await expect(shell).toHaveAttribute('data-view-mode', 'map');
+    // Toggle back
+    await toggleButton.click({ force: true });
+    const revertedClass = (await html.getAttribute('class')) || '';
+    expect(revertedClass).toEqual(initialClass);
   });
 
   test('navigates to the contact section', async ({ page }, testInfo) => {
     await page.goto('/');
 
     if (isMobileProject(testInfo.project.name)) {
-      await page.getByRole('button', { name: 'Toggle menu' }).click();
+      await page
+        .getByRole('button', { name: 'Toggle menu' })
+        .click({ force: true });
       const mobileMenu = page.getByTestId('mobile-menu');
 
       await expect(mobileMenu).toBeVisible();
-      await mobileMenu.getByRole('button', { name: 'CONTACT' }).click();
+      await mobileMenu.getByRole('button', { name: 'Contact' }).click();
     } else {
       await page
         .getByRole('navigation')
-        .getByRole('button', { name: 'CONTACT' })
+        .getByRole('button', { name: 'Contact' })
         .click();
     }
 
@@ -80,24 +77,6 @@ test.describe('portfolio experience', () => {
     await expect(
       page.getByRole('textbox', { name: 'Message' })
     ).toHaveAttribute('maxlength', '2000');
-  });
-
-  test('opens project detail pages from project cards', async ({ page }) => {
-    await page.goto('/');
-
-    await page.getByRole('link', { name: 'DETAILS' }).first().click();
-
-    await expect(page).toHaveURL(/\/projects\/brick-breaker$/);
-    await expect(
-      page.getByRole('heading', { name: 'BRICK BREAKER' })
-    ).toBeVisible();
-    await expect(
-      page.getByRole('heading', { name: 'TECH STACK' })
-    ).toBeVisible();
-    await expect(page.getByRole('link', { name: /VIEW LIVE/ })).toHaveAttribute(
-      'href',
-      'https://resume.nathanzimmerman.com'
-    );
   });
 
   test('shows a not found state for unknown routes', async ({ page }) => {

@@ -26,7 +26,10 @@ const getCategoryIcon = (label: string) => {
 
 const Skills = ({ viewMode: _viewMode }: SkillsProps) => {
   return (
-    <section id="skills" className="py-16 md:py-20 relative overflow-hidden scroll-mt-4 bg-secondary/20">
+    <section
+      id="skills"
+      className="py-16 md:py-20 relative overflow-hidden scroll-mt-4 bg-secondary/20"
+    >
       {/* Background ambient lighting */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-sky-500/5 rounded-full blur-[140px] pointer-events-none" />
 
@@ -42,7 +45,8 @@ const Skills = ({ viewMode: _viewMode }: SkillsProps) => {
               Skills & <span className="gradient-text">Tech</span>
             </h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Core technologies, frameworks, and cloud services I build with daily.
+              Core technologies, frameworks, and cloud services I build with
+              daily.
             </p>
           </div>
 
@@ -67,8 +71,12 @@ const Skills = ({ viewMode: _viewMode }: SkillsProps) => {
                     {group.items.map((item) => (
                       <li key={item.name} className="space-y-1.5">
                         <div className="flex items-center justify-between text-xs">
-                          <span className="font-medium text-foreground/90">{item.name}</span>
-                          <span className="text-muted-foreground font-mono text-[11px]">{item.years}</span>
+                          <span className="font-medium text-foreground/90">
+                            {item.name}
+                          </span>
+                          <span className="text-muted-foreground font-mono text-[11px]">
+                            {item.years}
+                          </span>
                         </div>
                         <div className="h-1.5 w-full rounded-full bg-slate-200/80 dark:bg-secondary/80 overflow-hidden">
                           <div

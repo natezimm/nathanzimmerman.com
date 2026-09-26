@@ -1,74 +1,78 @@
-import { ExternalLink, Github } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ExternalLink, Github } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import nerdleImgWebp from "@/assets/project-nerdle.webp";
-import nerdleImgAvif from "@/assets/project-nerdle.avif";
-import nerdleImgSmallWebp from "@/assets/project-nerdle-small.webp";
-import nerdleImgSmallAvif from "@/assets/project-nerdle-small.avif";
-import blackjackImgWebp from "@/assets/project-blackjack.webp";
-import blackjackImgAvif from "@/assets/project-blackjack.avif";
-import sudokuImgWebp from "@/assets/project-sudoku.webp";
-import sudokuImgAvif from "@/assets/project-sudoku.avif";
-import sudokuImgSmallWebp from "@/assets/project-sudoku-small.webp";
-import sudokuImgSmallAvif from "@/assets/project-sudoku-small.avif";
-import brickbreakerImgWebp from "@/assets/project-brickbreaker.webp";
-import brickbreakerImgAvif from "@/assets/project-brickbreaker.avif";
-import brickbreakerImgSmallWebp from "@/assets/project-brickbreaker-small.webp";
-import brickbreakerImgSmallAvif from "@/assets/project-brickbreaker-small.avif";
-import blackjackImgSmallWebp from "@/assets/project-blackjack-small.webp";
-import blackjackImgSmallAvif from "@/assets/project-blackjack-small.avif";
+} from '@/components/ui/card';
+import nerdleImgWebp from '@/assets/project-nerdle.webp';
+import nerdleImgAvif from '@/assets/project-nerdle.avif';
+import nerdleImgSmallWebp from '@/assets/project-nerdle-small.webp';
+import nerdleImgSmallAvif from '@/assets/project-nerdle-small.avif';
+import blackjackImgWebp from '@/assets/project-blackjack.webp';
+import blackjackImgAvif from '@/assets/project-blackjack.avif';
+import sudokuImgWebp from '@/assets/project-sudoku.webp';
+import sudokuImgAvif from '@/assets/project-sudoku.avif';
+import sudokuImgSmallWebp from '@/assets/project-sudoku-small.webp';
+import sudokuImgSmallAvif from '@/assets/project-sudoku-small.avif';
+import brickbreakerImgWebp from '@/assets/project-brickbreaker.webp';
+import brickbreakerImgAvif from '@/assets/project-brickbreaker.avif';
+import brickbreakerImgSmallWebp from '@/assets/project-brickbreaker-small.webp';
+import brickbreakerImgSmallAvif from '@/assets/project-brickbreaker-small.avif';
+import blackjackImgSmallWebp from '@/assets/project-blackjack-small.webp';
+import blackjackImgSmallAvif from '@/assets/project-blackjack-small.avif';
 
 const Projects = () => {
   const projects = [
     {
-      title: "Brick Breaker Resume",
-      description: "Browser-based game built with Phaser.js that turns a .docx resume into a playable Brick Breaker level. Resume text is parsed into interactive bricks, combining classic arcade gameplay with a gamified take on a résumé.",
+      title: 'Brick Breaker Resume',
+      description:
+        'Browser-based game built with Phaser.js that turns a .docx resume into a playable Brick Breaker level. Resume text is parsed into interactive bricks, combining classic arcade gameplay with a gamified take on a résumé.',
       imageAvif: brickbreakerImgAvif,
       imageWebp: brickbreakerImgWebp,
       imageSmallAvif: brickbreakerImgSmallAvif,
       imageSmallWebp: brickbreakerImgSmallWebp,
-      github: "https://github.com/natezimm/brick-breaker-resume",
-      demo: "https://resume.nathanzimmerman.com",
-      tags: ["JavaScript", "Phaser.js", "Mammoth.js"],
+      github: 'https://github.com/natezimm/brick-breaker-resume',
+      demo: 'https://resume.nathanzimmerman.com',
+      tags: ['JavaScript', 'Phaser.js', 'Mammoth.js'],
     },
     {
-      title: "Nerdle",
-      description: "Word puzzle game inspired by Wordle, focused on technology-related vocabulary. Built with React and Node.js, featuring animated feedback, server-side validation, and persistent stats across multiple word lengths.",
+      title: 'Nerdle',
+      description:
+        'Word puzzle game inspired by Wordle, focused on technology-related vocabulary. Built with React and Node.js, featuring animated feedback, server-side validation, and persistent stats across multiple word lengths.',
       imageAvif: nerdleImgAvif,
       imageWebp: nerdleImgWebp,
       imageSmallAvif: nerdleImgSmallAvif,
       imageSmallWebp: nerdleImgSmallWebp,
-      github: "https://github.com/natezimm/nerdle",
-      demo: "https://nerdle.nathanzimmerman.com",
-      tags: ["React", "Axios", "Node.js"],
+      github: 'https://github.com/natezimm/nerdle',
+      demo: 'https://nerdle.nathanzimmerman.com',
+      tags: ['React', 'Axios', 'Node.js'],
     },
     {
-      title: "Blackjack",
-      description: "Full-stack blackjack game built with React and Spring Boot, featuring session-based gameplay, configurable table rules, and support for split hands, insurance, and live betting.",
+      title: 'Blackjack',
+      description:
+        'Full-stack blackjack game built with React and Spring Boot, featuring session-based gameplay, configurable table rules, and support for split hands, insurance, and live betting.',
       imageAvif: blackjackImgAvif,
       imageWebp: blackjackImgWebp,
       imageSmallAvif: blackjackImgSmallAvif,
       imageSmallWebp: blackjackImgSmallWebp,
-      github: "https://github.com/natezimm/blackjack",
-      demo: "https://blackjack.nathanzimmerman.com",
-      tags: ["React", "Java", "Spring Boot"],
+      github: 'https://github.com/natezimm/blackjack',
+      demo: 'https://blackjack.nathanzimmerman.com',
+      tags: ['React', 'Java', 'Spring Boot'],
     },
     {
-      title: "Sudoku",
-      description: "Interactive Sudoku game built with Angular and ASP.NET, featuring on-demand puzzle generation, real-time input validation, and persistent stats with resume support.",
+      title: 'Sudoku',
+      description:
+        'Interactive Sudoku game built with Angular and ASP.NET, featuring on-demand puzzle generation, real-time input validation, and persistent stats with resume support.',
       imageAvif: sudokuImgAvif,
       imageWebp: sudokuImgWebp,
       imageSmallAvif: sudokuImgSmallAvif,
       imageSmallWebp: sudokuImgSmallWebp,
-      github: "https://github.com/natezimm/sudoku",
-      demo: "https://sudoku.nathanzimmerman.com",
-      tags: ["Angular", "ASP.NET", "C#"],
+      github: 'https://github.com/natezimm/sudoku',
+      demo: 'https://sudoku.nathanzimmerman.com',
+      tags: ['Angular', 'ASP.NET', 'C#'],
     },
   ];
 
@@ -86,7 +90,8 @@ const Projects = () => {
               Featured <span className="gradient-text">Projects</span>
             </h2>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Interactive full-stack applications combining responsive UI, server-side logic, and interactive gameplay.
+              Interactive full-stack applications combining responsive UI,
+              server-side logic, and interactive gameplay.
             </p>
           </div>
 
@@ -102,12 +107,20 @@ const Projects = () => {
                   <div className="relative overflow-hidden border-b border-slate-200/80 dark:border-white/10 aspect-[16/9] w-full">
                     <picture className="w-full h-full">
                       <source
-                        srcSet={project.imageSmallAvif ? `${project.imageSmallAvif} 600w, ${project.imageAvif} 1200w` : project.imageAvif}
+                        srcSet={
+                          project.imageSmallAvif
+                            ? `${project.imageSmallAvif} 600w, ${project.imageAvif} 1200w`
+                            : project.imageAvif
+                        }
                         sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 768px) calc(100vw - 2rem), (max-width: 1280px) calc(50vw - 3rem), 600px"
                         type="image/avif"
                       />
                       <source
-                        srcSet={project.imageSmallWebp ? `${project.imageSmallWebp} 600w, ${project.imageWebp} 1200w` : project.imageWebp}
+                        srcSet={
+                          project.imageSmallWebp
+                            ? `${project.imageSmallWebp} 600w, ${project.imageWebp} 1200w`
+                            : project.imageWebp
+                        }
                         sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 768px) calc(100vw - 2rem), (max-width: 1280px) calc(50vw - 3rem), 600px"
                         type="image/webp"
                       />

@@ -1,10 +1,10 @@
-import { describe, it, expect } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
-import Index from "./Index";
-import { ThemeProvider } from "@/contexts/ThemeContext";
+import { describe, it, expect } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
+import Index from './Index';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 
-describe("Index page", () => {
-  it("renders the main sections", async () => {
+describe('Index page', () => {
+  it('renders the main sections', async () => {
     render(
       <ThemeProvider>
         <Index />
@@ -12,18 +12,24 @@ describe("Index page", () => {
     );
 
     expect(
-      screen.getByRole("heading", { name: /Hi, my name is Nathan/ })
+      screen.getByRole('heading', { name: /Hi, my name is Nathan/ })
     ).toBeInTheDocument();
-    
-    await waitFor(() => {
-      expect(
-        screen.getByRole("heading", { name: /Featured Projects/ })
-      ).toBeInTheDocument();
-    }, { timeout: 5000 });
-    await waitFor(() => {
-      expect(
-        screen.getByRole("heading", { name: /About Me/ })
-      ).toBeInTheDocument();
-    }, { timeout: 5000 });
+
+    await waitFor(
+      () => {
+        expect(
+          screen.getByRole('heading', { name: /Featured Projects/ })
+        ).toBeInTheDocument();
+      },
+      { timeout: 5000 }
+    );
+    await waitFor(
+      () => {
+        expect(
+          screen.getByRole('heading', { name: /About Me/ })
+        ).toBeInTheDocument();
+      },
+      { timeout: 5000 }
+    );
   });
 });
