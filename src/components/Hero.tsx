@@ -200,27 +200,27 @@ const Hero = () => {
               <div className="absolute inset-0 -m-6 sm:-m-10 rounded-full bg-gradient-to-tr from-cyan-500/25 via-sky-500/20 to-purple-600/25 blur-3xl opacity-80 pointer-events-none" />
 
               {/* Floating Top Telemetry Pill */}
-              <div className="animate-float-slow absolute -top-4 -right-2 sm:-top-6 sm:-right-4 z-20 bg-white/60 dark:bg-card/50 backdrop-blur-md rounded-2xl p-3 sm:p-3.5 border border-slate-200/90 dark:border-white/20 shadow-xl shadow-slate-900/10 dark:shadow-slate-950/50 flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-                  <Activity className="w-4 h-4" />
+              <div className="animate-float-slow absolute -top-5 -right-1 sm:-top-6 sm:-right-4 z-20 bg-white/60 dark:bg-card/50 backdrop-blur-md rounded-2xl p-2.5 sm:p-3.5 border border-slate-200/90 dark:border-white/20 shadow-xl shadow-slate-900/10 dark:shadow-slate-950/50 flex items-center gap-2 sm:gap-3">
+                <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+                  <Activity className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
                 <div>
-                  <div className="text-xs font-semibold text-foreground flex items-center gap-1.5 font-heading">
+                  <div className="text-[11px] sm:text-xs font-semibold text-foreground flex items-center gap-1.5 font-heading">
                     Enterprise Fintech
                   </div>
-                  <div className="text-[11px] text-emerald-500 dark:text-emerald-400 font-medium">
+                  <div className="text-[10px] sm:text-[11px] text-emerald-500 dark:text-emerald-400 font-medium whitespace-nowrap">
                     Payments & Microservices
                   </div>
                 </div>
               </div>
 
               {/* Floating Bottom Architecture Card */}
-              <div className="animate-float-reverse absolute -bottom-4 -left-2 sm:-bottom-6 sm:-left-4 z-20 bg-white/60 dark:bg-card/50 backdrop-blur-md rounded-2xl p-3 sm:p-3.5 border border-slate-200/90 dark:border-white/20 shadow-xl shadow-slate-900/10 dark:shadow-slate-950/50">
-                <div className="flex items-center gap-2 mb-1.5">
-                  <div className="w-7 h-7 rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-500 dark:text-sky-400">
-                    <Cpu className="w-3.5 h-3.5" />
+              <div className="animate-float-reverse absolute -bottom-4 -left-2 sm:-bottom-6 sm:-left-4 z-20 bg-white/60 dark:bg-card/50 backdrop-blur-md rounded-2xl p-2.5 sm:p-3.5 border border-slate-200/90 dark:border-white/20 shadow-xl shadow-slate-900/10 dark:shadow-slate-950/50">
+                <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5">
+                  <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-md sm:rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-500 dark:text-sky-400 shrink-0">
+                    <Cpu className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                   </div>
-                  <span className="text-xs font-semibold text-foreground font-heading">
+                  <span className="text-[11px] sm:text-xs font-semibold text-foreground font-heading">
                     Primary Stack
                   </span>
                 </div>
@@ -239,11 +239,13 @@ const Hero = () => {
               {/* Central Portrait Card */}
               <div className="relative rounded-[2rem] p-3 sm:p-3.5 bg-gradient-to-b from-card/95 via-card/85 to-card/95 border border-slate-200/90 dark:border-white/20 group-hover:border-sky-400/30 backdrop-blur-xl shadow-2xl shadow-slate-900/10 dark:shadow-slate-950/50 group overflow-hidden transition-all duration-500">
                 {/* Header System Line */}
-                <div className="flex items-center gap-2 px-3 py-1.5 mb-2.5 rounded-xl bg-slate-100/90 dark:bg-secondary/60 border border-slate-200/80 dark:border-white/10 text-[11px] font-mono text-muted-foreground transition-colors group-hover:border-sky-400/30">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                  <span className="font-semibold text-foreground/80 group-hover:text-sky-500 dark:group-hover:text-sky-400 transition-colors">
-                    nathan_zimmerman.dev
-                  </span>
+                <div className="flex items-center justify-between mb-2 sm:mb-2.5">
+                  <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-slate-100/90 dark:bg-secondary/60 border border-slate-200/80 dark:border-white/10 text-[10px] sm:text-[11px] font-mono text-muted-foreground transition-colors group-hover:border-sky-400/30">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
+                    <span className="font-semibold text-foreground/80 group-hover:text-sky-500 dark:group-hover:text-sky-400 transition-colors truncate">
+                      nathan_zimmerman.dev
+                    </span>
+                  </div>
                 </div>
 
                 {/* Picture Container with Clean Photo Crossfade Transition */}
