@@ -87,4 +87,4 @@ The site implements multiple layers of security:
 
 ## Deployment
 
-Use `npm run build` to generate the production bundle in `dist/` and deploy that folder to any static host (Lightsail, Vercel, etc.). The repo is set up for modern static deployments with HTTPS offloading handled by your environment.
+Use `npm run build` to generate the production bundle in `dist/` and deploy that folder to any static host (GCP, Vercel, etc.). The repo is set up for modern static deployments with HTTPS offloading handled by your environment.

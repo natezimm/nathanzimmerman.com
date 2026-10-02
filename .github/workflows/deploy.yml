@@ -64,7 +64,7 @@ jobs:
             StrictHostKeyChecking=no
           EOF2
 
-      - name: Deploy to Lightsail
+      - name: Deploy to GCP
         run: |
           rsync -avz --delete dist/ gcp:/var/www/nathanzimmerman.com/
 
