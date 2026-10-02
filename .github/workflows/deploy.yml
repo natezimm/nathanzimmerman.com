@@ -51,13 +51,22 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.LIGHTSAIL_SSH_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.GCP_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan "${{ secrets.LIGHTSAIL_HOST }}" >> ~/.ssh/known_hosts
+          ssh-keyscan github.com >> ~/.ssh/known_hosts || true
+          ssh-keyscan "${{ secrets.GCP_HOST }}" >> ~/.ssh/known_hosts || true
+
+          cat <<EOF2 > ~/.ssh/config
+          Host gcp
+            HostName ${{ secrets.GCP_HOST }}
+            User ${{ secrets.GCP_USER }}
+            IdentityFile ~/.ssh/id_rsa
+            StrictHostKeyChecking=no
+          EOF2
 
       - name: Deploy to Lightsail
         run: |
-          rsync -avz --delete dist/ ${{ secrets.LIGHTSAIL_USER }}@${{ secrets.LIGHTSAIL_HOST }}:/var/www/nathanzimmerman.com/
+          rsync -avz --delete dist/ gcp:/var/www/nathanzimmerman.com/
 
       - name: Health check
         run: |
