@@ -99,9 +99,7 @@ const Projects = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {projects.map((project, index) => (
               <ScrollReveal key={project.title} delay={0.1 + index * 0.1}>
-                <Card
-                  className="glass-card overflow-hidden group border border-slate-200/90 dark:border-white/10 rounded-2xl flex flex-col justify-between card-glow hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 shadow-sm h-full"
-                >
+                <Card className="glass-card overflow-hidden group border border-slate-200/90 dark:border-white/10 rounded-2xl flex flex-col justify-between card-glow hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 shadow-sm h-full">
                   <div>
                     {/* Media Preview Box */}
                     <div className="relative overflow-hidden border-b border-slate-200/80 dark:border-white/10 aspect-[16/9] w-full">

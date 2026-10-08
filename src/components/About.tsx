@@ -67,7 +67,10 @@ const About = () => {
 
           <div className="grid md:grid-cols-2 gap-12 items-center mb-4">
             {/* Story column */}
-            <ScrollReveal delay={0.1} className="space-y-6 text-lg leading-relaxed text-foreground/90">
+            <ScrollReveal
+              delay={0.1}
+              className="space-y-6 text-lg leading-relaxed text-foreground/90"
+            >
               <p>
                 I first studied psychology to understand how people think, then
                 got into programming to understand how computers think. Teaching
@@ -92,9 +95,7 @@ const About = () => {
                 const Icon = skill.icon;
                 return (
                   <ScrollReveal key={skill.title} delay={0.2 + index * 0.1}>
-                    <Card
-                      className="glass-card h-full rounded-2xl border border-slate-200/90 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 card-glow shadow-sm"
-                    >
+                    <Card className="glass-card h-full rounded-2xl border border-slate-200/90 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 card-glow shadow-sm">
                       <CardContent className="p-6">
                         <div
                           className={`w-11 h-11 rounded-xl flex items-center justify-center border mb-4 ${skill.color}`}

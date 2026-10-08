@@ -15,6 +15,50 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
+class MockIntersectionObserver implements IntersectionObserver {
+  readonly root: Element | Document | null = null;
+  readonly rootMargin: string = '';
+  readonly thresholds: ReadonlyArray<number> = [];
+
+  constructor(
+    private callback: IntersectionObserverCallback,
+    _options?: IntersectionObserverInit
+  ) {}
+
+  observe = vi.fn((target: Element) => {
+    this.callback(
+      [
+        {
+          isIntersecting: true,
+          target,
+          intersectionRatio: 1,
+          boundingClientRect: target.getBoundingClientRect(),
+          intersectionRect: target.getBoundingClientRect(),
+          rootBounds: null,
+          time: Date.now(),
+        } as IntersectionObserverEntry,
+      ],
+      this
+    );
+  });
+
+  unobserve = vi.fn();
+  disconnect = vi.fn();
+  takeRecords = vi.fn(() => []);
+}
+
+Object.defineProperty(window, 'IntersectionObserver', {
+  writable: true,
+  configurable: true,
+  value: MockIntersectionObserver,
+});
+
+Object.defineProperty(global, 'IntersectionObserver', {
+  writable: true,
+  configurable: true,
+  value: MockIntersectionObserver,
+});
+
 window.scrollTo = vi.fn();
 
 const storage: Record<string, string> = {};
