@@ -9,6 +9,7 @@ import {
   HeartHandshake,
 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { ScrollReveal } from '@/components/ScrollReveal';
 
 const About = () => {
   const skills = [
@@ -54,7 +55,7 @@ const About = () => {
       <div className="container px-4 sm:px-6 mx-auto relative z-10">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
-          <div className="text-center mb-16 animate-fade-in">
+          <ScrollReveal className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4 font-heading tracking-tight">
               About <span className="gradient-text">Me</span>
             </h2>
@@ -62,11 +63,11 @@ const About = () => {
               Former teacher turned software engineer who loves building useful
               things and learning something new every day.
             </p>
-          </div>
+          </ScrollReveal>
 
           <div className="grid md:grid-cols-2 gap-12 items-center mb-4">
             {/* Story column */}
-            <div className="space-y-6 animate-slide-in text-lg leading-relaxed text-foreground/90">
+            <ScrollReveal delay={0.1} className="space-y-6 text-lg leading-relaxed text-foreground/90">
               <p>
                 I first studied psychology to understand how people think, then
                 got into programming to understand how computers think. Teaching
@@ -83,32 +84,32 @@ const About = () => {
                 When I’m not coding, I’m probably watching Philly sports,
                 playing guitar, or getting into a good fantasy book.
               </p>
-            </div>
+            </ScrollReveal>
 
             {/* Core Capability Cards Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {skills.map((skill, index) => {
                 const Icon = skill.icon;
                 return (
-                  <Card
-                    key={skill.title}
-                    className="glass-card rounded-2xl border border-slate-200/90 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 card-glow shadow-sm"
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                  >
-                    <CardContent className="p-6">
-                      <div
-                        className={`w-11 h-11 rounded-xl flex items-center justify-center border mb-4 ${skill.color}`}
-                      >
-                        <Icon className="w-5 h-5" />
-                      </div>
-                      <h3 className="font-bold mb-2 text-lg text-foreground font-heading">
-                        {skill.title}
-                      </h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {skill.description}
-                      </p>
-                    </CardContent>
-                  </Card>
+                  <ScrollReveal key={skill.title} delay={0.2 + index * 0.1}>
+                    <Card
+                      className="glass-card h-full rounded-2xl border border-slate-200/90 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 card-glow shadow-sm"
+                    >
+                      <CardContent className="p-6">
+                        <div
+                          className={`w-11 h-11 rounded-xl flex items-center justify-center border mb-4 ${skill.color}`}
+                        >
+                          <Icon className="w-5 h-5" />
+                        </div>
+                        <h3 className="font-bold mb-2 text-lg text-foreground font-heading">
+                          {skill.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed">
+                          {skill.description}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </ScrollReveal>
                 );
               })}
             </div>

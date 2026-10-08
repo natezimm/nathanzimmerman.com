@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
+import { ScrollReveal } from '@/components/ScrollReveal';
 
 const MAX_NAME_LENGTH = 100;
 const MAX_EMAIL_LENGTH = 254;
@@ -126,7 +127,7 @@ const Contact = () => {
 
       <div className="container px-4 mx-auto relative z-10">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16 animate-fade-in">
+          <ScrollReveal className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
               Get In <span className="gradient-text">Touch</span>
             </h2>
@@ -134,10 +135,10 @@ const Contact = () => {
               I enjoy meeting new people and chatting about engineering or
               creative projects. Always happy to connect.
             </p>
-          </div>
+          </ScrollReveal>
 
           <div className="grid md:grid-cols-2 gap-12">
-            <div className="space-y-8 animate-slide-in">
+            <ScrollReveal delay={0.1} className="space-y-8">
               <div>
                 <h3 className="text-2xl font-semibold mb-6">Let's Connect</h3>
                 <p className="text-muted-foreground mb-8 text-lg leading-relaxed">
@@ -178,9 +179,9 @@ const Contact = () => {
                   </CardContent>
                 </Card>
               </div>
-            </div>
+            </ScrollReveal>
 
-            <div className="animate-fade-in delay-200">
+            <ScrollReveal delay={0.3}>
               <Card className="glass-card rounded-2xl border border-slate-200/90 dark:border-white/10 p-6 md:p-8 card-glow shadow-sm">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="space-y-2">
@@ -243,7 +244,7 @@ const Contact = () => {
                   </Button>
                 </form>
               </Card>
-            </div>
+            </ScrollReveal>
           </div>
         </div>
       </div>

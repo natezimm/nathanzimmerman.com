@@ -6,6 +6,7 @@ import {
   Sparkles,
   CheckCircle2,
 } from 'lucide-react';
+import { ScrollReveal } from '@/components/ScrollReveal';
 
 type ExperienceProps = {
   viewMode?: ViewMode;
@@ -24,7 +25,7 @@ const Experience = ({ viewMode: _viewMode }: ExperienceProps) => {
       <div className="container px-4 sm:px-6 mx-auto relative z-10">
         <div className="max-w-5xl mx-auto">
           {/* Section Header */}
-          <div className="text-center mb-16 animate-fade-in">
+          <ScrollReveal className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4 font-heading tracking-tight">
               Work <span className="gradient-text">Experience</span>
             </h2>
@@ -32,7 +33,7 @@ const Experience = ({ viewMode: _viewMode }: ExperienceProps) => {
               Software engineering roles across enterprise fintech, cloud
               systems, and high-scale platforms.
             </p>
-          </div>
+          </ScrollReveal>
 
           {/* Timeline Container */}
           <div className="relative">
@@ -44,9 +45,10 @@ const Experience = ({ viewMode: _viewMode }: ExperienceProps) => {
                 const isCurrent = item.period.includes('Present');
 
                 return (
-                  <div
+                  <ScrollReveal
                     key={`${item.title}-${item.company}`}
                     className="relative md:pl-20 group"
+                    delay={0.1}
                   >
                     {/* Timeline Node Icon (Desktop) */}
                     <div
@@ -107,7 +109,7 @@ const Experience = ({ viewMode: _viewMode }: ExperienceProps) => {
                         ))}
                       </div>
                     </article>
-                  </div>
+                  </ScrollReveal>
                 );
               })}
             </div>
