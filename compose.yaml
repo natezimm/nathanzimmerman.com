@@ -2,5 +2,5 @@ services:
   portfolio:
     build: .
     ports:
-      - "8081:80"
+      - '8081:80'
     restart: unless-stopped
