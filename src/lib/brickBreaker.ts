@@ -45,7 +45,7 @@ export const BRICK_LABELS = [
   'Java',
   'JavaScript',
   'Azure',
-  'SQL Server',
+  'MongoDB',
   'REST APIs',
 ] as const;
 
