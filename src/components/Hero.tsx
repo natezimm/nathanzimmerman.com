@@ -2,17 +2,20 @@ import {
   Github,
   Linkedin,
   ArrowDown,
+  ArrowRight,
   Activity,
-  Cpu,
-  ShieldCheck,
+  Gamepad2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useState, useEffect, useCallback } from 'react';
-import nathanPortraitAvif from '@/assets/nathan-portrait.avif';
-import nathanPortraitWebp from '@/assets/nathan-portrait.webp';
-import nathanPortraitJpg from '@/assets/nathan-portrait.jpg';
-import nathanVectorJpg from '@/assets/nathan-vector.jpg';
-import nathanVectorLightJpg from '@/assets/nathan-vector-light.jpg';
+import HeroGame from '@/components/HeroGame';
+import {
+  Fragment,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  type PointerEvent,
+} from 'react';
 
 const ROLES = [
   'Full-Stack Engineer',
@@ -23,11 +26,36 @@ const TYPING_SPEED = 80;
 const DELETING_SPEED = 50;
 const PAUSE_DURATION = 2000;
 
+const GREETING_WORDS = [
+  { word: 'Hi,', delay: '[--rise-delay:60ms]' },
+  { word: 'my', delay: '[--rise-delay:120ms]' },
+  { word: 'name', delay: '[--rise-delay:180ms]' },
+  { word: 'is', delay: '[--rise-delay:240ms]' },
+];
+
+// Light pulses that run along the 28px background grid lines.
+const GRID_PACKETS = [
+  'hero-packet-x top-[195px] w-[120px] text-sky-400 [--packet-duration:7s]',
+  'hero-packet-x top-[391px] w-[90px] text-cyan-400 [--packet-duration:9s] [--packet-delay:2.5s]',
+  'hero-packet-x top-[615px] w-[140px] text-violet-400 [--packet-duration:8s] [--packet-delay:1.2s]',
+  'hero-packet-x top-[755px] w-[100px] text-sky-400 [--packet-duration:11s] [--packet-delay:4s]',
+  'hero-packet-y left-[251px] h-[120px] text-cyan-400 [--packet-duration:6s] [--packet-delay:1s]',
+  'hero-packet-y left-[867px] h-[100px] text-sky-400 [--packet-duration:7.5s] [--packet-delay:3s]',
+  'hero-packet-y left-[1231px] h-[130px] text-violet-400 [--packet-duration:9s]',
+];
+
+const MAX_TILT_X = 9;
+const MAX_TILT_Y = 12;
+const BRICK_BREAKER_URL = 'https://resume.nathanzimmerman.com';
+
 const Hero = () => {
   const [displayText, setDisplayText] = useState('');
   const [roleIndex, setRoleIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const pointerFrame = useRef(0);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -40,6 +68,8 @@ const Hero = () => {
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
+
+  useEffect(() => () => cancelAnimationFrame(pointerFrame.current), []);
 
   const typeEffect = useCallback(() => {
     const currentRole = ROLES[roleIndex];
@@ -77,26 +107,67 @@ const Hero = () => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // Points the grid spotlight at the cursor and leans the portrait card toward it.
+  const handlePointerMove = (event: PointerEvent<HTMLElement>) => {
+    if (event.pointerType !== 'mouse') return;
+
+    const { clientX, clientY } = event;
+    // Hold the card level while the visitor is steering the game inside it.
+    const overCard = cardRef.current?.contains(event.target as Node) ?? false;
+
+    cancelAnimationFrame(pointerFrame.current);
+    pointerFrame.current = requestAnimationFrame(() => {
+      const section = sectionRef.current;
+      const rect = section?.getBoundingClientRect();
+      if (!section || !rect?.width || !rect.height) return;
+
+      const x = (clientX - rect.left) / rect.width;
+      const y = (clientY - rect.top) / rect.height;
+      const tilt = prefersReducedMotion || overCard ? 0 : 1;
+
+      section.style.setProperty('--hero-mx', `${(x * 100).toFixed(2)}%`);
+      section.style.setProperty('--hero-my', `${(y * 100).toFixed(2)}%`);
+      section.style.setProperty(
+        '--hero-rx',
+        `${((0.5 - y) * MAX_TILT_X * tilt).toFixed(2)}deg`
+      );
+      section.style.setProperty(
+        '--hero-ry',
+        `${((x - 0.5) * MAX_TILT_Y * tilt).toFixed(2)}deg`
+      );
+    });
+  };
+
   const fullRolesText = ROLES.join(' • ');
 
   return (
     <section
       id="home"
-      className="relative min-h-[95vh] flex items-center justify-center overflow-hidden bg-background pt-24 pb-16 lg:py-28"
+      ref={sectionRef}
+      onPointerMove={handlePointerMove}
+      className="relative min-h-[95vh] flex items-center justify-center overflow-hidden bg-background pt-24 pb-16 lg:py-24"
     >
-      {/* Dynamic Background Atmosphere */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[45%] h-[45%] rounded-full bg-purple-500/20 blur-[70px] md:blur-[130px] animate-pulse" />
-        <div className="absolute top-[15%] right-[-10%] w-[40%] h-[40%] rounded-full bg-sky-500/20 blur-[60px] md:blur-[120px] animate-pulse delay-1000" />
-        <div className="absolute bottom-[-10%] left-[25%] w-[50%] h-[50%] rounded-full bg-cyan-500/15 blur-[80px] md:blur-[140px] animate-pulse delay-2000" />
-      </div>
+      <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
+        {/* Dynamic Background Atmosphere */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="animate-aurora absolute top-[-10%] left-[-10%] w-[45%] h-[45%] rounded-full bg-purple-500/20 blur-[70px] md:blur-[130px] [--aurora-duration:16s]" />
+          <div className="animate-aurora absolute top-[15%] right-[-10%] w-[40%] h-[40%] rounded-full bg-sky-500/20 blur-[60px] md:blur-[120px] [--aurora-duration:20s] [animation-direction:reverse]" />
+          <div className="animate-aurora absolute bottom-[-10%] left-[25%] w-[50%] h-[50%] rounded-full bg-cyan-500/15 blur-[80px] md:blur-[140px] [--aurora-duration:24s]" />
+        </div>
 
-      {/* Grid Pattern Overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808015_1px,transparent_1px),linear-gradient(to_bottom,#80808015_1px,transparent_1px)] bg-[size:28px_28px] opacity-75" />
+        {/* Grid Pattern Overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808015_1px,transparent_1px),linear-gradient(to_bottom,#80808015_1px,transparent_1px)] bg-[size:28px_28px] opacity-75" />
 
-      {/* Radial ambient illumination */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div className="w-[900px] h-[900px] rounded-full bg-gradient-radial from-sky-500/10 via-transparent to-transparent blur-3xl" />
+        {/* Cursor spotlight: ambient glow plus the grid lines it lights up */}
+        <div className="hero-spotlight absolute inset-0" />
+        <div className="hero-lit-grid absolute inset-0" />
+
+        {/* Grid packets */}
+        <div className="absolute inset-0 overflow-hidden">
+          {GRID_PACKETS.map((packet) => (
+            <span key={packet} className={`hero-packet ${packet}`} />
+          ))}
+        </div>
       </div>
 
       {/* Hero Content */}
@@ -105,7 +176,7 @@ const Hero = () => {
           {/* Left Column: Headlines, Role typing, Bio, CTAs */}
           <div className="lg:col-span-7 text-center lg:text-left space-y-6">
             {/* Live Role Badge */}
-            <div className="inline-flex items-center gap-2.5 rounded-full border border-sky-400/40 dark:border-sky-400/35 bg-sky-500/10 dark:bg-sky-500/15 px-4 py-1.5 text-xs sm:text-sm font-semibold sm:font-medium text-sky-700 dark:text-sky-200 shadow-sm backdrop-blur-md">
+            <div className="animate-rise inline-flex items-center gap-2.5 rounded-full border border-sky-400/40 dark:border-sky-400/35 bg-sky-500/10 dark:bg-sky-500/15 px-4 py-1.5 text-xs sm:text-sm font-semibold sm:font-medium text-sky-700 dark:text-sky-200 shadow-sm backdrop-blur-md">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
@@ -115,12 +186,22 @@ const Hero = () => {
 
             {/* Main Greeting */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight font-heading leading-[1.1]">
-              Hi, my name is <span className="gradient-text">Nathan</span>.
+              {GREETING_WORDS.map(({ word, delay }) => (
+                <Fragment key={word}>
+                  <span className={`animate-rise inline-block ${delay}`}>
+                    {word}
+                  </span>{' '}
+                </Fragment>
+              ))}
+              <span className="animate-rise inline-block [--rise-delay:320ms]">
+                <span className="gradient-text gradient-text-live">Nathan</span>
+                .
+              </span>
             </h1>
 
             {/* Accessible Typing Subtitle */}
             <p
-              className="text-xl sm:text-2xl md:text-3xl text-muted-foreground font-light min-h-[1.5em]"
+              className="animate-rise [--rise-delay:420ms] text-xl sm:text-2xl md:text-3xl text-muted-foreground font-light min-h-[1.5em]"
               aria-label={fullRolesText}
             >
               <span
@@ -138,7 +219,7 @@ const Hero = () => {
             </p>
 
             {/* Bio Paragraph */}
-            <p className="text-base sm:text-lg text-foreground/85 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+            <p className="animate-rise [--rise-delay:500ms] text-base sm:text-lg text-foreground/85 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
               Former special education teacher turned software engineer,
               bringing empathy and clear thinking to enterprise fintech. I build
               clean, reliable systems from frontend interfaces to backend
@@ -146,14 +227,18 @@ const Hero = () => {
             </p>
 
             {/* Buttons & Socials */}
-            <div className="pt-2">
+            <div className="animate-rise [--rise-delay:580ms] pt-2">
               <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
                 <Button
                   size="lg"
-                  className="h-12 px-8 text-base rounded-full bg-primary text-primary-foreground font-medium shadow-lg shadow-sky-500/20 hover:shadow-sky-500/35 transition-all duration-300 hover:-translate-y-0.5"
+                  className="relative overflow-hidden h-12 px-8 text-base rounded-full bg-primary text-primary-foreground font-medium shadow-lg shadow-sky-500/20 hover:shadow-sky-500/35 transition-all duration-300 hover:-translate-y-0.5"
                   onClick={() => scrollToSection('projects')}
                 >
                   View My Work
+                  <span
+                    aria-hidden="true"
+                    className="animate-sheen absolute inset-y-0 left-0 w-2/5 bg-gradient-to-r from-transparent via-sky-400/40 to-transparent pointer-events-none"
+                  />
                 </Button>
                 <Button
                   size="lg"
@@ -191,99 +276,66 @@ const Hero = () => {
                 </div>
               </div>
             </div>
+
+            {/* Brick Breaker Tie-In */}
+            <a
+              href={BRICK_BREAKER_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="animate-rise [--rise-delay:660ms] group/game inline-flex items-center gap-2.5 text-sm font-medium text-sky-700 dark:text-sky-300 hover:text-sky-600 dark:hover:text-sky-200 transition-colors"
+            >
+              <Gamepad2 className="w-[18px] h-[18px] shrink-0" />
+              <span>
+                Those bricks are my stack. Play the full Brick Breaker Resume
+              </span>
+              <ArrowRight className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover/game:translate-x-1" />
+            </a>
           </div>
 
-          {/* Right Column: Visual Portrait & Fintech Hub Anchor */}
+          {/* Right Column: Playable Portrait Card */}
           <div className="lg:col-span-5 flex justify-center relative">
             <div className="relative w-full max-w-[380px] sm:max-w-[420px]">
               {/* Glowing Aura behind the card */}
               <div className="absolute inset-0 -m-6 sm:-m-10 rounded-full bg-gradient-to-tr from-cyan-500/25 via-sky-500/20 to-purple-600/25 blur-3xl opacity-80 pointer-events-none" />
 
-              {/* Floating Top Telemetry Pill */}
-              <div className="animate-float-slow absolute -top-5 -right-1 sm:-top-6 sm:-right-4 z-20 bg-white/60 dark:bg-card/50 backdrop-blur-md rounded-2xl p-2.5 sm:p-3.5 border border-slate-200/90 dark:border-white/20 shadow-xl shadow-slate-900/10 dark:shadow-slate-950/50 flex items-center gap-2 sm:gap-3">
-                <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
-                  <Activity className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                </div>
-                <div>
-                  <div className="text-[11px] sm:text-xs font-semibold text-foreground flex items-center gap-1.5 font-heading">
-                    Enterprise Fintech
-                  </div>
-                  <div className="text-[10px] sm:text-[11px] text-emerald-500 dark:text-emerald-400 font-medium whitespace-nowrap">
-                    Payments & Microservices
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating Bottom Architecture Card */}
-              <div className="animate-float-reverse absolute -bottom-4 -left-2 sm:-bottom-6 sm:-left-4 z-20 bg-white/60 dark:bg-card/50 backdrop-blur-md rounded-2xl p-2.5 sm:p-3.5 border border-slate-200/90 dark:border-white/20 shadow-xl shadow-slate-900/10 dark:shadow-slate-950/50">
-                <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5">
-                  <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-md sm:rounded-lg bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-500 dark:text-sky-400 shrink-0">
-                    <Cpu className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                  </div>
-                  <span className="text-[11px] sm:text-xs font-semibold text-foreground font-heading">
-                    Primary Stack
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  {['.NET', 'C#', 'Angular', 'AWS'].map((tag) => (
-                    <span
-                      key={tag}
-                      className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-100 dark:bg-secondary/80 text-foreground border border-slate-200 dark:border-white/10"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Central Portrait Card */}
-              <div className="relative rounded-[2rem] p-3 sm:p-3.5 bg-gradient-to-b from-card/95 via-card/85 to-card/95 border border-slate-200/90 dark:border-white/20 group-hover:border-sky-400/30 backdrop-blur-xl shadow-2xl shadow-slate-900/10 dark:shadow-slate-950/50 group overflow-hidden transition-all duration-500">
-                {/* Header System Line */}
-                <div className="flex items-center justify-between mb-2 sm:mb-2.5">
-                  <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-slate-100/90 dark:bg-secondary/60 border border-slate-200/80 dark:border-white/10 text-[10px] sm:text-[11px] font-mono text-muted-foreground transition-colors group-hover:border-sky-400/30">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
-                    <span className="font-semibold text-foreground/80 group-hover:text-sky-500 dark:group-hover:text-sky-400 transition-colors truncate">
-                      nathan_zimmerman.dev
-                    </span>
+              <div className="hero-tilt relative">
+                {/* Floating Top Telemetry Pill, lifted off the card for depth */}
+                <div className="absolute -top-3 right-0 sm:-top-4 sm:-right-3 z-20 [transform:translateZ(40px)]">
+                  <div className="animate-float-slow bg-white/60 dark:bg-card/50 backdrop-blur-md rounded-2xl p-2.5 sm:p-3.5 border border-slate-200/90 dark:border-white/20 shadow-xl shadow-slate-900/10 dark:shadow-slate-950/50 flex items-center gap-2 sm:gap-3">
+                    <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+                      <Activity className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    </div>
+                    <div>
+                      <div className="text-[11px] sm:text-xs font-semibold text-foreground flex items-center gap-1.5 font-heading">
+                        Enterprise Fintech
+                      </div>
+                      <div className="text-[10px] sm:text-[11px] text-emerald-500 dark:text-emerald-400 font-medium whitespace-nowrap">
+                        Payments & Microservices
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                {/* Picture Container with Clean Photo Crossfade Transition */}
-                <div className="relative rounded-2xl overflow-hidden aspect-[4/5] bg-secondary/50 group-hover:ring-2 group-hover:ring-sky-400/30 group-hover:shadow-[0_0_30px_rgba(56,189,248,0.2)] transition-all duration-500">
-                  {/* Base Real Headshot */}
-                  <picture>
-                    <source srcSet={nathanPortraitAvif} type="image/avif" />
-                    <source srcSet={nathanPortraitWebp} type="image/webp" />
-                    <img
-                      src={nathanPortraitJpg}
-                      alt="Nathan Zimmerman - Software Engineer"
-                      fetchPriority="high"
-                      width={480}
-                      height={600}
-                      className="w-full h-full object-cover object-top select-none transition-opacity duration-700 group-hover:opacity-0"
-                    />
-                  </picture>
+                {/* Central Portrait Card, edged by a rotating beam */}
+                <div
+                  ref={cardRef}
+                  className="group relative rounded-[2rem] p-[1.5px] overflow-hidden bg-slate-200/90 dark:bg-white/20 shadow-2xl shadow-slate-900/10 dark:shadow-slate-950/50"
+                >
+                  <div aria-hidden="true" className="card-beam" />
 
-                  {/* Illustrated Vector Portrait - Dark Theme (Reveals on Hover) */}
-                  <img
-                    src={nathanVectorJpg}
-                    alt="Nathan Zimmerman - Illustrated Vector Portrait"
-                    width={480}
-                    height={600}
-                    className="hidden dark:block absolute inset-0 w-full h-full object-cover object-top select-none opacity-0 transition-opacity duration-700 group-hover:opacity-100"
-                  />
+                  <div className="relative rounded-[calc(2rem-1.5px)] p-3 sm:p-3.5 bg-card">
+                    {/* Header System Line */}
+                    <div className="flex items-center justify-between mb-2 sm:mb-2.5">
+                      <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-slate-100/90 dark:bg-secondary/60 border border-slate-200/80 dark:border-white/10 text-[10px] sm:text-[11px] font-mono text-muted-foreground transition-colors group-hover:border-sky-400/30">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
+                        <span className="font-semibold text-foreground/80 group-hover:text-sky-500 dark:group-hover:text-sky-400 transition-colors truncate">
+                          nathan_zimmerman.dev
+                        </span>
+                      </div>
+                    </div>
 
-                  {/* Illustrated Vector Portrait - Light Theme (Reveals on Hover) */}
-                  <img
-                    src={nathanVectorLightJpg}
-                    alt="Nathan Zimmerman - Illustrated Vector Portrait"
-                    width={480}
-                    height={600}
-                    className="block dark:hidden absolute inset-0 w-full h-full object-cover object-top select-none opacity-0 transition-opacity duration-700 group-hover:opacity-100"
-                  />
-
-                  {/* Subtle inner shadow / gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/10 dark:from-slate-950/60 via-transparent to-transparent pointer-events-none" />
+                    <HeroGame reducedMotion={prefersReducedMotion} />
+                  </div>
                 </div>
               </div>
             </div>
@@ -291,7 +343,7 @@ const Hero = () => {
         </div>
 
         {/* Scroll Indicator */}
-        <div className="text-center pt-8 sm:pt-12">
+        <div className="text-center pt-8 sm:pt-10">
           <button
             onClick={() => scrollToSection('about')}
             className="inline-block text-muted-foreground hover:text-sky-400 transition-colors animate-bounce p-2"

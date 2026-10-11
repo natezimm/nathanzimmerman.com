@@ -164,6 +164,81 @@ describe('Hero section', () => {
     });
   });
 
+  describe('Pointer spotlight', () => {
+    const renderWithSize = () => {
+      const { container } = render(<Hero />);
+      const section = container.querySelector('section') as HTMLElement;
+      section.getBoundingClientRect = () =>
+        ({ left: 0, top: 0, width: 1000, height: 800 }) as DOMRect;
+      return section;
+    };
+
+    const movePointer = async (
+      target: Element,
+      init: { pointerType: string; clientX: number; clientY: number }
+    ) => {
+      fireEvent.pointerMove(target, init);
+      await act(async () => {
+        vi.advanceTimersByTime(32);
+      });
+    };
+
+    it('aims the grid spotlight at the cursor and tilts the card', async () => {
+      const section = renderWithSize();
+
+      await movePointer(section, {
+        pointerType: 'mouse',
+        clientX: 250,
+        clientY: 200,
+      });
+
+      expect(section.style.getPropertyValue('--hero-mx')).toBe('25.00%');
+      expect(section.style.getPropertyValue('--hero-my')).toBe('25.00%');
+      expect(section.style.getPropertyValue('--hero-rx')).toBe('2.25deg');
+      expect(section.style.getPropertyValue('--hero-ry')).toBe('-3.00deg');
+    });
+
+    it('holds the card level while the pointer is over it', async () => {
+      const section = renderWithSize();
+
+      await movePointer(screen.getByText('nathan_zimmerman.dev'), {
+        pointerType: 'mouse',
+        clientX: 750,
+        clientY: 200,
+      });
+
+      expect(section.style.getPropertyValue('--hero-mx')).toBe('75.00%');
+      expect(section.style.getPropertyValue('--hero-rx')).toBe('0.00deg');
+      expect(section.style.getPropertyValue('--hero-ry')).toBe('0.00deg');
+    });
+
+    it('does not tilt the card when the visitor prefers reduced motion', async () => {
+      window.matchMedia = mockMatchMedia(true);
+      const section = renderWithSize();
+
+      await movePointer(section, {
+        pointerType: 'mouse',
+        clientX: 250,
+        clientY: 200,
+      });
+
+      expect(section.style.getPropertyValue('--hero-mx')).toBe('25.00%');
+      expect(section.style.getPropertyValue('--hero-ry')).toBe('0.00deg');
+    });
+
+    it('ignores touch pointers', async () => {
+      const section = renderWithSize();
+
+      await movePointer(section, {
+        pointerType: 'touch',
+        clientX: 250,
+        clientY: 200,
+      });
+
+      expect(section.style.getPropertyValue('--hero-mx')).toBe('');
+    });
+  });
+
   describe('Portrait card', () => {
     it('renders system line and both real and vector portrait images for crossfade across themes', () => {
       render(<Hero />);
@@ -175,6 +250,17 @@ describe('Hero section', () => {
       expect(
         screen.getAllByAltText('Nathan Zimmerman - Illustrated Vector Portrait')
       ).toHaveLength(2);
+    });
+
+    it('pairs the playable card with a link to the full Brick Breaker Resume', () => {
+      render(<Hero />);
+
+      expect(
+        screen.getByRole('button', { name: 'Pause brick breaker' })
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('link', { name: /Play the full Brick Breaker Resume/ })
+      ).toHaveAttribute('href', 'https://resume.nathanzimmerman.com');
     });
   });
 });

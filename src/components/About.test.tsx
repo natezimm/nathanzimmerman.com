@@ -17,4 +17,12 @@ describe('About section', () => {
       expect(screen.getByText(skill)).toBeInTheDocument();
     });
   });
+
+  it('groups the capability cards so they share one cursor spotlight', () => {
+    const { container } = render(<About />);
+
+    const group = container.querySelector('.spotlight-group');
+    expect(group?.querySelectorAll('.spotlight-card')).toHaveLength(4);
+    expect(screen.getByText('how people think')).toBeInTheDocument();
+  });
 });

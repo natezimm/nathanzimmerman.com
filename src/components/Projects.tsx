@@ -1,5 +1,7 @@
-import { ExternalLink, Github } from 'lucide-react';
+import { ExternalLink, Github, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { SpotlightGroup } from '@/components/ui/spotlight-group';
+import { SectionCaption } from '@/components/shared/SectionCaption';
 import { ScrollReveal } from '@/components/ScrollReveal';
 import {
   Card,
@@ -78,7 +80,10 @@ const Projects = () => {
   ];
 
   return (
-    <section id="projects" className="py-16 md:py-20 relative scroll-mt-4">
+    <section
+      id="projects"
+      className="py-16 md:py-20 relative overflow-hidden scroll-mt-4"
+    >
       {/* Background decoration */}
       <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-sky-500/5 rounded-full blur-[120px] -translate-y-1/2 pointer-events-none" />
       <div className="absolute bottom-10 right-0 w-[450px] h-[450px] bg-purple-500/5 rounded-full blur-[120px] pointer-events-none" />
@@ -96,10 +101,17 @@ const Projects = () => {
             </p>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <ScrollReveal className="mb-6">
+            <SectionCaption
+              command="ls ~/projects"
+              meta={`${projects.length} games · playable in your browser`}
+            />
+          </ScrollReveal>
+
+          <SpotlightGroup className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {projects.map((project, index) => (
               <ScrollReveal key={project.title} delay={0.1 + index * 0.1}>
-                <Card className="glass-card overflow-hidden group border border-slate-200/90 dark:border-white/10 rounded-2xl flex flex-col justify-between card-glow hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 shadow-sm h-full">
+                <Card className="spotlight-card glass-card overflow-hidden group border border-slate-200/90 dark:border-white/10 rounded-2xl flex flex-col justify-between card-glow hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 shadow-sm h-full">
                   <div>
                     {/* Media Preview Box */}
                     <div className="relative overflow-hidden border-b border-slate-200/80 dark:border-white/10 aspect-[16/9] w-full">
@@ -132,6 +144,30 @@ const Projects = () => {
                           decoding="async"
                         />
                       </picture>
+
+                      {/* Playable Badge */}
+                      <div className="absolute top-3 left-3 inline-flex items-center gap-2 rounded-full border border-white/20 bg-slate-950/70 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-md">
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+                        </span>
+                        Playable
+                      </div>
+
+                      {/* Hover shortcut to the demo; the Live Demo button is the accessible link */}
+                      <a
+                        href={project.demo}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-hidden="true"
+                        tabIndex={-1}
+                        className="absolute inset-0 flex items-center justify-center bg-slate-950/55 opacity-0 backdrop-blur-[2px] transition-opacity duration-300 group-hover:opacity-100"
+                      >
+                        <span className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-slate-900 shadow-xl shadow-sky-500/30 translate-y-2 transition-transform duration-300 ease-out group-hover:translate-y-0">
+                          <Play className="w-4 h-4 fill-current" />
+                          Play in browser
+                        </span>
+                      </a>
                     </div>
 
                     <CardHeader className="pt-6 pb-2">
@@ -195,7 +231,7 @@ const Projects = () => {
                 </Card>
               </ScrollReveal>
             ))}
-          </div>
+          </SpotlightGroup>
         </div>
       </div>
     </section>

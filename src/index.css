@@ -134,6 +134,12 @@
     transform: scale(1.02);
   }
 
+  .gradient-text-live {
+    background-image: linear-gradient(90deg, #22d3ee, #2563eb 50%, #22d3ee);
+    background-size: 200% 100%;
+    animation: gradient-pan 6s linear infinite;
+  }
+
   .glass {
     @apply bg-background/85 dark:bg-background/60 backdrop-blur-lg border border-slate-200/80 dark:border-white/10;
   }
@@ -294,6 +300,275 @@
   animation: scanline-sweep 3.5s linear infinite;
 }
 
+@keyframes gradient-pan {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 200% 50%;
+  }
+}
+
+/* Hero entrance: each element sets its own --rise-delay */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+.animate-rise {
+  animation: hero-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) var(--rise-delay, 0s)
+    both;
+}
+
+@keyframes aurora-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(6%, 8%, 0) scale(1.15);
+  }
+}
+
+.animate-aurora {
+  animation: aurora-drift var(--aurora-duration, 18s) ease-in-out infinite;
+}
+
+/* Hero spotlight: --hero-mx / --hero-my follow the cursor */
+.hero-spotlight {
+  background: radial-gradient(
+    440px circle at var(--hero-mx, 72%) var(--hero-my, 42%),
+    rgb(56 189 248 / 0.16),
+    transparent 70%
+  );
+}
+
+.hero-lit-grid {
+  background-image:
+    linear-gradient(to right, rgb(56 189 248 / 0.55) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(56 189 248 / 0.55) 1px, transparent 1px);
+  background-size: 28px 28px;
+  -webkit-mask-image: radial-gradient(
+    340px circle at var(--hero-mx, 72%) var(--hero-my, 42%),
+    #000,
+    transparent 72%
+  );
+  mask-image: radial-gradient(
+    340px circle at var(--hero-mx, 72%) var(--hero-my, 42%),
+    #000,
+    transparent 72%
+  );
+}
+
+.light .hero-spotlight {
+  background: radial-gradient(
+    440px circle at var(--hero-mx, 72%) var(--hero-my, 42%),
+    rgb(14 165 233 / 0.14),
+    transparent 70%
+  );
+}
+
+.light .hero-lit-grid {
+  background-image:
+    linear-gradient(to right, rgb(2 132 199 / 0.4) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(2 132 199 / 0.4) 1px, transparent 1px);
+}
+
+/* Light pulses along the hero grid lines; color comes from currentColor */
+.hero-packet {
+  position: absolute;
+  border-radius: 9999px;
+  opacity: 0;
+  box-shadow: 0 0 12px currentColor;
+}
+
+.hero-packet-x {
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, currentColor);
+  animation: hero-packet-x var(--packet-duration, 8s) linear
+    var(--packet-delay, 0s) infinite;
+}
+
+.hero-packet-y {
+  top: 0;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, currentColor);
+  animation: hero-packet-y var(--packet-duration, 8s) linear
+    var(--packet-delay, 0s) infinite;
+}
+
+@keyframes hero-packet-x {
+  0% {
+    transform: translateX(-160px);
+    opacity: 0;
+  }
+  8%,
+  92% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100vw);
+    opacity: 0;
+  }
+}
+
+@keyframes hero-packet-y {
+  0% {
+    transform: translateY(-160px);
+    opacity: 0;
+  }
+  8%,
+  92% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+/* Portrait card: leans toward the cursor via --hero-rx / --hero-ry */
+.hero-tilt {
+  transform: perspective(1100px) rotateX(var(--hero-rx, 0deg))
+    rotateY(var(--hero-ry, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 0.25s ease-out;
+}
+
+.card-beam {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 200%;
+  aspect-ratio: 1;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg 240deg,
+    #38bdf8 320deg,
+    #a5f3fc 352deg,
+    transparent 360deg
+  );
+  animation: card-beam-spin 6s linear infinite;
+}
+
+@keyframes card-beam-spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.hero-photo-fade {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 24%);
+  mask-image: linear-gradient(to bottom, transparent, #000 24%);
+}
+
+@keyframes sheen-sweep {
+  0%,
+  55% {
+    transform: translateX(-140%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(320%) skewX(-20deg);
+  }
+}
+
+.animate-sheen {
+  animation: sheen-sweep 4.5s ease-in-out infinite;
+}
+
+/* Cards inside a .spotlight-group glow where the cursor is; --spot-x / --spot-y
+   are set per card, so neighbouring borders light up as the cursor nears */
+.spotlight-card {
+  position: relative;
+}
+
+.spotlight-card::before,
+.spotlight-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.spotlight-card::before {
+  padding: 1px;
+  background: radial-gradient(
+    260px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgb(56 189 248 / 0.9),
+    transparent 70%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+
+.spotlight-card::after {
+  background: radial-gradient(
+    420px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgb(56 189 248 / 0.09),
+    transparent 65%
+  );
+}
+
+.light .spotlight-card::before {
+  background: radial-gradient(
+    260px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgb(2 132 199 / 0.75),
+    transparent 70%
+  );
+}
+
+.light .spotlight-card::after {
+  background: radial-gradient(
+    420px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    rgb(14 165 233 / 0.08),
+    transparent 65%
+  );
+}
+
+.spotlight-group:hover .spotlight-card::before,
+.spotlight-group:hover .spotlight-card::after {
+  opacity: 1;
+}
+
+/* Experience git graph: a highlight that climbs the lane toward HEAD */
+.lane-comet {
+  background: linear-gradient(
+    to top,
+    transparent calc(100% - 96px),
+    rgb(186 230 253)
+  );
+  animation: lane-comet 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes lane-comet {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-blink {
     animation: none;
@@ -306,7 +581,21 @@
 
   .animate-float-slow,
   .animate-float-reverse,
-  .animate-scanline {
+  .animate-scanline,
+  .animate-rise,
+  .animate-aurora,
+  .gradient-text-live {
     animation: none;
+  }
+
+  .hero-packet,
+  .card-beam,
+  .animate-sheen,
+  .lane-comet {
+    display: none;
+  }
+
+  .hero-tilt {
+    transition: none;
   }
 }

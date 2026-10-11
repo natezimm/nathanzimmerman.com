@@ -10,6 +10,7 @@ Preserve unrelated working-tree changes. `docs/architecture.md` has broader desi
 
 - `src/App.tsx` currently routes only `/` and the catch-all 404. `src/pages/Index.tsx` composes the homepage. `ProjectDetail.tsx` has tests but is not wired into the app router.
 - Homepage project cards are defined inside `src/components/Projects.tsx`; experience content comes from `src/data/portfolioData.ts`. That data file also contains project entries used by the unrouted detail page. Check the consuming component before editing content.
+- `src/components/Hero.tsx` owns the hero backdrop and pointer spotlight; `HeroGame.tsx` renders the playable portrait card, and the game rules live in `src/lib/brickBreaker.ts`. The Experience git graph reads `experienceItems` and `careerOriginItems` from the data file.
 - `src/components/Navigation.tsx` owns active section navigation. `src/data/navigationMap.ts` has tests but no current app import; changing it does not change homepage navigation.
 - `src/components/`: visible portfolio sections; `ui/` and `shared/` contain reusable elements.
 - `src/contexts/ThemeContext.tsx`: saves `light`/`dark` under the `theme` localStorage key and defaults to dark when no valid value is saved.
@@ -33,6 +34,7 @@ Run from this repository root. Node 22 is specified by both `.nvmrc` and `packag
 ## Behavior to preserve
 
 - Check desktop/mobile layouts, keyboard controls, accessible labels, and reduced-motion behavior when changing UI or animations. Reuse Tailwind tokens and existing UI primitives.
+- The hero game must stay pausable, start paused under reduced motion, and stop when scrolled out of view.
 - Contact submission uses EmailJS in `src/components/Contact.tsx`. Configuration names are `VITE_EMAILJS_SERVICE_ID`, `VITE_EMAILJS_TEMPLATE_ID`, and `VITE_EMAILJS_PUBLIC_KEY`. Browser environment variables are public; do not place secrets in them. Preserve validation and submission cooldowns, and mock external delivery in tests.
 - Keep project links, resume claims, and metrics consistent across their consumers; preserve the public `/resume.pdf` link.
 - Tests are colocated as `*.test.ts(x)`; `src/setupTests.ts` supplies browser mocks. `e2e/portfolio.spec.ts` covers Chromium desktop/mobile. Coverage thresholds live in `vite.config.ts`.

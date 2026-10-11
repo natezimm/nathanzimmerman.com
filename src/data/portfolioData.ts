@@ -262,49 +262,20 @@ export const experienceItems: ExperienceItem[] = [
   },
 ];
 
-export type SkillItem = {
-  name: string;
-  years: string;
+export type CareerOriginItem = {
+  title: string;
+  detail: string;
 };
 
-export type SkillGroup = {
-  label: string;
-  items: SkillItem[];
-};
-
-export const skillGroups: SkillGroup[] = [
+// The path before engineering, newest first like experienceItems.
+export const careerOriginItems: CareerOriginItem[] = [
   {
-    label: 'LANGUAGES',
-    items: [
-      { name: 'JavaScript', years: '6+ Years' },
-      { name: 'TypeScript', years: '3+ Years' },
-      { name: 'Node.js', years: '3+ Years' },
-      { name: 'C#', years: '3+ Years' },
-      { name: 'Java', years: '3+ Years' },
-    ],
+    title: 'Special education teacher',
+    detail:
+      'Preschool classrooms taught me patience, empathy, and how to break down complex ideas.',
   },
   {
-    label: 'FRAMEWORKS',
-    items: [
-      { name: '.NET', years: '3+ Years' },
-      { name: 'Angular', years: '3+ Years' },
-      { name: 'React', years: '3+ Years' },
-    ],
-  },
-  {
-    label: 'DATABASES',
-    items: [
-      { name: 'MongoDB', years: '3+ Years' },
-      { name: 'DynamoDB', years: '3+ Years' },
-      { name: 'SQL Server', years: '2+ Years' },
-    ],
-  },
-  {
-    label: 'TOOLS & OTHER',
-    items: [
-      { name: 'AWS', years: '6+ Years' },
-      { name: 'Azure', years: '3+ Years' },
-      { name: 'REST APIs', years: '6+ Years' },
-    ],
+    title: 'Studied psychology',
+    detail: 'Learned how people think before learning how computers think.',
   },
 ];

@@ -1,4 +1,4 @@
-import { Mail, MapPin } from 'lucide-react';
+import { Mail, MapPin, Send } from 'lucide-react';
 import { toast } from 'sonner';
 import { useState, useRef } from 'react';
 import emailjs from '@emailjs/browser';
@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
+import { SpotlightGroup } from '@/components/ui/spotlight-group';
+import { SectionCaption } from '@/components/shared/SectionCaption';
 import { ScrollReveal } from '@/components/ScrollReveal';
 
 const MAX_NAME_LENGTH = 100;
@@ -128,7 +130,7 @@ const Contact = () => {
       <div className="container px-4 mx-auto relative z-10">
         <div className="max-w-6xl mx-auto">
           <ScrollReveal className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 font-heading tracking-tight">
               Get In <span className="gradient-text">Touch</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -140,6 +142,7 @@ const Contact = () => {
           <div className="grid md:grid-cols-2 gap-12">
             <ScrollReveal delay={0.1} className="space-y-8">
               <div>
+                <SectionCaption command="./say-hello" className="mb-6" />
                 <h3 className="text-2xl font-semibold mb-6">Let's Connect</h3>
                 <p className="text-muted-foreground mb-8 text-lg leading-relaxed">
                   Have an idea or just want to say hello? Send a message — I’d
@@ -147,10 +150,12 @@ const Contact = () => {
                 </p>
               </div>
 
-              <div className="space-y-6">
-                <Card className="glass-card rounded-2xl border border-slate-200/90 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 card-glow shadow-sm">
+              <SpotlightGroup className="space-y-6">
+                <Card className="spotlight-card glass-card rounded-2xl border border-slate-200/90 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 card-glow shadow-sm">
                   <CardContent className="flex items-center gap-4 p-6">
-                    <Mail className="w-8 h-8 text-sky-500 dark:text-cyan-400 flex-shrink-0" />
+                    <div className="w-11 h-11 rounded-xl flex items-center justify-center border flex-shrink-0 text-sky-600 dark:text-sky-400 bg-sky-500/10 border-sky-500/20 shadow-[0_0_24px_-6px_rgba(56,189,248,0.55)]">
+                      <Mail className="w-5 h-5" />
+                    </div>
                     <div>
                       <h4 className="font-semibold mb-1 text-base text-foreground font-heading">
                         Email
@@ -165,9 +170,11 @@ const Contact = () => {
                   </CardContent>
                 </Card>
 
-                <Card className="glass-card rounded-2xl border border-slate-200/90 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 card-glow shadow-sm">
+                <Card className="spotlight-card glass-card rounded-2xl border border-slate-200/90 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 card-glow shadow-sm">
                   <CardContent className="flex items-center gap-4 p-6">
-                    <MapPin className="w-8 h-8 text-sky-500 dark:text-cyan-400 flex-shrink-0" />
+                    <div className="w-11 h-11 rounded-xl flex items-center justify-center border flex-shrink-0 text-cyan-600 dark:text-cyan-400 bg-cyan-500/10 border-cyan-500/20 shadow-[0_0_24px_-6px_rgba(34,211,238,0.55)]">
+                      <MapPin className="w-5 h-5" />
+                    </div>
                     <div>
                       <h4 className="font-semibold mb-1 text-base text-foreground font-heading">
                         Location
@@ -178,72 +185,81 @@ const Contact = () => {
                     </div>
                   </CardContent>
                 </Card>
-              </div>
+              </SpotlightGroup>
             </ScrollReveal>
 
             <ScrollReveal delay={0.3}>
-              <Card className="glass-card rounded-2xl border border-slate-200/90 dark:border-white/10 p-6 md:p-8 card-glow shadow-sm">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="space-y-2">
-                    <label htmlFor="name" className="text-sm font-medium">
-                      Name
-                    </label>
-                    <Input
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      placeholder="Your name"
-                      required
-                      maxLength={MAX_NAME_LENGTH}
-                      className="bg-background/60 border border-slate-300 dark:border-white/25 focus-visible:border-primary focus-visible:ring-primary/40 transition-colors"
-                    />
-                  </div>
+              {/* Form card, edged by the same rotating beam as the hero portrait */}
+              <div className="relative overflow-hidden rounded-2xl p-[1.5px] bg-slate-200/90 dark:bg-white/10 shadow-sm">
+                <div aria-hidden="true" className="card-beam" />
+                <Card className="relative rounded-[calc(1rem-1.5px)] border-0 bg-card p-6 md:p-8 shadow-none">
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="space-y-2">
+                      <label htmlFor="name" className="text-sm font-medium">
+                        Name
+                      </label>
+                      <Input
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        placeholder="Your name"
+                        required
+                        maxLength={MAX_NAME_LENGTH}
+                        className="bg-background/60 border border-slate-300 dark:border-white/25 focus-visible:border-primary focus-visible:ring-primary/40 transition-colors"
+                      />
+                    </div>
 
-                  <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium">
-                      Email
-                    </label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="your.email@example.com"
-                      required
-                      maxLength={MAX_EMAIL_LENGTH}
-                      className="bg-background/60 border border-slate-300 dark:border-white/25 focus-visible:border-primary focus-visible:ring-primary/40 transition-colors"
-                    />
-                  </div>
+                    <div className="space-y-2">
+                      <label htmlFor="email" className="text-sm font-medium">
+                        Email
+                      </label>
+                      <Input
+                        id="email"
+                        name="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="your.email@example.com"
+                        required
+                        maxLength={MAX_EMAIL_LENGTH}
+                        className="bg-background/60 border border-slate-300 dark:border-white/25 focus-visible:border-primary focus-visible:ring-primary/40 transition-colors"
+                      />
+                    </div>
 
-                  <div className="space-y-2">
-                    <label htmlFor="message" className="text-sm font-medium">
-                      Message
-                    </label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      placeholder="Tell me what you're working on or say hello!"
-                      rows={6}
-                      required
-                      maxLength={MAX_MESSAGE_LENGTH}
-                      className="bg-background/60 border border-slate-300 dark:border-white/25 focus-visible:border-primary focus-visible:ring-primary/40 transition-colors resize-none"
-                    />
-                  </div>
+                    <div className="space-y-2">
+                      <label htmlFor="message" className="text-sm font-medium">
+                        Message
+                      </label>
+                      <Textarea
+                        id="message"
+                        name="message"
+                        value={formData.message}
+                        onChange={handleChange}
+                        placeholder="Tell me what you're working on or say hello!"
+                        rows={6}
+                        required
+                        maxLength={MAX_MESSAGE_LENGTH}
+                        className="bg-background/60 border border-slate-300 dark:border-white/25 focus-visible:border-primary focus-visible:ring-primary/40 transition-colors resize-none"
+                      />
+                    </div>
 
-                  <Button
-                    type="submit"
-                    size="lg"
-                    disabled={isSubmitting}
-                    className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/20"
-                  >
-                    {isSubmitting ? 'Sending...' : 'Send Message'}
-                  </Button>
-                </form>
-              </Card>
+                    <Button
+                      type="submit"
+                      size="lg"
+                      disabled={isSubmitting}
+                      className="group/send relative overflow-hidden w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-sky-500/20 hover:shadow-sky-500/35 transition-all duration-300"
+                    >
+                      {isSubmitting ? 'Sending...' : 'Send Message'}
+                      <Send className="w-4 h-4 ml-2 transition-transform duration-300 group-hover/send:translate-x-0.5 group-hover/send:-translate-y-0.5" />
+                      <span
+                        aria-hidden="true"
+                        className="animate-sheen absolute inset-y-0 left-0 w-2/5 bg-gradient-to-r from-transparent via-sky-400/40 to-transparent pointer-events-none"
+                      />
+                    </Button>
+                  </form>
+                </Card>
+              </div>
             </ScrollReveal>
           </div>
         </div>

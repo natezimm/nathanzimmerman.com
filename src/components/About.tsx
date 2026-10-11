@@ -1,42 +1,43 @@
-import {
-  Code2,
-  Database,
-  Rocket,
-  Users,
-  GraduationCap,
-  MapPin,
-  Sparkles,
-  HeartHandshake,
-} from 'lucide-react';
+import { Code2, Database, Rocket, Users } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { SpotlightGroup } from '@/components/ui/spotlight-group';
+import { SectionCaption } from '@/components/shared/SectionCaption';
 import { ScrollReveal } from '@/components/ScrollReveal';
 
 const About = () => {
   const skills = [
     {
       icon: Code2,
-      color: 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20',
+      color:
+        'text-cyan-600 dark:text-cyan-400 bg-cyan-500/10 border-cyan-500/20 shadow-[0_0_24px_-6px_rgba(34,211,238,0.55)]',
+      watermark: 'text-cyan-500',
       title: 'Full-Stack Development',
       description:
         'Building modern, responsive apps with Angular, React, and TypeScript. I enjoy creating smooth, fast experiences for users.',
     },
     {
       icon: Database,
-      color: 'text-purple-400 bg-purple-500/10 border-purple-500/20',
+      color:
+        'text-purple-600 dark:text-purple-400 bg-purple-500/10 border-purple-500/20 shadow-[0_0_24px_-6px_rgba(168,85,247,0.55)]',
+      watermark: 'text-purple-500',
       title: 'Backend & Architecture',
       description:
         'Creating solid backend APIs and services with C#, Node, and Java. Comfortable working with both SQL and NoSQL databases.',
     },
     {
       icon: Rocket,
-      color: 'text-sky-400 bg-sky-500/10 border-sky-500/20',
+      color:
+        'text-sky-600 dark:text-sky-400 bg-sky-500/10 border-sky-500/20 shadow-[0_0_24px_-6px_rgba(56,189,248,0.55)]',
+      watermark: 'text-sky-500',
       title: 'Cloud & DevOps',
       description:
         'Deploying apps to AWS and Azure, and keeping things running smoothly with CI/CD pipelines.',
     },
     {
       icon: Users,
-      color: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20',
+      color:
+        'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20 shadow-[0_0_24px_-6px_rgba(52,211,153,0.55)]',
+      watermark: 'text-emerald-500',
       title: 'Team Collaboration',
       description:
         'Easy to work with and big on communication. My teaching background helps me explain things clearly and work well with any team.',
@@ -71,12 +72,19 @@ const About = () => {
               delay={0.1}
               className="space-y-6 text-lg leading-relaxed text-foreground/90"
             >
+              <SectionCaption command="cat about.md" />
               <p>
-                I first studied psychology to understand how people think, then
-                got into programming to understand how computers think. Teaching
-                preschoolers with special needs taught me patience, empathy, and
-                how to break down complex ideas—skills I bring into the way I
-                write code and build software.
+                I first studied psychology to understand{' '}
+                <strong className="font-semibold text-foreground">
+                  how people think
+                </strong>
+                , then got into programming to understand{' '}
+                <strong className="font-semibold text-foreground">
+                  how computers think
+                </strong>
+                . Teaching preschoolers with special needs taught me patience,
+                empathy, and how to break down complex ideas—skills I bring into
+                the way I write code and build software.
               </p>
               <p>
                 As a full‑stack engineer, I’ve worked with Angular, React, C#,
@@ -90,13 +98,18 @@ const About = () => {
             </ScrollReveal>
 
             {/* Core Capability Cards Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <SpotlightGroup className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {skills.map((skill, index) => {
                 const Icon = skill.icon;
                 return (
                   <ScrollReveal key={skill.title} delay={0.2 + index * 0.1}>
-                    <Card className="glass-card h-full rounded-2xl border border-slate-200/90 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 card-glow shadow-sm">
-                      <CardContent className="p-6">
+                    <Card className="spotlight-card glass-card group overflow-hidden h-full rounded-2xl border border-slate-200/90 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 card-glow shadow-sm">
+                      {/* Oversized icon watermark */}
+                      <Icon
+                        aria-hidden="true"
+                        className={`absolute -right-5 -bottom-5 w-28 h-28 opacity-[0.09] dark:opacity-[0.07] transition-transform duration-500 ease-out group-hover:scale-110 group-hover:-rotate-6 ${skill.watermark}`}
+                      />
+                      <CardContent className="relative p-6">
                         <div
                           className={`w-11 h-11 rounded-xl flex items-center justify-center border mb-4 ${skill.color}`}
                         >
@@ -113,7 +126,7 @@ const About = () => {
                   </ScrollReveal>
                 );
               })}
-            </div>
+            </SpotlightGroup>
           </div>
         </div>
       </div>

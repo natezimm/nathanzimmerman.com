@@ -18,7 +18,12 @@ const Index = () => {
 
       <div className="relative z-10">
         <Navigation />
-        <main>
+        <main className="relative">
+          {/* The hero's grid, continued faintly behind the rest of the page */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 pointer-events-none bg-[linear-gradient(to_right,#80808015_1px,transparent_1px),linear-gradient(to_bottom,#80808015_1px,transparent_1px)] bg-[size:28px_28px] opacity-75"
+          />
           <Hero />
           <About />
           <Experience />

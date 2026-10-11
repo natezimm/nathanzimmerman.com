@@ -24,4 +24,23 @@ describe('Experience section', () => {
       screen.getByText('Delivered customer-facing mortgage platform features.')
     ).toBeInTheDocument();
   });
+
+  it('draws the career as a git graph with one lane segment per role', () => {
+    render(<Experience />);
+
+    expect(screen.getByText('5 commits · 1 branch switch')).toBeInTheDocument();
+    expect(screen.getByText('HEAD → main')).toBeInTheDocument();
+    expect(screen.getAllByTestId('career-lane')).toHaveLength(3);
+    expect(screen.getByText('git checkout -b engineering')).toBeInTheDocument();
+  });
+
+  it('shows the path before engineering below the branch point', () => {
+    render(<Experience />);
+
+    expect(
+      screen.getByRole('heading', { name: 'Before engineering' })
+    ).toBeInTheDocument();
+    expect(screen.getByText('Special education teacher')).toBeInTheDocument();
+    expect(screen.getByText('Studied psychology')).toBeInTheDocument();
+  });
 });
