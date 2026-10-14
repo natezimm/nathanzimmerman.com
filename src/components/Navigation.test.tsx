@@ -84,6 +84,8 @@ describe('Navigation', () => {
     fireEvent.click(screen.getByLabelText('Toggle menu'));
     const mobileMenu = screen.getByTestId('mobile-menu');
     expect(mobileMenu).toBeInTheDocument();
+    expect(nav).toHaveClass('bg-background');
+    expect(nav).not.toHaveClass('glass');
 
     fireEvent.click(
       within(mobileMenu).getByRole('button', { name: 'Contact' })
