@@ -262,5 +262,14 @@ describe('Hero section', () => {
         screen.getByRole('link', { name: /Play the full Brick Breaker Resume/ })
       ).toHaveAttribute('href', 'https://resume.nathanzimmerman.com');
     });
+
+    it('links the PDF resume directly from the hero', () => {
+      render(<Hero />);
+
+      expect(screen.getByRole('link', { name: /Resume PDF/ })).toHaveAttribute(
+        'href',
+        '/resume.pdf'
+      );
+    });
   });
 });

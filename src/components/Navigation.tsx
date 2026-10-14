@@ -41,7 +41,13 @@ const Navigation = () => {
     <nav
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-        isScrolled ? 'glass shadow-lg py-2.5' : 'bg-transparent py-4'
+        isScrolled ? 'py-2.5' : 'py-4',
+        // The open mobile drawer needs a solid backdrop so it never sits over hero text.
+        isMobileMenuOpen
+          ? 'bg-background shadow-lg border-b border-border/60'
+          : isScrolled
+            ? 'glass shadow-lg'
+            : 'bg-transparent'
       )}
     >
       <div className="container mx-auto px-4 sm:px-6">

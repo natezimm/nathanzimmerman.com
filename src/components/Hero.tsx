@@ -3,7 +3,9 @@ import {
   Linkedin,
   ArrowDown,
   ArrowRight,
+  ArrowUpRight,
   Activity,
+  FileText,
   Gamepad2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -277,19 +279,31 @@ const Hero = () => {
               </div>
             </div>
 
-            {/* Brick Breaker Tie-In */}
-            <a
-              href={BRICK_BREAKER_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="animate-rise [--rise-delay:660ms] group/game inline-flex items-center gap-2.5 text-sm font-medium text-sky-700 dark:text-sky-300 hover:text-sky-600 dark:hover:text-sky-200 transition-colors"
-            >
-              <Gamepad2 className="w-[18px] h-[18px] shrink-0" />
-              <span>
-                Those bricks are my stack. Play the full Brick Breaker Resume
-              </span>
-              <ArrowRight className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover/game:translate-x-1" />
-            </a>
+            {/* Resume links: the playable Brick Breaker version and the PDF */}
+            <div className="animate-rise [--rise-delay:660ms] flex flex-wrap items-center justify-center lg:justify-start gap-x-5 gap-y-3">
+              <a
+                href={BRICK_BREAKER_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group/game inline-flex items-center gap-2.5 text-sm font-medium text-sky-700 dark:text-sky-300 hover:text-sky-600 dark:hover:text-sky-200 transition-colors"
+              >
+                <Gamepad2 className="w-[18px] h-[18px] shrink-0" />
+                <span>
+                  Those bricks are my stack. Play the full Brick Breaker Resume
+                </span>
+                <ArrowRight className="w-4 h-4 shrink-0 transition-transform duration-300 group-hover/game:translate-x-1" />
+              </a>
+              <a
+                href="/resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 dark:border-white/15 bg-slate-100/70 dark:bg-white/5 hover:bg-slate-200/70 dark:hover:bg-white/10 text-sm font-medium text-foreground px-4 py-2 transition-all hover:scale-105 shadow-sm"
+              >
+                <FileText className="w-4 h-4 text-sky-500 dark:text-sky-400" />
+                <span>Resume PDF</span>
+                <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
+              </a>
+            </div>
           </div>
 
           {/* Right Column: Playable Portrait Card */}
