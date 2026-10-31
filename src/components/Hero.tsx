@@ -175,112 +175,117 @@ const Hero = () => {
       {/* Hero Content */}
       <div className="relative z-10 container px-4 sm:px-6 mx-auto animate-fade-in">
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center max-w-6xl mx-auto">
-          {/* Left Column: Headlines, Role typing, Bio, CTAs */}
-          <div className="lg:col-span-7 text-center lg:text-left space-y-6">
-            {/* Live Role Badge */}
-            <div className="animate-rise inline-flex items-center gap-2.5 rounded-full border border-sky-400/40 dark:border-sky-400/35 bg-sky-500/10 dark:bg-sky-500/15 px-4 py-1.5 text-xs sm:text-sm font-semibold sm:font-medium text-sky-700 dark:text-sky-200 shadow-sm backdrop-blur-md">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-              </span>
-              <span>Software Engineer II @ Nelnet</span>
-            </div>
+          {/* Left Column: Headlines, Role typing, Bio, CTAs. On mobile the
+              column dissolves so the resume links can sit below the card. */}
+          <div className="contents lg:block lg:col-span-7 text-center lg:text-left lg:space-y-6">
+            <div className="space-y-6">
+              {/* Live Role Badge */}
+              <div className="animate-rise inline-flex items-center gap-2.5 rounded-full border border-sky-400/40 dark:border-sky-400/35 bg-sky-500/10 dark:bg-sky-500/15 px-4 py-1.5 text-xs sm:text-sm font-semibold sm:font-medium text-sky-700 dark:text-sky-200 shadow-sm backdrop-blur-md">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+                </span>
+                <span>Software Engineer II @ Nelnet</span>
+              </div>
 
-            {/* Main Greeting */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight font-heading leading-[1.1]">
-              {GREETING_WORDS.map(({ word, delay }) => (
-                <Fragment key={word}>
-                  <span className={`animate-rise inline-block ${delay}`}>
-                    {word}
-                  </span>{' '}
-                </Fragment>
-              ))}
-              <span className="animate-rise inline-block [--rise-delay:320ms]">
-                <span className="gradient-text gradient-text-live">Nathan</span>
-                .
-              </span>
-            </h1>
+              {/* Main Greeting */}
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight font-heading leading-[1.1]">
+                {GREETING_WORDS.map(({ word, delay }) => (
+                  <Fragment key={word}>
+                    <span className={`animate-rise inline-block ${delay}`}>
+                      {word}
+                    </span>{' '}
+                  </Fragment>
+                ))}
+                <span className="animate-rise inline-block [--rise-delay:320ms]">
+                  <span className="gradient-text gradient-text-live">
+                    Nathan
+                  </span>
+                  .
+                </span>
+              </h1>
 
-            {/* Accessible Typing Subtitle */}
-            <p
-              className="animate-rise [--rise-delay:420ms] text-xl sm:text-2xl md:text-3xl text-muted-foreground font-light min-h-[1.5em]"
-              aria-label={fullRolesText}
-            >
-              <span
-                aria-hidden="true"
-                className="inline-flex items-center font-heading"
+              {/* Accessible Typing Subtitle */}
+              <p
+                className="animate-rise [--rise-delay:420ms] text-xl sm:text-2xl md:text-3xl text-muted-foreground font-light min-h-[1.5em]"
+                aria-label={fullRolesText}
               >
-                {displayText}
                 <span
-                  className="inline-block w-[3px] h-[1em] bg-sky-400 ml-1 animate-blink"
                   aria-hidden="true"
-                />
-              </span>
-              {/* Visually hidden text for screen readers */}
-              <span className="sr-only">{fullRolesText}</span>
-            </p>
-
-            {/* Bio Paragraph */}
-            <p className="animate-rise [--rise-delay:500ms] text-base sm:text-lg text-foreground/85 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-              Former special education teacher turned software engineer,
-              bringing empathy and clear thinking to enterprise fintech. I build
-              clean, reliable systems from frontend interfaces to backend
-              microservices.
-            </p>
-
-            {/* Buttons & Socials */}
-            <div className="animate-rise [--rise-delay:580ms] pt-2">
-              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
-                <Button
-                  size="lg"
-                  className="relative overflow-hidden h-12 px-8 text-base rounded-full bg-primary text-primary-foreground font-medium shadow-lg shadow-sky-500/20 hover:shadow-sky-500/35 transition-all duration-300 hover:-translate-y-0.5"
-                  onClick={() => scrollToSection('projects')}
+                  className="inline-flex items-center font-heading"
                 >
-                  View My Work
+                  {displayText}
                   <span
+                    className="inline-block w-[3px] h-[1em] bg-sky-400 ml-1 animate-blink"
                     aria-hidden="true"
-                    className="animate-sheen absolute inset-y-0 left-0 w-2/5 bg-gradient-to-r from-transparent via-sky-400/40 to-transparent pointer-events-none"
                   />
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="h-12 px-8 text-base rounded-full border border-slate-300 dark:border-white/20 bg-slate-100/70 dark:bg-white/5 hover:bg-slate-200/70 dark:hover:bg-white/10 text-foreground backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 shadow-sm"
-                  onClick={() => scrollToSection('contact')}
-                >
-                  Get In Touch
-                </Button>
+                </span>
+                {/* Visually hidden text for screen readers */}
+                <span className="sr-only">{fullRolesText}</span>
+              </p>
 
-                <div className="flex items-center gap-2.5 pl-1">
-                  {[
-                    {
-                      href: 'https://github.com/natezimm',
-                      icon: Github,
-                      label: 'GitHub',
-                    },
-                    {
-                      href: 'https://www.linkedin.com/in/zimmermannathan',
-                      icon: Linkedin,
-                      label: 'LinkedIn',
-                    },
-                  ].map(({ href, icon: Icon, label }) => (
-                    <a
-                      key={label}
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center w-11 h-11 rounded-full border border-slate-300 dark:border-white/15 bg-slate-100/70 dark:bg-white/5 text-muted-foreground hover:text-foreground hover:border-sky-500 dark:hover:border-sky-400/50 hover:bg-slate-200/70 dark:hover:bg-white/10 transition-all duration-300 hover:scale-105 shadow-sm"
-                      aria-label={label}
-                    >
-                      <Icon className="w-5 h-5" />
-                    </a>
-                  ))}
+              {/* Bio Paragraph */}
+              <p className="animate-rise [--rise-delay:500ms] text-base sm:text-lg text-foreground/85 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                Former special education teacher turned software engineer,
+                bringing empathy and clear thinking to enterprise fintech. I
+                build clean, reliable systems from frontend interfaces to
+                backend microservices.
+              </p>
+
+              {/* Buttons & Socials */}
+              <div className="animate-rise [--rise-delay:580ms] pt-2">
+                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
+                  <Button
+                    size="lg"
+                    className="relative overflow-hidden h-12 px-8 text-base rounded-full bg-primary text-primary-foreground font-medium shadow-lg shadow-sky-500/20 hover:shadow-sky-500/35 transition-all duration-300 hover:-translate-y-0.5"
+                    onClick={() => scrollToSection('projects')}
+                  >
+                    View My Work
+                    <span
+                      aria-hidden="true"
+                      className="animate-sheen absolute inset-y-0 left-0 w-2/5 bg-gradient-to-r from-transparent via-sky-400/40 to-transparent pointer-events-none"
+                    />
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="h-12 px-8 text-base rounded-full border border-slate-300 dark:border-white/20 bg-slate-100/70 dark:bg-white/5 hover:bg-slate-200/70 dark:hover:bg-white/10 text-foreground backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 shadow-sm"
+                    onClick={() => scrollToSection('contact')}
+                  >
+                    Get In Touch
+                  </Button>
+
+                  <div className="flex items-center gap-2.5 pl-1">
+                    {[
+                      {
+                        href: 'https://github.com/natezimm',
+                        icon: Github,
+                        label: 'GitHub',
+                      },
+                      {
+                        href: 'https://www.linkedin.com/in/zimmermannathan',
+                        icon: Linkedin,
+                        label: 'LinkedIn',
+                      },
+                    ].map(({ href, icon: Icon, label }) => (
+                      <a
+                        key={label}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center w-11 h-11 rounded-full border border-slate-300 dark:border-white/15 bg-slate-100/70 dark:bg-white/5 text-muted-foreground hover:text-foreground hover:border-sky-500 dark:hover:border-sky-400/50 hover:bg-slate-200/70 dark:hover:bg-white/10 transition-all duration-300 hover:scale-105 shadow-sm"
+                        aria-label={label}
+                      >
+                        <Icon className="w-5 h-5" />
+                      </a>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Resume links: the playable Brick Breaker version and the PDF */}
-            <div className="animate-rise [--rise-delay:660ms] flex flex-wrap items-center justify-center lg:justify-start gap-x-5 gap-y-3">
+            <div className="animate-rise [--rise-delay:660ms] order-last lg:order-none flex flex-wrap items-center justify-center lg:justify-start gap-x-5 gap-y-3">
               <a
                 href={BRICK_BREAKER_URL}
                 target="_blank"
