@@ -11,19 +11,19 @@ describe('Projects section', () => {
     expect(screen.getByText('Blackjack')).toBeInTheDocument();
     expect(screen.getByText('Sudoku')).toBeInTheDocument();
     expect(screen.getAllByText('Code')).toHaveLength(4);
-    expect(screen.getAllByText('Live Demo')).toHaveLength(4);
+    expect(screen.getAllByText('Live Demo')).toHaveLength(1);
   });
 
-  it('marks every project playable and offers a hover shortcut to its demo', () => {
+  it('marks only projects with a live demo playable, with a hover shortcut', () => {
     const { container } = render(<Projects />);
 
     expect(
-      screen.getByText('4 games · playable in your browser')
+      screen.getByText('4 games · 1 playable in your browser')
     ).toBeInTheDocument();
-    expect(screen.getAllByText('Playable')).toHaveLength(4);
+    expect(screen.getAllByText('Playable')).toHaveLength(1);
 
     const shortcuts = container.querySelectorAll('a[aria-hidden="true"]');
-    expect(shortcuts).toHaveLength(4);
+    expect(shortcuts).toHaveLength(1);
     expect(shortcuts[0]).toHaveAttribute(
       'href',
       'https://resume.nathanzimmerman.com'
