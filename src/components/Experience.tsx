@@ -1,23 +1,15 @@
-import {
-  careerOriginItems,
-  experienceItems,
-  type ViewMode,
-} from '@/data/portfolioData';
+import { careerOriginItems, experienceItems } from '@/data/portfolioData';
 import { Calendar, Building2 } from 'lucide-react';
 import { MotionConfig, motion } from 'framer-motion';
 import { SpotlightGroup } from '@/components/ui/spotlight-group';
 import { SectionCaption } from '@/components/shared/SectionCaption';
 import { ScrollReveal } from '@/components/ScrollReveal';
 
-type ExperienceProps = {
-  viewMode?: ViewMode;
-};
-
 // Vertical-only margin: the lane sits at the screen edge on phones.
 const LANE_VIEWPORT = { once: true, margin: '-80px 0px' };
 const LANE_EASE = [0.16, 1, 0.3, 1] as const;
 
-const Experience = ({ viewMode: _viewMode }: ExperienceProps) => {
+const Experience = () => {
   const commitCount = experienceItems.length + careerOriginItems.length;
 
   return (

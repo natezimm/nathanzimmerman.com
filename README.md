@@ -1,15 +1,25 @@
+# Nathan Zimmerman, portfolio
+
+My portfolio at [nathanzimmerman.com](https://nathanzimmerman.com): a React and TypeScript single-page site that features my projects with live demos, screen recordings and a case study page for each.
+
 [![CI](https://github.com/natezimm/nathanzimmerman.com/actions/workflows/deploy.yml/badge.svg)](https://github.com/natezimm/nathanzimmerman.com/actions/workflows/deploy.yml)
-[![Coverage](https://img.shields.io/badge/coverage-checked-brightgreen)](#testing--quality)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Live site](https://img.shields.io/badge/site-nathanzimmerman.com-0369a1)](https://nathanzimmerman.com)
 
-# Nathan Zimmerman - Portfolio Website
+## What's on it
 
-Personal portfolio built with React, TypeScript, and Vite. The single-page experience ties together navigation, hero, about, projects, and contact sections with responsive layouts, theme persistence, and subtle animation hooks powered by Radix UI primitives, Lucide icons, and Sonner toasts. See [`docs/architecture.md`](docs/architecture.md) for runtime boundaries, quality gates, deployment flow, and deferred architecture follow-ups.
+- **A playable hero**: the portrait card is a small Brick Breaker game that pauses off screen and under reduced motion.
+- **Featured projects**: [Wheelhouse](https://calendar.nathanzimmerman.com), [Know Ball](https://knowball.nathanzimmerman.com), [Rabbit Ears](https://rabbitears.nathanzimmerman.com) and [Brick Breaker Resume](https://resume.nathanzimmerman.com). Each card plays a short recording on hover and links to its demo, its code and a case study at `/projects/<slug>` with the problem, engineering highlights and architecture diagram.
+- **Earlier projects**: Nerdle, Sudoku and Blackjack, whose demos are retired, with links to their code.
+- **Experience** as a git graph, a contact form through EmailJS, and light and dark themes.
+
+See [`docs/architecture.md`](docs/architecture.md) for runtime boundaries, quality gates, deployment and how the five project repositories are hosted.
 
 ## Quick start
 
-1. `npm install`
+1. `npm ci`
 2. `npm run dev`
-3. Open `http://localhost:5173` (or the port Vite reports) to start exploring the live preview.
+3. Open `http://localhost:8081`.
 
 ## Available scripts
 
@@ -20,13 +30,14 @@ Personal portfolio built with React, TypeScript, and Vite. The single-page exper
 - `npm run lint` - ESLint across the whole workspace (powered by `@eslint/js` + TypeScript).
 - `npm run format` / `npm run format:check` - Prettier write/check modes using the shared repo style.
 - `npm run typecheck` - TypeScript compilation with `noEmit`.
-- `npm run quality` - Full gate: format check, lint, typecheck, coverage, and production build.
+- `npm run quality` - Full gate: format check, lint, typecheck, coverage, and the Playwright suite against a production build.
 - `npm run test` - Vitest suite covering shared helpers, context, and visible sections.
 - `npm run test:watch` – Watch mode for the Vitest suite.
-- `npm run test:coverage` – Vitest with coverage reporting via `c8`.
+- `npm run test:coverage` – Vitest with V8 coverage and the thresholds in `vite.config.ts`.
 - `npm run test:e2e` – Playwright end-to-end tests against a production preview.
 - `npm run test:e2e:headed` / `npm run test:e2e:ui` – Debug Playwright in headed or UI mode.
 - `npm run images:project -- <screenshot.png> <slug>` – Convert a project screenshot into the site's image set (see below).
+- `npm run diagrams` – Render `docs/diagrams/*.mmd` to the SVGs the case studies show (set `PUPPETEER_EXECUTABLE_PATH` to use an installed Chromium).
 
 ## Project screenshots
 
@@ -43,26 +54,39 @@ That writes to `src/assets/`:
 | `project-<slug>.png`                                     | original     | Source, kept so the set can be regenerated; not bundled |
 | `project-<slug>.avif`, `project-<slug>.webp`             | 1200 px wide | `1200w` srcset entry                                    |
 | `project-<slug>-small.avif`, `project-<slug>-small.webp` | 600 px wide  | `600w` srcset entry                                     |
-| `project-<slug>-detail.webp`                             | original     | Only with `--detail`, for a project's `detailMedia`     |
 
-The slug is lowercase with dashes and becomes the file name, so rerunning with an existing slug replaces that project's images in place. Import the new files where the card is defined (`src/components/Projects.tsx`, and `src/data/portfolioData.ts` for `media`). Settings live at the top of `scripts/project-images.mjs`.
+The slug is lowercase with dashes and becomes the file name, so rerunning with an existing slug replaces that project's images in place. Import the new files in `src/data/portfolioData.ts`, which both the card and the case study read. Settings live at the top of `scripts/project-images.mjs`.
 
-## Tech snapshot
+## Adding a featured project
 
-- **React 18 + React Router DOM** – component-driven routing for the index/404 experience.
-- **TypeScript + Vite** – fast compilation, native ESM, and debug-friendly source maps.
-- **Tailwind CSS** (with `tailwindcss-animate` and `@tailwindcss/typography`) – utility-first styling layered on top of a `src/index.css` foundation.
-- **Radix UI + cmdk + Lucide + Sonner** – accessible UI primitives, command-style navigation, icons, and toast notifications.
-- **React Query** – caching/query client wrappers around any asynchronous interactions (even if primarily local for now).
-- **@emailjs/browser** – client-side contact form submission.
+A project needs four things, all referenced from its entry in `projectEntries` in `src/data/portfolioData.ts`:
+
+1. A screenshot set from `npm run images:project`.
+2. A short silent MP4 (about 20 seconds, 1280 px wide, no audio) in `src/assets/video/`.
+3. Its containers diagram: copy the Mermaid block from the project's README into `docs/diagrams/<slug>.mmd` and run `npm run diagrams`.
+4. The card summary, the case study's problem, features and highlights, and its live, code and architecture links.
+
+Add its URL to `public/sitemap.xml`.
+
+## Tech stack
+
+| Area    | Tools                                                                |
+| ------- | -------------------------------------------------------------------- |
+| App     | React 18, TypeScript, Vite, React Router (home and case study pages) |
+| Styling | Tailwind CSS with `tailwindcss-animate`, Framer Motion, Lucide icons |
+| UI      | A few shadcn-style primitives on Radix Slot, Sonner toasts           |
+| Contact | `@emailjs/browser`                                                   |
+| Quality | Vitest and Testing Library, Playwright, ESLint, Prettier             |
 
 ## Project layout
 
 - `src/components/` – Hero, About, Projects, Contact, Footer, and shared UI primitives (including a theme toggle).
 - `src/contexts/ThemeContext.tsx` – theme persistence, system preference detection, and toggles wrapped around the app.
-- `src/pages/` – `Index` for the main landing flow; `NotFound` for wildcard routes.
+- `src/pages/` – `Index` for the home page, `ProjectDetail` for case studies at `/projects/:slug`, `NotFound` for everything else.
+- `src/data/portfolioData.ts` – featured and earlier projects, and the experience timeline.
 - `src/lib/` – utilities such as `cn()` (clsx + tailwind-merge) helpers used throughout.
-- `public/` & `assets/` – statics served directly by Vite.
+- `src/assets/` – screenshots, recordings (`video/`) and rendered diagrams (`diagrams/`); `public/` is served as is.
+- `docs/diagrams/` – Mermaid sources for the case study diagrams.
 
 ## Testing & quality
 
@@ -79,7 +103,7 @@ Tooling:
 - Vitest + Testing Library for component, context, and integration tests
 - Playwright for cross-viewport end-to-end smoke coverage
 - ESLint for consistent TypeScript and React conventions
-- Prettier for shared formatting across the portfolio and sibling repos
+- Prettier for formatting
 
 ## Security
 
@@ -107,4 +131,8 @@ The site implements multiple layers of security:
 
 ## Deployment
 
-Use `npm run build` to generate the production bundle in `dist/` and deploy that folder to any static host (GCP, Vercel, etc.). The repo is set up for modern static deployments with HTTPS offloading handled by your environment.
+Every push to `main` runs the quality gate in GitHub Actions, then rsyncs `dist/` to the GCP VM, where nginx serves it over HTTPS, and checks that the site answers. nginx falls back to `index.html` so case study URLs load directly. See [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
+
+## License
+
+[MIT](LICENSE)

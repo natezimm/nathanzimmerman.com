@@ -1,0 +1,24 @@
+flowchart LR
+  Browser["Browser<br/>Angular 22 app, service worker"] -->|"HTTPS"| Nginx["Host nginx<br/>TLS, X-Forwarded-For"]
+  Nginx -->|"127.0.0.1:8090"| Api["KnowBall.Api<br/>minimal API + static Angular build"]
+  Api --> Db[("PostgreSQL 17<br/>players, puzzles, results, rounds")]
+  Importer["KnowBall.Importer<br/>nightly worker, 04:00 Eastern"] --> Db
+  Importer --> Sources["Basketball-Reference mirror<br/>Wikidata, ESPN"]
+
+  subgraph Vm["GCP VM, Docker Compose"]
+    Nginx
+    Api
+    Importer
+    Db
+  end
+
+  classDef client fill:#dcfce7,stroke:#15803d,color:#14532d
+  classDef server fill:#ffedd5,stroke:#c2410c,color:#7c2d12
+  classDef data fill:#fef3c7,stroke:#b45309,color:#78350f
+  classDef site fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
+  classDef external fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d
+  class Browser client
+  class Nginx site
+  class Api,Importer server
+  class Db data
+  class Sources external

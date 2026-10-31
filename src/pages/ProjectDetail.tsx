@@ -1,158 +1,263 @@
-import { ArrowLeft, ExternalLink, FileText, Github } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { projectBySlug } from '@/data/portfolioData';
+import {
+  ArrowLeft,
+  ArrowRight,
+  ExternalLink,
+  FileText,
+  Github,
+} from 'lucide-react';
+import { projectBySlug, projectEntries } from '@/data/portfolioData';
 import { trackPortfolioEvent } from '@/lib/analytics';
-import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import { SectionCaption } from '@/components/shared/SectionCaption';
+import ThemeToggle from '@/components/ThemeToggle';
+import Footer from '@/components/Footer';
 import NotFound from './NotFound';
-import { ProjectImage } from '@/components/shared/ProjectImage';
+
+const prefersReducedMotion = () =>
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const outlineButton =
+  'rounded-lg border-slate-300 dark:border-white/15 bg-slate-100/80 dark:bg-white/5 hover:bg-slate-200/80 dark:hover:bg-white/10 text-foreground hover:border-sky-500 dark:hover:border-sky-400/50';
 
 const ProjectDetail = () => {
   const { slug = '' } = useParams();
   const project = projectBySlug(slug);
+  const [autoPlay] = useState(() => !prefersReducedMotion());
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    if (!project) return;
+    const previousTitle = document.title;
+    document.title = `${project.title} case study · Nathan Zimmerman`;
+    return () => {
+      document.title = previousTitle;
+    };
+  }, [project]);
 
   if (!project) {
     return <NotFound />;
   }
 
+  const index = projectEntries.indexOf(project);
+  const next = projectEntries[(index + 1) % projectEntries.length];
+
+  const track = (
+    name: 'project_live_click' | 'project_code_click' | 'project_details_click'
+  ) =>
+    trackPortfolioEvent(name, {
+      project: project.slug,
+      source: 'project_detail',
+    });
+
   return (
-    <div className="project-detail-page min-h-screen">
-      <header className="detail-topbar sticky top-0 z-40 border-b border-cyan-300/20 bg-slate-950/90 backdrop-blur">
-        <div className="container mx-auto flex min-h-[66px] items-center justify-between gap-4 px-4">
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur">
+        <div className="container mx-auto flex h-16 items-center justify-between gap-4 px-4 sm:px-6">
           <Link
-            to="/"
-            className="retro-ui inline-flex items-center gap-2 text-xs text-cyan-100 hover:text-cyan-50"
+            to={{ pathname: '/', hash: '#projects' }}
+            className="inline-flex items-center gap-2 min-h-[44px] text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
-            BACK TO PORTFOLIO
+            All projects
           </Link>
-          <a
-            href="/resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() =>
-              trackPortfolioEvent('resume_click', { source: 'project_detail' })
-            }
-            className="retro-ui inline-flex items-center gap-2 rounded-sm border border-amber-300/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-100 hover:bg-amber-500/20"
-          >
-            <FileText className="h-4 w-4" />
-            RESUME
-          </a>
+          <ThemeToggle />
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-10">
-        <div className="detail-frame mx-auto max-w-6xl rounded-md border border-cyan-300/25 bg-slate-950/78 p-5 md:p-8">
-          <p className="retro-ui text-xs text-emerald-300/90">
-            {project.regionLabel}
-          </p>
-          <h1 className="retro-heading mt-2 text-3xl text-slate-50 md:text-5xl">
+      <main className="container mx-auto px-4 sm:px-6 py-10 md:py-14">
+        <article className="mx-auto max-w-5xl">
+          <SectionCaption
+            command={`cat ~/projects/${project.slug}/README.md`}
+            meta={project.kind}
+            className="mb-4"
+          />
+          <h1 className="text-4xl md:text-5xl font-bold font-heading tracking-tight">
             {project.title}
           </h1>
-          <p className="mt-3 max-w-3xl text-base text-slate-200 md:text-lg">
-            {project.summary}
+          <p className="mt-3 max-w-3xl text-lg text-muted-foreground">
+            {project.tagline}
           </p>
 
-          <div className="mt-6 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-            <section className="space-y-4">
-              <div
-                className={cn(
-                  'flex items-center justify-center overflow-hidden rounded-sm border border-slate-200/20',
-                  project.mediaBackground === 'dark'
-                    ? 'bg-emerald-950/80'
-                    : 'bg-white'
-                )}
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Button asChild>
+              <a
+                href={project.links.live}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => track('project_live_click')}
               >
-                <ProjectImage
-                  project={project}
-                  useDetail
-                  className="flex h-auto w-full items-center justify-center"
-                  imgClassName="h-auto w-full object-contain"
-                  sizes="(max-width: 1024px) 100vw, 750px"
-                  loading="eager"
-                />
-              </div>
+                <ExternalLink className="h-4 w-4 mr-2" />
+                {project.kind === 'Playable' ? 'Play it' : 'Try the demo'}
+              </a>
+            </Button>
+            <Button variant="outline" className={outlineButton} asChild>
+              <a
+                href={project.links.code}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => track('project_code_click')}
+              >
+                <Github className="h-4 w-4 mr-2" />
+                Code
+              </a>
+            </Button>
+            <Button variant="outline" className={outlineButton} asChild>
+              <a
+                href={project.links.architecture}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => track('project_details_click')}
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                Architecture docs
+              </a>
+            </Button>
+          </div>
 
-              <p className="rounded-sm border border-slate-200/10 bg-slate-900/70 p-4 text-sm leading-relaxed text-slate-200">
-                {project.description}
-              </p>
+          <figure className="mt-8 overflow-hidden rounded-2xl border border-slate-200/90 dark:border-white/10 bg-slate-950 shadow-sm">
+            <video
+              src={project.video}
+              poster={project.media.webp}
+              muted
+              loop
+              playsInline
+              controls
+              autoPlay={autoPlay}
+              preload={autoPlay ? 'auto' : 'none'}
+              aria-label={`Screen recording of ${project.title}`}
+              className="w-full aspect-[16/8.6] object-cover object-top"
+            />
+          </figure>
 
-              <div className="flex flex-wrap gap-3">
-                {project.links.live ? (
-                  <a
-                    href={project.links.live}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() =>
-                      trackPortfolioEvent('project_live_click', {
-                        project: project.slug,
-                        source: 'project_detail',
-                      })
-                    }
-                    className="detail-action detail-action-live"
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                    VIEW LIVE
-                  </a>
-                ) : (
-                  <span className="detail-action detail-action-muted">
-                    LIVE COMING SOON
-                  </span>
-                )}
-                {project.links.code ? (
-                  <a
-                    href={project.links.code}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() =>
-                      trackPortfolioEvent('project_code_click', {
-                        project: project.slug,
-                        source: 'project_detail',
-                      })
-                    }
-                    className="detail-action detail-action-code"
-                  >
-                    <Github className="h-4 w-4" />
-                    VIEW CODE
-                  </a>
-                ) : (
-                  <span className="detail-action detail-action-muted">
-                    PRIVATE CODEBASE
-                  </span>
-                )}
-              </div>
-            </section>
-
-            <aside className="space-y-4">
-              <article className="rounded-sm border border-emerald-300/20 bg-emerald-500/5 p-4">
-                <h2 className="retro-ui text-xs text-emerald-200">
-                  TECH STACK
+          <div className="mt-12 grid gap-10 lg:grid-cols-[1.4fr_1fr]">
+            <div className="space-y-10">
+              <section aria-labelledby="problem">
+                <h2
+                  id="problem"
+                  className="text-2xl font-semibold font-heading mb-3"
+                >
+                  The problem
                 </h2>
-                <ul className="mt-3 flex flex-wrap gap-2">
+                <p className="text-foreground/85 leading-relaxed">
+                  {project.problem}
+                </p>
+              </section>
+
+              <section aria-labelledby="highlights">
+                <h2
+                  id="highlights"
+                  className="text-2xl font-semibold font-heading mb-4"
+                >
+                  Engineering highlights
+                </h2>
+                <ul className="space-y-5">
+                  {project.highlights.map((highlight) => (
+                    <li
+                      key={highlight.title}
+                      className="border-l-2 border-sky-500/60 pl-4"
+                    >
+                      <h3 className="font-semibold">{highlight.title}</h3>
+                      <p className="mt-1 text-sm text-foreground/80 leading-relaxed">
+                        {highlight.detail}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            </div>
+
+            <aside className="space-y-6">
+              <section
+                aria-labelledby="features"
+                className="glass-card rounded-2xl border border-slate-200/90 dark:border-white/10 p-5"
+              >
+                <h2 id="features" className="font-semibold font-heading mb-3">
+                  What it does
+                </h2>
+                <ul className="space-y-2 text-sm text-foreground/85 list-disc pl-5 marker:text-sky-500">
+                  {project.features.map((feature) => (
+                    <li key={feature} className="leading-relaxed">
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+
+              <section
+                aria-labelledby="stack"
+                className="glass-card rounded-2xl border border-slate-200/90 dark:border-white/10 p-5"
+              >
+                <h2 id="stack" className="font-semibold font-heading mb-3">
+                  Tech stack
+                </h2>
+                <ul className="flex flex-wrap gap-1.5">
                   {project.stack.map((item) => (
                     <li
                       key={item}
-                      className="retro-ui rounded-sm border border-emerald-300/30 bg-emerald-600/10 px-2 py-1 text-[10px] text-emerald-100"
+                      className="px-2.5 py-0.5 text-xs font-medium bg-slate-100/90 dark:bg-secondary/80 border border-slate-200/80 dark:border-white/10 rounded-md"
                     >
                       {item}
                     </li>
                   ))}
                 </ul>
-              </article>
-
-              <article className="rounded-sm border border-cyan-300/20 bg-cyan-500/5 p-4">
-                <h2 className="retro-ui text-xs text-cyan-200">FEATURES</h2>
-                <ul className="mt-3 space-y-2 text-sm text-cyan-50/90">
-                  {project.features.map((feature) => (
-                    <li key={feature} className="leading-relaxed">
-                      • {feature}
-                    </li>
-                  ))}
-                </ul>
-              </article>
+              </section>
             </aside>
           </div>
-        </div>
+
+          <section aria-labelledby="architecture" className="mt-12">
+            <h2
+              id="architecture"
+              className="text-2xl font-semibold font-heading mb-4"
+            >
+              Architecture
+            </h2>
+            <figure className="rounded-2xl border border-slate-200/90 dark:border-white/10 bg-white p-4 md:p-6 overflow-x-auto">
+              <img
+                src={project.diagram}
+                alt={project.diagramAlt}
+                loading="lazy"
+                className="mx-auto w-full min-w-[640px] max-w-4xl h-auto"
+              />
+            </figure>
+            <p className="mt-3 text-sm text-muted-foreground">
+              The context, runtime sequence and delivery diagrams are in{' '}
+              <a
+                href={project.links.architecture}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline underline-offset-4"
+                onClick={() => track('project_details_click')}
+              >
+                docs/architecture.md
+              </a>
+              .
+            </p>
+          </section>
+
+          <nav
+            aria-label="More projects"
+            className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-border/60 pt-6"
+          >
+            <Link
+              to={{ pathname: '/', hash: '#projects' }}
+              className="inline-flex items-center gap-2 min-h-[44px] text-sm text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              All projects
+            </Link>
+            <Link
+              to={`/projects/${next.slug}`}
+              className="inline-flex items-center gap-2 min-h-[44px] text-sm font-medium text-primary hover:underline underline-offset-4"
+            >
+              Next: {next.title}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </nav>
+        </article>
       </main>
+      <Footer />
     </div>
   );
 };

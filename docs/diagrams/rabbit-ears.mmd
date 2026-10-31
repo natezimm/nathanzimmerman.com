@@ -1,0 +1,20 @@
+flowchart LR
+  Remote["Phone remote"] -->|"button presses"| Hub["TvHub<br/>SignalR"]
+  Hub --> Service["TvService<br/>one lock, broadcast on change"]
+  Service --> Television["Television<br/>pure state machine"]
+  Service --> Disk[("Media folders<br/>state.json")]
+  Hub -->|"full snapshots"| Remote
+  Hub -->|"full snapshots"| TvPage["Browser TV page<br/>WebGL CRT shader"]
+  TvPage -->|"ended, failed, position<br/>+ play token"| Hub
+  Service <-->|"snapshots in,<br/>end-file events out"| Mpv["mpv on the box<br/>IPC socket + CRT shader"]
+  Flirc["IR remote via Flirc"] -->|"key presses"| Mpv
+  Flirc -.->|"or, in a browser"| TvPage
+
+  classDef server fill:#ffedd5,stroke:#c2410c,color:#7c2d12
+  classDef client fill:#dcfce7,stroke:#15803d,color:#14532d
+  classDef data fill:#fef3c7,stroke:#b45309,color:#78350f
+  classDef external fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d
+  class Remote,Flirc,TvPage client
+  class Hub,Service,Television server
+  class Disk data
+  class Mpv external

@@ -4,7 +4,7 @@ import Experience from './Experience';
 
 describe('Experience section', () => {
   it('renders resume timeline entries', () => {
-    render(<Experience viewMode="map" />);
+    render(<Experience />);
 
     expect(
       screen.getByRole('heading', { name: /EXPERIENCE/i })

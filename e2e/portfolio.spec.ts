@@ -79,6 +79,47 @@ test.describe('portfolio experience', () => {
     ).toHaveAttribute('maxlength', '2000');
   });
 
+  test('opens a case study from a project card and comes back', async ({
+    page,
+  }) => {
+    await page.goto('/');
+
+    await page.getByRole('link', { name: 'Know Ball case study' }).click();
+    await expect(page).toHaveURL('/projects/know-ball');
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Know Ball' })
+    ).toBeVisible();
+    await expect(page.getByRole('link', { name: /Play it/ })).toHaveAttribute(
+      'href',
+      'https://knowball.nathanzimmerman.com'
+    );
+    await expect(
+      page.getByRole('img', { name: /KnowBall API/ })
+    ).toBeAttached();
+
+    await page.getByRole('link', { name: 'All projects' }).first().click();
+    await expect(page).toHaveURL('/#projects');
+    await expect(
+      page.getByRole('heading', { name: /Featured Projects/i })
+    ).toBeInViewport();
+  });
+
+  test('lists retired projects with code links only', async ({ page }) => {
+    await page.goto('/');
+
+    for (const name of ['Nerdle', 'Sudoku', 'Blackjack']) {
+      await expect(
+        page.getByRole('link', { name: `${name} code on GitHub` })
+      ).toHaveAttribute(
+        'href',
+        `https://github.com/natezimm/${name.toLowerCase()}`
+      );
+    }
+    await expect(page.locator('a[href*="nerdle.nathanzimmerman"]')).toHaveCount(
+      0
+    );
+  });
+
   test('shows a not found state for unknown routes', async ({ page }) => {
     await page.goto('/missing-page');
 

@@ -1,46 +1,70 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import ProjectDetail from './ProjectDetail';
 
-describe('ProjectDetail page', () => {
-  it('renders project with light background and handles external link clicks', () => {
-    render(
-      <MemoryRouter initialEntries={['/projects/nerdle']}>
+const renderAt = (path: string) =>
+  render(
+    <ThemeProvider>
+      <MemoryRouter initialEntries={[path]}>
         <Routes>
           <Route path="/projects/:slug" element={<ProjectDetail />} />
         </Routes>
       </MemoryRouter>
-    );
+    </ThemeProvider>
+  );
+
+describe('ProjectDetail page', () => {
+  it('shows a case study with links, highlights and the architecture diagram', () => {
+    renderAt('/projects/wheelhouse');
 
     expect(
-      screen.getByRole('heading', { name: /NERDLE/i })
+      screen.getByRole('heading', { level: 1, name: 'Wheelhouse' })
     ).toBeInTheDocument();
+    expect(document.title).toBe('Wheelhouse case study · Nathan Zimmerman');
 
-    const liveLink = screen.getByRole('link', { name: /VIEW LIVE/i });
-    expect(liveLink).toBeInTheDocument();
-    liveLink.click();
+    expect(screen.getByRole('link', { name: /Try the demo/ })).toHaveAttribute(
+      'href',
+      'https://calendar.nathanzimmerman.com'
+    );
+    expect(screen.getByRole('link', { name: /^Code$/ })).toHaveAttribute(
+      'href',
+      'https://github.com/natezimm/wheelhouse'
+    );
+    screen.getByRole('link', { name: /Try the demo/ }).click();
+    screen.getByRole('link', { name: /Architecture docs/ }).click();
 
-    const codeLink = screen.getByRole('link', { name: /VIEW CODE/i });
-    expect(codeLink).toBeInTheDocument();
-    codeLink.click();
-
-    const resumeLink = screen.getByRole('link', { name: /RESUME/i });
-    expect(resumeLink).toBeInTheDocument();
-    resumeLink.click();
+    expect(
+      screen.getByRole('heading', { name: 'Engineering highlights' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('img', { name: /proxies to the ASP.NET Core API/ })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText('Screen recording of Wheelhouse')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: /Next: Know Ball/ })
+    ).toHaveAttribute('href', '/projects/know-ball');
   });
 
-  it('renders project with dark background', () => {
-    render(
-      <MemoryRouter initialEntries={['/projects/blackjack']}>
-        <Routes>
-          <Route path="/projects/:slug" element={<ProjectDetail />} />
-        </Routes>
-      </MemoryRouter>
-    );
+  it('calls a game playable and wraps to the first project', () => {
+    renderAt('/projects/brick-breaker');
 
+    expect(screen.getByRole('link', { name: /Play it/ })).toHaveAttribute(
+      'href',
+      'https://resume.nathanzimmerman.com'
+    );
     expect(
-      screen.getByRole('heading', { name: /BLACKJACK/i })
-    ).toBeInTheDocument();
+      screen.getByRole('link', { name: /Next: Wheelhouse/ })
+    ).toHaveAttribute('href', '/projects/wheelhouse');
+  });
+
+  it('shows the not found page for a retired or unknown project', () => {
+    renderAt('/projects/nerdle');
+
+    expect(screen.queryByRole('heading', { name: 'Nerdle' })).toBeNull();
+    expect(screen.getByRole('heading', { name: '404' })).toBeInTheDocument();
   });
 });
