@@ -26,6 +26,26 @@ Personal portfolio built with React, TypeScript, and Vite. The single-page exper
 - `npm run test:coverage` – Vitest with coverage reporting via `c8`.
 - `npm run test:e2e` – Playwright end-to-end tests against a production preview.
 - `npm run test:e2e:headed` / `npm run test:e2e:ui` – Debug Playwright in headed or UI mode.
+- `npm run images:project -- <screenshot.png> <slug>` – Convert a project screenshot into the site's image set (see below).
+
+## Project screenshots
+
+Each project card serves AVIF and WebP at two widths through `<picture>` with a `600w, 1200w` srcset. To add or replace one, take a full-window screenshot (2880 px wide on a Retina display works well) and run:
+
+```sh
+npm run images:project -- ~/Desktop/know-ball.png know-ball
+```
+
+That writes to `src/assets/`:
+
+| File                                                     | Size         | Use                                                     |
+| -------------------------------------------------------- | ------------ | ------------------------------------------------------- |
+| `project-<slug>.png`                                     | original     | Source, kept so the set can be regenerated; not bundled |
+| `project-<slug>.avif`, `project-<slug>.webp`             | 1200 px wide | `1200w` srcset entry                                    |
+| `project-<slug>-small.avif`, `project-<slug>-small.webp` | 600 px wide  | `600w` srcset entry                                     |
+| `project-<slug>-detail.webp`                             | original     | Only with `--detail`, for a project's `detailMedia`     |
+
+The slug is lowercase with dashes and becomes the file name, so rerunning with an existing slug replaces that project's images in place. Import the new files where the card is defined (`src/components/Projects.tsx`, and `src/data/portfolioData.ts` for `media`). Settings live at the top of `scripts/project-images.mjs`.
 
 ## Tech snapshot
 

@@ -29,6 +29,7 @@ Run from this repository root. Node 22 is specified by both `.nvmrc` and `packag
 - Coverage: `npm run test:coverage` (Vitest/Testing Library).
 - Browser tests: `npm run test:e2e`; install Chromium first with `npx playwright install chromium` if needed.
 - Full CI gate: `npm run quality` runs formatting, lint, typecheck, coverage, and Playwright. Playwright normally builds and serves the production app; see the server-reuse caveat below.
+- Project screenshots: `npm run images:project -- <screenshot.png> <slug>` writes the PNG source plus 1200 px and 600 px AVIF/WebP to `src/assets/`; see the README's Project screenshots section.
 - Formatting: `npx prettier --check <files>` or `npx prettier --write <files>`. A scoped formatting check is sufficient for documentation-only edits.
 
 ## Behavior to preserve
