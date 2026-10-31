@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import Hero from '@/components/Hero';
 import About from '@/components/About';
@@ -7,6 +9,13 @@ import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 
 const Index = () => {
+  const { hash } = useLocation();
+
+  // Links back from a case study land on /#projects; scroll there once.
+  useEffect(() => {
+    if (hash) document.getElementById(hash.slice(1))?.scrollIntoView();
+  }, [hash]);
+
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-sky-500/20 selection:text-sky-300 relative">
       {/* Ambient page illumination */}

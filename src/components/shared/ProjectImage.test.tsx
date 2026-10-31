@@ -1,19 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { ProjectImage } from './ProjectImage';
-import type { ProjectEntry } from '@/data/portfolioData';
 
 describe('ProjectImage', () => {
-  const mockProject: ProjectEntry = {
-    slug: 'mock-game',
-    title: 'MOCK GAME',
-    subtitle: 'A Fun Mock Game',
-    regionLabel: 'Mock Zone',
-    summary: 'Mock game summary',
-    description: 'Mock game full description',
-    stack: ['React', 'TypeScript'],
-    features: ['Feature 1', 'Feature 2'],
-    links: { live: 'https://example.com' },
+  const mockProject = {
+    title: 'Mock Game',
     image: '/assets/mock.webp',
     media: {
       webp: '/assets/mock.webp',
@@ -21,56 +12,44 @@ describe('ProjectImage', () => {
       avif: '/assets/mock.avif',
       avifSmall: '/assets/mock-small.avif',
     },
-    mediaBackground: 'light',
-    accent: 'forest',
   };
 
-  it('renders a picture with AVIF and WebP sources and fallback img', () => {
+  it('renders a picture with AVIF and WebP sources and a small fallback img', () => {
     const { container } = render(
       <ProjectImage project={mockProject} imgClassName="test-img" />
     );
 
-    const picture = container.querySelector('picture');
-    expect(picture).toBeInTheDocument();
+    const avifSource = container.querySelector('source[type="image/avif"]');
+    expect(avifSource).toHaveAttribute(
+      'srcset',
+      '/assets/mock-small.avif 600w, /assets/mock.avif 1200w'
+    );
 
-    const avifSource = container.querySelector(
-      'source[type="image/avif"]'
-    ) as HTMLSourceElement | null;
-    expect(avifSource).toBeInTheDocument();
-    expect(avifSource?.srcset).toContain('/assets/mock-small.avif 600w');
-    expect(avifSource?.srcset).toContain('/assets/mock.avif 1200w');
+    const webpSource = container.querySelector('source[type="image/webp"]');
+    expect(webpSource).toHaveAttribute(
+      'srcset',
+      '/assets/mock-small.webp 600w, /assets/mock.webp 1200w'
+    );
 
-    const webpSource = container.querySelector(
-      'source[type="image/webp"]'
-    ) as HTMLSourceElement | null;
-    expect(webpSource).toBeInTheDocument();
-    expect(webpSource?.srcset).toContain('/assets/mock-small.webp 600w');
-    expect(webpSource?.srcset).toContain('/assets/mock.webp 1200w');
-
-    const img = screen.getByRole('img', { name: 'MOCK GAME screenshot' });
-    expect(img).toBeInTheDocument();
-    expect(img).toHaveAttribute('src', '/assets/mock.webp');
+    const img = screen.getByRole('img', { name: 'Mock Game screenshot' });
+    expect(img).toHaveAttribute('src', '/assets/mock-small.webp');
     expect(img).toHaveClass('test-img');
   });
 
-  it('uses detail image and detail media when useDetail is true', () => {
-    const mockWithDetail: ProjectEntry = {
-      ...mockProject,
-      detailImage: '/assets/mock-detail.webp',
-      detailMedia: {
-        webp: '/assets/mock-detail.webp',
-        avif: '/assets/mock-detail.avif',
-      },
-    };
-
+  it('uses single sources when there is no small size', () => {
     const { container } = render(
-      <ProjectImage project={mockWithDetail} useDetail />
+      <ProjectImage
+        project={{
+          ...mockProject,
+          media: { webp: '/assets/mock.webp' },
+        }}
+      />
     );
 
-    const img = screen.getByRole('img', { name: 'MOCK GAME screenshot' });
-    expect(img).toHaveAttribute('src', '/assets/mock-detail.webp');
-
-    const avifSource = container.querySelector('source[type="image/avif"]');
-    expect(avifSource).toHaveAttribute('srcset', '/assets/mock-detail.avif');
+    expect(container.querySelector('source[type="image/avif"]')).toBeNull();
+    expect(
+      container.querySelector('source[type="image/webp"]')
+    ).toHaveAttribute('srcset', '/assets/mock.webp');
+    expect(screen.getByRole('img')).toHaveAttribute('src', '/assets/mock.webp');
   });
 });

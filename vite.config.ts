@@ -22,13 +22,10 @@ export default defineConfig(({ mode }) => ({
           'vendor-router': ['react-router-dom'],
           'vendor-ui': [
             '@radix-ui/react-slot',
-            '@radix-ui/react-tooltip',
             'class-variance-authority',
             'clsx',
             'tailwind-merge',
           ],
-          'vendor-forms': ['react-hook-form', '@hookform/resolvers', 'zod'],
-          'vendor-query': ['@tanstack/react-query'],
         },
       },
     },

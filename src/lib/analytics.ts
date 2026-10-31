@@ -6,13 +6,11 @@ export type PortfolioEventName =
   | 'contact_link_click'
   | 'contact_submit_failure'
   | 'contact_submit_success'
-  | 'map_destination_open'
   | 'project_code_click'
   | 'project_details_click'
   | 'project_live_click'
   | 'resume_click'
-  | 'social_link_click'
-  | 'view_mode_change';
+  | 'social_link_click';
 
 type AnalyticsWindow = Window & {
   gtag?: (

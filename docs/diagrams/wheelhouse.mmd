@@ -1,0 +1,24 @@
+flowchart LR
+  Wall["Wall display<br/>Angular /wall"]
+  Phone["Phone and desktop<br/>Angular /"]
+  Web["web<br/>nginx: app, CSP,<br/>proxies /api and /hubs"]
+  Api["api<br/>ASP.NET Core 10<br/>minimal APIs, SignalR"]
+  Db[("PostgreSQL<br/>event cache,<br/>change numbers")]
+  Google["Google Calendar<br/>and sign-in"]
+  Meteo["Open-Meteo"]
+
+  Wall & Phone -->|"HTTPS and WebSocket"| Web --> Api
+  Api --> Db
+  Api <-->|"sync tokens,<br/>If-Match writes"| Google
+  Api --> Meteo
+
+  classDef client fill:#dcfce7,stroke:#15803d,color:#14532d
+  classDef site fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
+  classDef server fill:#ffedd5,stroke:#c2410c,color:#7c2d12
+  classDef data fill:#fef3c7,stroke:#b45309,color:#78350f
+  classDef external fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d
+  class Wall,Phone client
+  class Web site
+  class Api server
+  class Db data
+  class Google,Meteo external

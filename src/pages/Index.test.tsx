@@ -1,14 +1,17 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import Index from './Index';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 
 describe('Index page', () => {
   it('renders the main sections', async () => {
     render(
-      <ThemeProvider>
-        <Index />
-      </ThemeProvider>
+      <MemoryRouter>
+        <ThemeProvider>
+          <Index />
+        </ThemeProvider>
+      </MemoryRouter>
     );
 
     expect(

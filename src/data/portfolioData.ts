@@ -1,31 +1,30 @@
-import blackjackImgAvif from '@/assets/project-blackjack.avif';
-import blackjackImgAvifSmall from '@/assets/project-blackjack-small.avif';
-import blackjackImgWebp from '@/assets/project-blackjack.webp';
-import blackjackImgWebpSmall from '@/assets/project-blackjack-small.webp';
-
-import brickbreakerDetailImgWebp from '@/assets/project-brickbreaker-detail.webp';
 import brickbreakerImgAvif from '@/assets/project-brickbreaker.avif';
 import brickbreakerImgAvifSmall from '@/assets/project-brickbreaker-small.avif';
 import brickbreakerImgWebp from '@/assets/project-brickbreaker.webp';
 import brickbreakerImgWebpSmall from '@/assets/project-brickbreaker-small.webp';
+import brickbreakerVideo from '@/assets/video/brick-breaker.mp4';
+import brickbreakerDiagram from '@/assets/diagrams/brick-breaker.svg';
 
-import nerdleImgAvif from '@/assets/project-nerdle.avif';
-import nerdleImgAvifSmall from '@/assets/project-nerdle-small.avif';
-import nerdleImgWebp from '@/assets/project-nerdle.webp';
-import nerdleImgWebpSmall from '@/assets/project-nerdle-small.webp';
+import knowBallImgAvif from '@/assets/project-know-ball.avif';
+import knowBallImgAvifSmall from '@/assets/project-know-ball-small.avif';
+import knowBallImgWebp from '@/assets/project-know-ball.webp';
+import knowBallImgWebpSmall from '@/assets/project-know-ball-small.webp';
+import knowBallVideo from '@/assets/video/know-ball.mp4';
+import knowBallDiagram from '@/assets/diagrams/know-ball.svg';
 
-import sudokuImgAvif from '@/assets/project-sudoku.avif';
-import sudokuImgAvifSmall from '@/assets/project-sudoku-small.avif';
-import sudokuImgWebp from '@/assets/project-sudoku.webp';
-import sudokuImgWebpSmall from '@/assets/project-sudoku-small.webp';
+import rabbitEarsImgAvif from '@/assets/project-rabbit-ears.avif';
+import rabbitEarsImgAvifSmall from '@/assets/project-rabbit-ears-small.avif';
+import rabbitEarsImgWebp from '@/assets/project-rabbit-ears.webp';
+import rabbitEarsImgWebpSmall from '@/assets/project-rabbit-ears-small.webp';
+import rabbitEarsVideo from '@/assets/video/rabbit-ears.mp4';
+import rabbitEarsDiagram from '@/assets/diagrams/rabbit-ears.svg';
 
-export type ViewMode = 'map' | 'grid';
-export type SectionId =
-  | 'about'
-  | 'projects'
-  | 'experience'
-  | 'skills'
-  | 'contact';
+import wheelhouseImgAvif from '@/assets/project-wheelhouse.avif';
+import wheelhouseImgAvifSmall from '@/assets/project-wheelhouse-small.avif';
+import wheelhouseImgWebp from '@/assets/project-wheelhouse.webp';
+import wheelhouseImgWebpSmall from '@/assets/project-wheelhouse-small.webp';
+import wheelhouseVideo from '@/assets/video/wheelhouse.mp4';
+import wheelhouseDiagram from '@/assets/diagrams/wheelhouse.svg';
 
 export type ProjectMedia = {
   webp: string;
@@ -34,47 +33,284 @@ export type ProjectMedia = {
   avifSmall?: string;
 };
 
+export type ProjectHighlight = {
+  title: string;
+  detail: string;
+};
+
 export type ProjectEntry = {
   slug: string;
   title: string;
-  subtitle: string;
-  regionLabel: string;
+  /** One line under the title on the case study page. */
+  tagline: string;
+  /** The card's description. */
   summary: string;
-  description: string;
+  /** Why it exists: the opening paragraph of the case study. */
+  problem: string;
+  /** Badge on the card's screenshot: a game you play, or an app you try. */
+  kind: 'Playable' | 'Live demo';
   stack: string[];
   features: string[];
+  highlights: ProjectHighlight[];
   links: {
-    live?: string;
-    code?: string;
+    live: string;
+    code: string;
+    architecture: string;
   };
   image: string;
-  media?: ProjectMedia;
-  detailImage?: string;
-  detailMedia?: ProjectMedia;
-  mediaBackground: 'light' | 'dark';
-  accent: 'forest' | 'violet' | 'ember' | 'azure' | 'gold' | 'jade';
+  media: ProjectMedia;
+  /** A short silent screen recording, played on hover and on the case study. */
+  video: string;
+  /** The repository's containers diagram, rendered from docs/diagrams. */
+  diagram: string;
+  diagramAlt: string;
 };
 
 export const projectEntries: ProjectEntry[] = [
   {
-    slug: 'brick-breaker',
-    title: 'BRICK BREAKER',
-    subtitle: 'Brick Breaker Resume',
-    regionLabel: 'Arcade District',
+    slug: 'wheelhouse',
+    title: 'Wheelhouse',
+    tagline: 'A family calendar for the kitchen wall and every phone',
     summary:
-      'Browser-based Phaser.js game that turns a .docx resume into a playable Brick Breaker level.',
-    description:
-      'Resume text is parsed into interactive bricks, combining classic arcade gameplay with a gamified take on a resume.',
-    stack: ['JavaScript', 'Phaser.js', 'Mammoth.js'],
+      "A family calendar for a wall touch screen and every phone in the house, built on the family's own Google Calendar. Edits show up on every screen within a second or two.",
+    problem:
+      'A shared family calendar is only useful if it is where everyone looks and as quick to change as a whiteboard. Wheelhouse puts Day, Week and Month views on a 1920 × 1080 touch screen in the kitchen and on every phone, while Google Calendar stays the source of truth, so nobody has to switch apps.',
+    kind: 'Live demo',
+    stack: [
+      'ASP.NET Core 10',
+      'EF Core',
+      'PostgreSQL',
+      'SignalR',
+      'Angular 22',
+      'Docker',
+    ],
     features: [
-      'Parses .docx resume content into playable brick layouts',
-      'Classic paddle, scoring, lives, and quick replay loops',
-      'Responsive game board and keyboard controls',
-      'Portfolio-focused deployment with a readable game loop',
+      'Wall display with Day, Week and Month views, each person in their own color',
+      'Phone and desktop calendar with keyboard shortcuts',
+      'Drag to move, pull to resize, repeats and ten-second undo',
+      'Live updates across screens; Google edits arrive within two minutes',
+      'Four themes, each with a night look, plus weather and countdowns',
+    ],
+    highlights: [
+      {
+        title: 'Google Calendar is the source of truth',
+        detail:
+          'The API caches Google with incremental sync tokens and writes to Google first with the cached etag in If-Match, so a stale edit gets Google’s version back as a 409 instead of overwriting it.',
+      },
+      {
+        title: 'Optimistic edits with idempotent retries',
+        detail:
+          'Changes draw at once over the last confirmed snapshot and roll back only the edit that failed. A retried create reuses its creationId, which maps to one deterministic Google event id, so it cannot duplicate.',
+      },
+      {
+        title: 'Live updates from committed change numbers',
+        detail:
+          'A per-family change number advances in the same transaction as the change. SignalR announces only committed numbers, with no event data, and clients re-read their visible days.',
+      },
+      {
+        title: 'Family isolation by default',
+        detail:
+          'Every family-owned table has an EF Core query filter on the signed-in family, so a query that forgets the family returns nothing rather than someone else’s events.',
+      },
+      {
+        title: 'Staged, automatic releases',
+        detail:
+          'Each merge is tagged, built into images and deployed to the demo first; family instances move only after the demo passes a browser smoke check.',
+      },
+    ],
+    links: {
+      live: 'https://calendar.nathanzimmerman.com',
+      code: 'https://github.com/natezimm/wheelhouse',
+      architecture:
+        'https://github.com/natezimm/wheelhouse/blob/main/docs/architecture.md',
+    },
+    image: wheelhouseImgWebp,
+    media: {
+      webp: wheelhouseImgWebp,
+      webpSmall: wheelhouseImgWebpSmall,
+      avif: wheelhouseImgAvif,
+      avifSmall: wheelhouseImgAvifSmall,
+    },
+    video: wheelhouseVideo,
+    diagram: wheelhouseDiagram,
+    diagramAlt:
+      'The wall display and phones reach an nginx web container over HTTPS and WebSocket; it proxies to the ASP.NET Core API, which uses PostgreSQL, syncs with Google Calendar and reads weather from Open-Meteo.',
+  },
+  {
+    slug: 'know-ball',
+    title: 'Know Ball',
+    tagline: 'Daily sports trivia, fed by every NBA player since 1947',
+    summary:
+      'Daily sports trivia: a word game, two guess-the-player games and a stats quiz, with a new puzzle every midnight Eastern. Fed by a nightly import of every NBA player since 1947.',
+    problem:
+      'Daily puzzle games live or die on fairness and trust: the answer cannot leak, a flaky connection cannot cost a guess, and tomorrow’s puzzle has to exist even when a data source has a bad night. Know Ball is built around those three promises.',
+    kind: 'Playable',
+    stack: [
+      'ASP.NET Core 10',
+      'EF Core',
+      'PostgreSQL',
+      'Angular 22',
+      'PWA',
+      'Docker',
+    ],
+    features: [
+      'Spordle: a sports word in six tries',
+      'Scouting Report and Career Path: guess today’s NBA player',
+      'Numbers Don’t Lie: five stats questions across four leagues',
+      'Practice rounds, an archive, streaks and a spoiler-free share card',
+      'Installable on a phone and built phone-first',
+    ],
+    highlights: [
+      {
+        title: 'Answers never leave the server early',
+        detail:
+          'Each puzzle keeps its public payload apart from its secret; guesses are graded on the server and the answer is attached only once the game is won or lost.',
+      },
+      {
+        title: 'Retries never cost a guess',
+        detail:
+          'Guesses carry a client requestId and are saved with a compare-and-swap, so a dropped response or two open tabs cannot spend or lose a guess.',
+      },
+      {
+        title: 'A defensive nightly import',
+        detail:
+          'Imports are repeatable (CI runs them twice and expects no change), and a feed that suddenly returns under half the league fails the run instead of retiring everyone.',
+      },
+      {
+        title: 'Clean layers, two databases',
+        detail:
+          'Domain, Application and Infrastructure layers share one game engine that new games plug into, and the tests run the same code on SQLite and PostgreSQL.',
+      },
+      {
+        title: 'Abuse limits that hold behind a proxy',
+        detail:
+          'Per-address rate limits with stricter ones on guesses, IPv6 counted by /64, and X-Forwarded-For trusted only from known proxies.',
+      },
+    ],
+    links: {
+      live: 'https://knowball.nathanzimmerman.com',
+      code: 'https://github.com/natezimm/know-ball',
+      architecture:
+        'https://github.com/natezimm/know-ball/blob/main/docs/architecture.md',
+    },
+    image: knowBallImgWebp,
+    media: {
+      webp: knowBallImgWebp,
+      webpSmall: knowBallImgWebpSmall,
+      avif: knowBallImgAvif,
+      avifSmall: knowBallImgAvifSmall,
+    },
+    video: knowBallVideo,
+    diagram: knowBallDiagram,
+    diagramAlt:
+      'The browser reaches the host nginx over HTTPS, which forwards to the KnowBall API on a GCP VM; the API and a nightly importer share PostgreSQL, and the importer reads Basketball-Reference, Wikidata and ESPN.',
+  },
+  {
+    slug: 'rabbit-ears',
+    title: 'Rabbit Ears',
+    tagline: 'A 90s TV for the living room, on a curved CRT picture',
+    summary:
+      'Folders of old shows become channels on a curved CRT picture, driven by an IR or phone remote. The demo gives every visitor a TV of their own, with their phone as the remote.',
+    problem:
+      'Streaming apps ask what you want to watch; old TV just had something on. Rabbit Ears brings back flipping channels on a mini PC under the TV, and two remotes, a browser page and a video player all have to agree on what is on screen without ever disagreeing.',
+    kind: 'Live demo',
+    stack: ['ASP.NET Core 10', 'SignalR', 'Angular 22', 'WebGL', 'mpv'],
+    features: [
+      'Each folder is a channel, already playing when you tune in',
+      'Live, Resume and Random channel modes on an endless shuffle',
+      'A bent tube picture with scanlines and a chunky green banner',
+      'IR and phone remotes that drive the same TV',
+      'A demo VCR that plays your own videos without uploading them',
+    ],
+    highlights: [
+      {
+        title: 'The server is the only source of truth',
+        detail:
+          'The TV is a pure state machine with injected time and randomness, unit tested by single-stepping it; clients send button presses and render full snapshots.',
+      },
+      {
+        title: 'Play tokens and sequence counters',
+        detail:
+          'Reports from the screen are safe to arrive late, twice or out of order, and any one snapshot can rebuild the whole display.',
+      },
+      {
+        title: 'One picture, two renderers',
+        detail:
+          'A WebGL shader in the browser and the same tube maths as an mpv hook shader on the box, with mpv driven over its JSON IPC socket.',
+      },
+      {
+        title: 'No dead frames',
+        detail:
+          'Two video elements swap, so the next episode is loaded and seeked before the cut.',
+      },
+      {
+        title: 'A public demo without accounts',
+        detail:
+          'Per-visitor rooms, idle cleanup and per-address rate limits, deliberately not authentication.',
+      },
+    ],
+    links: {
+      live: 'https://rabbitears.nathanzimmerman.com',
+      code: 'https://github.com/natezimm/rabbit-ears',
+      architecture:
+        'https://github.com/natezimm/rabbit-ears/blob/main/docs/architecture.md',
+    },
+    image: rabbitEarsImgWebp,
+    media: {
+      webp: rabbitEarsImgWebp,
+      webpSmall: rabbitEarsImgWebpSmall,
+      avif: rabbitEarsImgAvif,
+      avifSmall: rabbitEarsImgAvifSmall,
+    },
+    video: rabbitEarsVideo,
+    diagram: rabbitEarsDiagram,
+    diagramAlt:
+      'The phone remote sends button presses to a SignalR hub; TvService applies them to a pure Television state machine and broadcasts full snapshots to the remote, the browser TV page and mpv on the box.',
+  },
+  {
+    slug: 'brick-breaker',
+    title: 'Brick Breaker Resume',
+    tagline: 'A résumé you play one bounce at a time',
+    summary:
+      'A Phaser 3 game that turns a Word résumé into a Brick Breaker level: every word is a brick. Two looks, Glass and Paper, and you can switch between them mid-game.',
+    problem:
+      'Résumés all look alike. This one is a level: a build step turns the .docx into words, every word becomes a brick, and the page stays crisp and readable while you break it apart.',
+    kind: 'Playable',
+    stack: ['JavaScript', 'Phaser 3', 'Vite', 'Mammoth', 'Jest', 'Playwright'],
+    features: [
+      'Every word of the résumé is a brick, sized to fit it',
+      'Glass and Paper looks, switchable mid-game',
+      'Settings that pause the game, with a live preview',
+      'Lives, score and a saved best',
+      'Mouse, touch and keyboard',
+    ],
+    highlights: [
+      {
+        title: 'Résumé as build-time data',
+        detail:
+          'Mammoth and JSDOM turn the .docx into JSON before each build, so the game always matches the document and never ships a parser to the browser.',
+      },
+      {
+        title: 'DOM bricks, Phaser physics',
+        detail:
+          'Each brick is a DOM element so the type stays crisp, paired with an invisible static physics body; the canvas draws only the ball and paddle.',
+      },
+      {
+        title: 'Two layouts, one word index',
+        detail:
+          'The wall and the typeset page give every word the same index, so a theme switch rebuilds only the bricks that are left.',
+      },
+      {
+        title: 'Fast first paint',
+        detail:
+          'Phaser is a separate chunk loaded only after a look is chosen.',
+      },
     ],
     links: {
       live: 'https://resume.nathanzimmerman.com',
       code: 'https://github.com/natezimm/brick-breaker-resume',
+      architecture:
+        'https://github.com/natezimm/brick-breaker-resume/blob/main/docs/architecture.md',
     },
     image: brickbreakerImgWebp,
     media: {
@@ -83,148 +319,45 @@ export const projectEntries: ProjectEntry[] = [
       avif: brickbreakerImgAvif,
       avifSmall: brickbreakerImgAvifSmall,
     },
-    detailImage: brickbreakerDetailImgWebp,
-    detailMedia: {
-      webp: brickbreakerDetailImgWebp,
-    },
-    mediaBackground: 'light',
-    accent: 'forest',
-  },
-  {
-    slug: 'nerdle',
-    title: 'NERDLE',
-    subtitle: 'Technology Word Game',
-    regionLabel: 'Letter Wizard Tower',
-    summary:
-      'Word puzzle game inspired by Wordle, focused on technology-related vocabulary.',
-    description:
-      'Built with React and Node.js, featuring animated feedback, server-side validation, and persistent stats across multiple word lengths.',
-    stack: ['React', 'Axios', 'Node.js'],
-    features: [
-      'Technology-themed words with on-demand new games',
-      'Animated guess feedback and keyboard state',
-      'Server-side validation with persistent player stats',
-      'Multiple word lengths for replay variety',
-    ],
-    links: {
-      live: 'https://nerdle.nathanzimmerman.com',
-      code: 'https://github.com/natezimm/nerdle',
-    },
-    image: nerdleImgWebp,
-    media: {
-      webp: nerdleImgWebp,
-      webpSmall: nerdleImgWebpSmall,
-      avif: nerdleImgAvif,
-      avifSmall: nerdleImgAvifSmall,
-    },
-    mediaBackground: 'light',
-    accent: 'violet',
-  },
-  {
-    slug: 'sudoku',
-    title: 'SUDOKU',
-    subtitle: 'Logic Board Challenge',
-    regionLabel: 'Logic Light Temple',
-    summary: 'Interactive Sudoku game built with Angular and ASP.NET.',
-    description:
-      'Features on-demand puzzle generation, real-time input validation, and persistent stats with resume support.',
-    stack: ['Angular', 'ASP.NET', 'C#'],
-    features: [
-      'On-demand puzzle generation and difficulty flow',
-      'Real-time input validation and solution checking',
-      'Persistent stats and resume support',
-      'Clean separation between gameplay logic and UI state',
-    ],
-    links: {
-      live: 'https://sudoku.nathanzimmerman.com',
-      code: 'https://github.com/natezimm/sudoku',
-    },
-    image: sudokuImgWebp,
-    media: {
-      webp: sudokuImgWebp,
-      webpSmall: sudokuImgWebpSmall,
-      avif: sudokuImgAvif,
-      avifSmall: sudokuImgAvifSmall,
-    },
-    mediaBackground: 'light',
-    accent: 'ember',
-  },
-  {
-    slug: 'blackjack',
-    title: 'BLACKJACK',
-    subtitle: 'Casino Rules Engine',
-    regionLabel: 'Casino of Chance',
-    summary: 'Full-stack blackjack game built with React and Spring Boot.',
-    description:
-      'Features session-based gameplay, configurable table rules, and support for split hands, insurance, and live betting.',
-    stack: ['React', 'Spring Boot', 'Java'],
-    features: [
-      'Session-based gameplay and betting lifecycle',
-      'Configurable dealer and table rules',
-      'Support for split hands, insurance, and live betting',
-      'Polished card-table UI with clear round states',
-    ],
-    links: {
-      live: 'https://blackjack.nathanzimmerman.com',
-      code: 'https://github.com/natezimm/blackjack',
-    },
-    image: blackjackImgWebp,
-    media: {
-      webp: blackjackImgWebp,
-      webpSmall: blackjackImgWebpSmall,
-      avif: blackjackImgAvif,
-      avifSmall: blackjackImgAvifSmall,
-    },
-    mediaBackground: 'dark',
-    accent: 'gold',
+    video: brickbreakerVideo,
+    diagram: brickbreakerDiagram,
+    diagramAlt:
+      'The player drives the start page, which loads the Phaser scene on Play; both use the brick layout, which fetches resume.json and draws DOM bricks, and settings live in localStorage.',
   },
 ];
 
 export const projectBySlug = (slug: string) =>
   projectEntries.find((project) => project.slug === slug);
 
-export type MapLocation = {
-  id: SectionId;
+export type EarlierProject = {
   title: string;
-  subtitle: string;
-  position: {
-    left: string;
-    top: string;
-    width: string;
-    height: string;
-  };
+  summary: string;
+  stack: string[];
+  code: string;
 };
 
-export const mapLocations: MapLocation[] = [
+/** Retired projects: their live demos are offline, so they link to code only. */
+export const earlierProjects: EarlierProject[] = [
   {
-    id: 'about',
-    title: 'FOREST OF FOUNDATIONS',
-    subtitle: 'About Me',
-    position: { left: '12.6%', top: '46.8%', width: '13.5%', height: '12%' },
+    title: 'Nerdle',
+    summary:
+      'A Wordle-style game with technology words, server-side validation and stats across word lengths.',
+    stack: ['React', 'Node.js', 'Express'],
+    code: 'https://github.com/natezimm/nerdle',
   },
   {
-    id: 'skills',
-    title: 'MOUNTAINS OF MASTERY',
-    subtitle: 'Skills & Tools',
-    position: { left: '78%', top: '33.4%', width: '13.5%', height: '12%' },
+    title: 'Sudoku',
+    summary:
+      'Sudoku with on-demand puzzle generation, live validation and saved progress.',
+    stack: ['Angular', 'ASP.NET Core', 'C#'],
+    code: 'https://github.com/natezimm/sudoku',
   },
   {
-    id: 'projects',
-    title: 'PROJECT TOWN',
-    subtitle: 'Featured Projects',
-    position: { left: '49.8%', top: '49.7%', width: '15%', height: '12%' },
-  },
-  {
-    id: 'experience',
-    title: 'CASTLE OF ACHIEVEMENT',
-    subtitle: 'Resume & Experience',
-    position: { left: '87.8%', top: '74.1%', width: '13.5%', height: '12%' },
-  },
-  {
-    id: 'contact',
-    title: 'CAMPFIRE CONTACT',
-    subtitle: 'Let’s Connect',
-    position: { left: '87.8%', top: '84.5%', width: '13%', height: '10%' },
+    title: 'Blackjack',
+    summary:
+      'Blackjack with configurable table rules, split hands, insurance and betting.',
+    stack: ['React', 'Spring Boot', 'Java'],
+    code: 'https://github.com/natezimm/blackjack',
   },
 ];
 

@@ -1,0 +1,16 @@
+flowchart LR
+  Player["Player<br/>mouse, touch, keyboard"] --> Page["index.html + main.js<br/>start screen, HUD, settings"]
+  Page -->|"dynamic import on Play"| Phaser["Phaser 3 scene<br/>src/game.js"]
+  Phaser --> Physics["Arcade physics<br/>ball, paddle, brick bodies"]
+  Page --> Layout["Brick layout<br/>wall or typeset"]
+  Phaser --> Layout
+  Layout -->|"fetch"| Data["resume.json<br/>public/assets"]
+  Layout --> Bricks["DOM bricks<br/>src/brickDom.js"]
+  Page --> Storage["localStorage<br/>theme, high score"]
+
+  classDef user fill:#f8fafc,stroke:#475569,color:#0f172a
+  classDef client fill:#dcfce7,stroke:#15803d,color:#14532d
+  classDef data fill:#fef3c7,stroke:#b45309,color:#78350f
+  class Player user
+  class Page,Phaser,Physics,Layout,Bricks client
+  class Data,Storage data

@@ -1,38 +1,30 @@
 import type { ProjectEntry } from '@/data/portfolioData';
 
 export type ProjectImageProps = {
-  project: ProjectEntry;
-  useDetail?: boolean;
+  project: Pick<ProjectEntry, 'title' | 'image' | 'media'>;
   className?: string;
   imgClassName?: string;
   sizes?: string;
   loading?: 'lazy' | 'eager';
+  width?: number;
+  height?: number;
 };
+
+const srcSet = (small: string | undefined, large: string | undefined) =>
+  large ? (small ? `${small} 600w, ${large} 1200w` : large) : undefined;
 
 export const ProjectImage = ({
   project,
-  useDetail = false,
   className,
   imgClassName,
-  sizes = '(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 300px',
+  sizes = '(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 600px',
   loading = 'lazy',
+  width,
+  height,
 }: ProjectImageProps) => {
-  const media =
-    useDetail && project.detailMedia ? project.detailMedia : project.media;
-  const fallbackSrc =
-    useDetail && project.detailImage ? project.detailImage : project.image;
-
-  const avifSrcSet = media?.avif
-    ? media.avifSmall
-      ? `${media.avifSmall} 600w, ${media.avif} 1200w`
-      : media.avif
-    : undefined;
-
-  const webpSrcSet = media?.webp
-    ? media.webpSmall
-      ? `${media.webpSmall} 600w, ${media.webp} 1200w`
-      : media.webp
-    : undefined;
+  const { media } = project;
+  const avifSrcSet = srcSet(media.avifSmall, media.avif);
+  const webpSrcSet = srcSet(media.webpSmall, media.webp);
 
   return (
     <picture className={className || undefined}>
@@ -43,10 +35,13 @@ export const ProjectImage = ({
         <source type="image/webp" srcSet={webpSrcSet} sizes={sizes} />
       )}
       <img
-        src={fallbackSrc}
+        src={media.webpSmall ?? project.image}
         alt={`${project.title} screenshot`}
         className={imgClassName}
         loading={loading}
+        decoding="async"
+        width={width}
+        height={height}
       />
     </picture>
   );

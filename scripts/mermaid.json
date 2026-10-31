@@ -1,0 +1,9 @@
+{
+  "theme": "base",
+  "flowchart": { "htmlLabels": false },
+  "themeVariables": {
+    "fontFamily": "Inter, Helvetica, Arial, sans-serif",
+    "lineColor": "#64748b",
+    "edgeLabelBackground": "#ffffff"
+  }
+}
