@@ -4,7 +4,7 @@
 // tells search engines each project page is a copy of the home page.
 //
 // This writes dist/projects/<slug>/index.html for each project with its own
-// title, description, canonical link and link-preview tags, and a sitemap that
+// title, description, canonical link and Open Graph tags, and a sitemap that
 // lists exactly those pages. Project URLs end in a slash: nginx's
 // `try_files $uri $uri/ /index.html` serves /projects/<slug>/index.html for
 // /projects/<slug>/ and redirects /projects/<slug> there, so the slash form is
@@ -62,10 +62,6 @@ const pageFor = (project) => {
     ['property', 'og:url', url],
     ['property', 'og:image', image],
     ['property', 'og:image:alt', alt],
-    ['name', 'twitter:title', title],
-    ['name', 'twitter:description', description],
-    ['name', 'twitter:image', image],
-    ['name', 'twitter:image:alt', alt],
   ]) {
     html = replaceOnce(
       html,

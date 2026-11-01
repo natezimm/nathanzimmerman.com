@@ -38,6 +38,6 @@ describe('page head', () => {
 
     expect(document.title).toBe(HOME_HEAD.title);
     expect(canonical()).toBe('https://nathanzimmerman.com/');
-    expect(meta('name="twitter:description"')).toBe(HOME_HEAD.description);
+    expect(meta('name="description"')).toBe(HOME_HEAD.description);
   });
 });
