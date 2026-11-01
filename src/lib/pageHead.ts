@@ -46,9 +46,6 @@ export function applyPageHead(head: PageHead) {
   setMeta('property', 'og:description', head.description);
   setMeta('property', 'og:url', url);
   setMeta('property', 'og:image', image);
-  setMeta('name', 'twitter:title', head.title);
-  setMeta('name', 'twitter:description', head.description);
-  setMeta('name', 'twitter:image', image);
 
   let canonical = document.head.querySelector<HTMLLinkElement>(
     'link[rel="canonical"]'
