@@ -41,11 +41,11 @@ export type ProjectHighlight = {
 export type ProjectEntry = {
   slug: string;
   title: string;
-  /** One line under the title on the case study page. */
+  /** One line under the title on the project page. */
   tagline: string;
   /** The card's description. */
   summary: string;
-  /** Why it exists: the opening paragraph of the case study. */
+  /** Why it exists: the opening paragraph of the project page. */
   problem: string;
   /** Badge on the card's screenshot: a game you play, or an app you try. */
   kind: 'Playable' | 'Live demo';
@@ -59,7 +59,7 @@ export type ProjectEntry = {
   };
   image: string;
   media: ProjectMedia;
-  /** A short silent screen recording, played on hover and on the case study. */
+  /** A short silent screen recording, played on hover and on the project page. */
   video: string;
   /** The repository's containers diagram, rendered from docs/diagrams. */
   diagram: string;

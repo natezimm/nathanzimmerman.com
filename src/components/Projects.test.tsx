@@ -19,7 +19,7 @@ const setMatchMedia = (matches: boolean) => {
 };
 
 describe('Projects section', () => {
-  it('features the four live projects with case study, code and demo links', () => {
+  it('features the four live projects with details, code and demo links', () => {
     renderProjects();
 
     for (const [title, slug, live] of [
@@ -40,7 +40,7 @@ describe('Projects section', () => {
         screen.getByRole('link', { name: `${title} live demo` })
       ).toHaveAttribute('href', live);
       expect(
-        screen.getByRole('link', { name: `${title} case study` })
+        screen.getByRole('link', { name: `${title} details` })
       ).toHaveAttribute('href', `/projects/${slug}`);
     }
 

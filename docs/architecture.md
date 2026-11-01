@@ -12,14 +12,14 @@ flowchart LR
   Site --> App["React 18 + Vite SPA"]
   App --> Router["React Router<br/>Index, /projects/:slug, NotFound"]
   Router --> Sections["Home sections<br/>Hero, About, Experience, Projects, Contact"]
-  Router --> CaseStudies["Case study pages<br/>ProjectDetail, loaded on demand"]
+  Router --> ProjectPages["Project pages<br/>ProjectDetail, loaded on demand"]
   Sections --> Content["Portfolio content<br/>src/data/portfolioData.ts"]
-  CaseStudies --> Content
+  ProjectPages --> Content
   Content --> Media["Screenshots, recordings,<br/>diagrams in src/assets"]
   App --> Theme["ThemeContext<br/>localStorage + system preference"]
   Sections --> Contact["Contact form"]
   Contact --> EmailJS["@emailjs/browser"]
-  Sections & CaseStudies --> ProjectSites["Project demos<br/>calendar, knowball, rabbitears, resume"]
+  Sections & ProjectPages --> ProjectSites["Project demos<br/>calendar, knowball, rabbitears, resume"]
   Repo["Repo quality gate<br/>npm run quality"] --> Build["Vite build<br/>dist/"]
   Build --> Deploy["GitHub Actions<br/>rsync to GCP"]
 
@@ -31,7 +31,7 @@ flowchart LR
   classDef external fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d
   class Visitor user
   class Site,ProjectSites site
-  class App,Router,Sections,CaseStudies,Theme,Contact client
+  class App,Router,Sections,ProjectPages,Theme,Contact client
   class Content,Media data
   class Repo,Build,Deploy delivery
   class EmailJS external
@@ -39,9 +39,9 @@ flowchart LR
 
 ## Source Boundaries
 
-`src/pages/` owns route-level composition: `Index` for the home page, `ProjectDetail` for the case study at `/projects/:slug`, and `NotFound`. `src/components/` owns visible sections and shared UI primitives. `src/contexts/` owns app-level theme state. `src/data/portfolioData.ts` holds the featured projects (card and case study content), the earlier projects and the experience timeline, and `src/lib/` holds reusable helpers and analytics utilities.
+`src/pages/` owns route-level composition: `Index` for the home page, `ProjectDetail` for the project page at `/projects/:slug`, and `NotFound`. `src/components/` owns visible sections and shared UI primitives. `src/contexts/` owns app-level theme state. `src/data/portfolioData.ts` holds the featured projects (card and project page content), the earlier projects and the experience timeline, and `src/lib/` holds reusable helpers and analytics utilities.
 
-Each featured project has a screenshot set (`npm run images:project`), a short silent MP4 in `src/assets/video/` that plays on hover and on its case study, and its containers diagram. The diagram sources in `docs/diagrams/` are copies of each project's README diagram; `npm run diagrams` renders them to `src/assets/diagrams/` with Mermaid CLI.
+Each featured project has a screenshot set (`npm run images:project`), a short silent MP4 in `src/assets/video/` that plays on hover and on its project page, and its containers diagram. The diagram sources in `docs/diagrams/` are copies of each project's README diagram; `npm run diagrams` renders them to `src/assets/diagrams/` with Mermaid CLI.
 
 ## Quality Gates
 
