@@ -42,7 +42,7 @@ export const BRICK_LABELS = [
   'TypeScript',
   'React',
   'Microservices',
-  'PostgreSQL',
+  'Postman',
   'JavaScript',
   'Azure',
   'MongoDB',
