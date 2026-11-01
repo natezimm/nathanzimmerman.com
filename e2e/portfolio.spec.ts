@@ -85,7 +85,7 @@ test.describe('portfolio experience', () => {
     await page.goto('/');
 
     await page.getByRole('link', { name: 'Know Ball details' }).click();
-    await expect(page).toHaveURL('/projects/know-ball');
+    await expect(page).toHaveURL('/projects/know-ball/');
     await expect(
       page.getByRole('heading', { level: 1, name: 'Know Ball' })
     ).toBeVisible();
@@ -118,6 +118,36 @@ test.describe('portfolio experience', () => {
     await expect(page.locator('a[href*="nerdle.nathanzimmerman"]')).toHaveCount(
       0
     );
+  });
+
+  test('serves each project page its own head for crawlers and link previews', async ({
+    request,
+  }) => {
+    // Read the HTML as served, before any script runs, as a crawler does.
+    const html = await (await request.get('/projects/know-ball/')).text();
+
+    expect(html).toContain('<title>Know Ball · Nathan Zimmerman</title>');
+    expect(html).toContain(
+      '<link rel="canonical" href="https://nathanzimmerman.com/projects/know-ball/" />'
+    );
+    expect(html).toContain(
+      '<meta property="og:image" content="https://nathanzimmerman.com/og/know-ball.jpg" />'
+    );
+
+    const sitemap = await (await request.get('/sitemap.xml')).text();
+    expect(sitemap).toContain(
+      '<loc>https://nathanzimmerman.com/projects/know-ball/</loc>'
+    );
+  });
+
+  test('loads the social card the home page links to', async ({ request }) => {
+    const home = await (await request.get('/')).text();
+    expect(home).toContain(
+      'content="https://nathanzimmerman.com/og-image.jpg"'
+    );
+    const card = await request.get('/og-image.jpg');
+    expect(card.ok()).toBe(true);
+    expect(card.headers()['content-type']).toContain('image/jpeg');
   });
 
   test('shows a not found state for unknown routes', async ({ page }) => {

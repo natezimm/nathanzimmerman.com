@@ -248,7 +248,7 @@ const ProjectDetail = () => {
               All projects
             </Link>
             <Link
-              to={`/projects/${next.slug}`}
+              to={`/projects/${next.slug}/`}
               className="inline-flex items-center gap-2 min-h-[44px] text-sm font-medium text-primary hover:underline underline-offset-4"
             >
               Next: {next.title}

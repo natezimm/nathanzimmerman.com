@@ -46,7 +46,7 @@ describe('ProjectDetail page', () => {
     ).toBeInTheDocument();
     expect(
       screen.getByRole('link', { name: /Next: Know Ball/ })
-    ).toHaveAttribute('href', '/projects/know-ball');
+    ).toHaveAttribute('href', '/projects/know-ball/');
   });
 
   it('calls a game playable and wraps to the first project', () => {
@@ -58,7 +58,7 @@ describe('ProjectDetail page', () => {
     );
     expect(
       screen.getByRole('link', { name: /Next: Wheelhouse/ })
-    ).toHaveAttribute('href', '/projects/wheelhouse');
+    ).toHaveAttribute('href', '/projects/wheelhouse/');
   });
 
   it('shows the not found page for a retired or unknown project', () => {

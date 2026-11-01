@@ -23,13 +23,14 @@ Run from this repository root. Node 22 is specified by both `.nvmrc` and `packag
 
 - Install: `npm ci`.
 - Develop: `npm run dev` (configured port **8081**).
-- Build: `npm run build` produces `dist/`; preview with `npm run preview`.
+- Build: `npm run build` produces `dist/`, then `scripts/prerender-routes.mjs` writes `dist/projects/<slug>/index.html` (per-page title, canonical and preview tags) and `dist/sitemap.xml`; preview with `npm run preview`. Project URLs end in `/`, which is the canonical form.
 - Unit/component tests: `npm test`; target a file with `npm test -- src/components/Contact.test.tsx`.
 - Static checks: `npm run lint` and `npm run typecheck`.
 - Coverage: `npm run test:coverage` (Vitest/Testing Library).
 - Browser tests: `npm run test:e2e`; install Chromium first with `npx playwright install chromium` if needed.
 - Full CI gate: `npm run quality` runs formatting, lint, typecheck, coverage, and Playwright. Playwright normally builds and serves the production app; see the server-reuse caveat below.
 - Project screenshots: `npm run images:project -- <screenshot.png> <slug>` writes the PNG source plus 1200 px and 600 px AVIF/WebP to `src/assets/`; see the README's Project screenshots section.
+- Link-preview cards: `npm run images:social` redraws `public/og-image.jpg` and `public/og/<slug>.jpg` (set `CHROMIUM_PATH` to an installed Chromium if Playwright has not downloaded one). Rerun after changing a project's title, tagline or screenshot.
 - Project page diagrams: `npm run diagrams` renders `docs/diagrams/*.mmd` to `src/assets/diagrams/*.svg` with Mermaid CLI (downloaded by `npx`); set `PUPPETEER_EXECUTABLE_PATH` to an installed Chromium if it cannot download one. Copy a project's README diagram into `docs/diagrams/` when it changes.
 - Formatting: `npx prettier --check <files>` or `npx prettier --write <files>`. A scoped formatting check is sufficient for documentation-only edits.
 

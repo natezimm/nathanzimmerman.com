@@ -8,7 +8,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/prerender-routes.mjs",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -22,6 +22,7 @@
     "format:check": "prettier --check .",
     "typecheck": "tsc -b --noEmit",
     "images:project": "node scripts/project-images.mjs",
+    "images:social": "node scripts/social-cards.mjs",
     "diagrams": "bash scripts/render-diagrams.sh",
     "quality": "npm run format:check && npm run lint && npm run typecheck && npm run test:coverage && npm run test:e2e"
   },

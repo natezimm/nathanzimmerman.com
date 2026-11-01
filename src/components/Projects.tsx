@@ -51,7 +51,7 @@ const ProjectCard = ({ project }: { project: ProjectEntry }) => {
     video.currentTime = 0;
   };
 
-  const caseStudy = `/projects/${project.slug}`;
+  const caseStudy = `/projects/${project.slug}/`;
 
   return (
     <Card
