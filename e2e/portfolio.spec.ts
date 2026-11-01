@@ -140,6 +140,19 @@ test.describe('portfolio experience', () => {
     );
   });
 
+  test('keeps the head in step when moving between pages in the app', async ({
+    page,
+  }) => {
+    await page.goto('/projects/know-ball/');
+    await page.getByRole('link', { name: 'All projects' }).first().click();
+
+    await expect(page).toHaveTitle('Nathan Zimmerman | Software Engineer');
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      'https://nathanzimmerman.com/'
+    );
+  });
+
   test('loads the social card the home page links to', async ({ request }) => {
     const home = await (await request.get('/')).text();
     expect(home).toContain(

@@ -7,9 +7,11 @@ import Experience from '@/components/Experience';
 import Projects from '@/components/Projects';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
+import { HOME_HEAD, usePageHead } from '@/lib/pageHead';
 
 const Index = () => {
   const { hash } = useLocation();
+  usePageHead(HOME_HEAD);
 
   // Links back from a project page land on /#projects; scroll there once.
   useEffect(() => {

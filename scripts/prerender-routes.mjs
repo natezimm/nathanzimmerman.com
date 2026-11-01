@@ -40,10 +40,11 @@ const tag = (attr, key) =>
   new RegExp(`<meta\\s+${attr}="${key}"\\s+content="[^"]*"\\s*/?>`);
 
 const pageFor = (project) => {
-  const url = `${SITE_URL}/projects/${project.slug}/`;
-  const title = escape(`${project.title} · Nathan Zimmerman`);
-  const description = escape(project.summary);
-  const image = `${SITE_URL}/og/${project.slug}.jpg`;
+  const { head } = project;
+  const url = `${SITE_URL}${head.path}`;
+  const title = escape(head.title);
+  const description = escape(head.description);
+  const image = `${SITE_URL}${head.image}`;
   const alt = escape(`${project.title}: ${project.tagline}`);
 
   let html = shell;
@@ -85,7 +86,7 @@ const today = new Date().toISOString().slice(0, 10);
 const urls = [
   { loc: `${SITE_URL}/`, priority: '1.0' },
   ...projects.map((p) => ({
-    loc: `${SITE_URL}/projects/${p.slug}/`,
+    loc: `${SITE_URL}${p.head.path}`,
     priority: '0.8',
   })),
 ];
