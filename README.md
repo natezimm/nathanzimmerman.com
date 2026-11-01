@@ -24,7 +24,7 @@ See [`docs/architecture.md`](docs/architecture.md) for runtime boundaries, quali
 ## Available scripts
 
 - `npm run dev` – Vite development server with Fast Refresh.
-- `npm run build` – Production bundle for static hosting (outputs in `dist/`).
+- `npm run build` – Production bundle for static hosting (outputs in `dist/`), then `scripts/prerender-routes.mjs` writes each project page's own `<head>` and the sitemap (see Search and link previews).
 - `npm run build:dev` – Build with the development mode configuration.
 - `npm run preview` – Serve the build locally for a final sanity check.
 - `npm run lint` - ESLint across the whole workspace (powered by `@eslint/js` + TypeScript).
@@ -37,6 +37,7 @@ See [`docs/architecture.md`](docs/architecture.md) for runtime boundaries, quali
 - `npm run test:e2e` – Playwright end-to-end tests against a production preview.
 - `npm run test:e2e:headed` / `npm run test:e2e:ui` – Debug Playwright in headed or UI mode.
 - `npm run images:project -- <screenshot.png> <slug>` – Convert a project screenshot into the site's image set (see below).
+- `npm run images:social` – Redraw the 1200 × 630 link-preview cards in `public/og-image.jpg` and `public/og/<slug>.jpg` (set `CHROMIUM_PATH` to use an installed Chromium).
 - `npm run diagrams` – Render `docs/diagrams/*.mmd` to the SVGs the project pages show (set `PUPPETEER_EXECUTABLE_PATH` to use an installed Chromium).
 
 ## Project screenshots
@@ -66,7 +67,13 @@ A project needs four things, all referenced from its entry in `projectEntries` i
 3. Its containers diagram: copy the Mermaid block from the project's README into `docs/diagrams/<slug>.mmd` and run `npm run diagrams`.
 4. The card summary, the project page's problem, features and highlights, and its live, code and architecture links.
 
-Add its URL to `public/sitemap.xml`.
+Then run `npm run images:social` to draw its link-preview card. The build adds its page to the sitemap.
+
+## Search and link previews
+
+The site is a single-page app, so without help every URL would get the home page's `<head>`, including a canonical link back to `/`. After `vite build`, `scripts/prerender-routes.mjs` copies `dist/index.html` to `dist/projects/<slug>/index.html` with that project's title, description, canonical URL and Open Graph/Twitter tags, and writes `dist/sitemap.xml` from the same project list. Project URLs end in a slash (`/projects/know-ball/`) because nginx's `try_files $uri $uri/ /index.html` serves that directory's `index.html` and redirects the slashless form to it.
+
+The preview pictures are drawn by `npm run images:social` from each project's title, tagline and screenshot. Rerun it when one of those changes and commit the JPEGs.
 
 ## Tech stack
 

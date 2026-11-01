@@ -34,14 +34,14 @@ describe('Projects section', () => {
     ]) {
       expect(screen.getByRole('link', { name: title })).toHaveAttribute(
         'href',
-        `/projects/${slug}`
+        `/projects/${slug}/`
       );
       expect(
         screen.getByRole('link', { name: `${title} live demo` })
       ).toHaveAttribute('href', live);
       expect(
         screen.getByRole('link', { name: `${title} details` })
-      ).toHaveAttribute('href', `/projects/${slug}`);
+      ).toHaveAttribute('href', `/projects/${slug}/`);
     }
 
     expect(screen.getAllByText('Live Demo')).toHaveLength(4);

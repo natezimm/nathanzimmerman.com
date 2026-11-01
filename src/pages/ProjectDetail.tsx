@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { projectBySlug, projectEntries } from '@/data/portfolioData';
 import { trackPortfolioEvent } from '@/lib/analytics';
+import { projectHead, usePageHead } from '@/lib/pageHead';
 import { Button } from '@/components/ui/button';
 import { SectionCaption } from '@/components/shared/SectionCaption';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -28,13 +29,8 @@ const ProjectDetail = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!project) return;
-    const previousTitle = document.title;
-    document.title = `${project.title} · Nathan Zimmerman`;
-    return () => {
-      document.title = previousTitle;
-    };
   }, [project]);
+  usePageHead(project && projectHead(project));
 
   if (!project) {
     return <NotFound />;
@@ -248,7 +244,7 @@ const ProjectDetail = () => {
               All projects
             </Link>
             <Link
-              to={`/projects/${next.slug}`}
+              to={`/projects/${next.slug}/`}
               className="inline-flex items-center gap-2 min-h-[44px] text-sm font-medium text-primary hover:underline underline-offset-4"
             >
               Next: {next.title}
