@@ -30,7 +30,7 @@ const ProjectDetail = () => {
     window.scrollTo(0, 0);
     if (!project) return;
     const previousTitle = document.title;
-    document.title = `${project.title} case study · Nathan Zimmerman`;
+    document.title = `${project.title} · Nathan Zimmerman`;
     return () => {
       document.title = previousTitle;
     };

@@ -8,8 +8,8 @@ Preserve unrelated working-tree changes. `docs/architecture.md` has broader desi
 
 ## Where to work
 
-- `src/App.tsx` routes `/`, `/projects/:slug` (the case study, `src/pages/ProjectDetail.tsx`, loaded lazily) and the catch-all 404. `src/pages/Index.tsx` composes the homepage and scrolls to a `#section` hash on arrival.
-- `src/data/portfolioData.ts` is the one source for project content: `projectEntries` feeds both the cards in `src/components/Projects.tsx` and the case studies, and `earlierProjects` is the retired list. Each entry imports its screenshot set, an MP4 in `src/assets/video/` and a diagram SVG in `src/assets/diagrams/`; the README's "Adding a featured project" lists the steps. Experience content lives in the same file.
+- `src/App.tsx` routes `/`, `/projects/:slug` (the project page, `src/pages/ProjectDetail.tsx`, loaded lazily) and the catch-all 404. `src/pages/Index.tsx` composes the homepage and scrolls to a `#section` hash on arrival.
+- `src/data/portfolioData.ts` is the one source for project content: `projectEntries` feeds both the cards in `src/components/Projects.tsx` and the project pages, and `earlierProjects` is the retired list. Each entry imports its screenshot set, an MP4 in `src/assets/video/` and a diagram SVG in `src/assets/diagrams/`; the README's "Adding a featured project" lists the steps. Experience content lives in the same file.
 - `src/components/Hero.tsx` owns the hero backdrop and pointer spotlight; `HeroGame.tsx` renders the playable portrait card, and the game rules live in `src/lib/brickBreaker.ts`. The Experience git graph reads `experienceItems` and `careerOriginItems` from the data file.
 - `src/components/Navigation.tsx` owns active section navigation on the homepage.
 - `src/components/`: visible portfolio sections; `ui/` and `shared/` contain reusable elements.
@@ -30,17 +30,17 @@ Run from this repository root. Node 22 is specified by both `.nvmrc` and `packag
 - Browser tests: `npm run test:e2e`; install Chromium first with `npx playwright install chromium` if needed.
 - Full CI gate: `npm run quality` runs formatting, lint, typecheck, coverage, and Playwright. Playwright normally builds and serves the production app; see the server-reuse caveat below.
 - Project screenshots: `npm run images:project -- <screenshot.png> <slug>` writes the PNG source plus 1200 px and 600 px AVIF/WebP to `src/assets/`; see the README's Project screenshots section.
-- Case study diagrams: `npm run diagrams` renders `docs/diagrams/*.mmd` to `src/assets/diagrams/*.svg` with Mermaid CLI (downloaded by `npx`); set `PUPPETEER_EXECUTABLE_PATH` to an installed Chromium if it cannot download one. Copy a project's README diagram into `docs/diagrams/` when it changes.
+- Project page diagrams: `npm run diagrams` renders `docs/diagrams/*.mmd` to `src/assets/diagrams/*.svg` with Mermaid CLI (downloaded by `npx`); set `PUPPETEER_EXECUTABLE_PATH` to an installed Chromium if it cannot download one. Copy a project's README diagram into `docs/diagrams/` when it changes.
 - Formatting: `npx prettier --check <files>` or `npx prettier --write <files>`. A scoped formatting check is sufficient for documentation-only edits.
 
 ## Behavior to preserve
 
 - Check desktop/mobile layouts, keyboard controls, accessible labels, and reduced-motion behavior when changing UI or animations. Reuse Tailwind tokens and existing UI primitives.
 - The hero game must stay pausable, start paused under reduced motion, and stop when scrolled out of view.
-- Project recordings play on card hover only for a fine pointer without reduced motion, and the case study autoplays its recording only without reduced motion. Keep videos muted, `playsInline`, and `preload="none"` on cards.
+- Project recordings play on card hover only for a fine pointer without reduced motion, and the project page autoplays its recording only without reduced motion. Keep videos muted, `playsInline`, and `preload="none"` on cards.
 - Contact submission uses EmailJS in `src/components/Contact.tsx`. Configuration names are `VITE_EMAILJS_SERVICE_ID`, `VITE_EMAILJS_TEMPLATE_ID`, and `VITE_EMAILJS_PUBLIC_KEY`. Browser environment variables are public; do not place secrets in them. Preserve validation and submission cooldowns, and mock external delivery in tests.
 - Keep project links, resume claims, and metrics consistent across their consumers; preserve the public `/resume.pdf` link.
-- Tests are colocated as `*.test.ts(x)`; `src/setupTests.ts` supplies browser mocks. `e2e/portfolio.spec.ts` covers Chromium desktop/mobile, including a card to case study round trip. Coverage thresholds live in `vite.config.ts`.
+- Tests are colocated as `*.test.ts(x)`; `src/setupTests.ts` supplies browser mocks. `e2e/portfolio.spec.ts` covers Chromium desktop/mobile, including a card to project page round trip. Coverage thresholds live in `vite.config.ts`.
 
 ## Verification and delivery
 

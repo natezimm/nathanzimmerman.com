@@ -79,12 +79,12 @@ test.describe('portfolio experience', () => {
     ).toHaveAttribute('maxlength', '2000');
   });
 
-  test('opens a case study from a project card and comes back', async ({
+  test('opens a project page from a project card and comes back', async ({
     page,
   }) => {
     await page.goto('/');
 
-    await page.getByRole('link', { name: 'Know Ball case study' }).click();
+    await page.getByRole('link', { name: 'Know Ball details' }).click();
     await expect(page).toHaveURL('/projects/know-ball');
     await expect(
       page.getByRole('heading', { level: 1, name: 'Know Ball' })

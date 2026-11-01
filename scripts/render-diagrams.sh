@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Renders each docs/diagrams/<slug>.mmd to src/assets/diagrams/<slug>.svg for
-# the case study pages. The sources are copies of each project's containers
+# the project pages. The sources are copies of each project's containers
 # diagram from its README; copy them again when a project's diagram changes.
 # Set PUPPETEER_EXECUTABLE_PATH to use an installed Chromium.
 set -euo pipefail

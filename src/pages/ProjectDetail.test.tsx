@@ -16,13 +16,13 @@ const renderAt = (path: string) =>
   );
 
 describe('ProjectDetail page', () => {
-  it('shows a case study with links, highlights and the architecture diagram', () => {
+  it('shows a project page with links, highlights and the architecture diagram', () => {
     renderAt('/projects/wheelhouse');
 
     expect(
       screen.getByRole('heading', { level: 1, name: 'Wheelhouse' })
     ).toBeInTheDocument();
-    expect(document.title).toBe('Wheelhouse case study · Nathan Zimmerman');
+    expect(document.title).toBe('Wheelhouse · Nathan Zimmerman');
 
     expect(screen.getByRole('link', { name: /Try the demo/ })).toHaveAttribute(
       'href',

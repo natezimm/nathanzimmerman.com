@@ -91,7 +91,7 @@ const ProjectCard = ({ project }: { project: ProjectEntry }) => {
             {project.kind}
           </div>
 
-          {/* Mouse shortcut to the case study; the title link is the accessible one */}
+          {/* Mouse shortcut to the project page; the title link is the accessible one */}
           <Link
             to={caseStudy}
             aria-hidden="true"
@@ -131,9 +131,9 @@ const ProjectCard = ({ project }: { project: ProjectEntry }) => {
           <Link
             to={caseStudy}
             className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline underline-offset-4"
-            aria-label={`${project.title} case study`}
+            aria-label={`${project.title} details`}
           >
-            Case study
+            Details
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
           <div className="flex items-center gap-2.5">

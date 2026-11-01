@@ -11,7 +11,7 @@ import Footer from '@/components/Footer';
 const Index = () => {
   const { hash } = useLocation();
 
-  // Links back from a case study land on /#projects; scroll there once.
+  // Links back from a project page land on /#projects; scroll there once.
   useEffect(() => {
     if (hash) document.getElementById(hash.slice(1))?.scrollIntoView();
   }, [hash]);

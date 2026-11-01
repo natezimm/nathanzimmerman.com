@@ -1,6 +1,6 @@
 # Nathan Zimmerman, portfolio
 
-My portfolio at [nathanzimmerman.com](https://nathanzimmerman.com): a React and TypeScript single-page site that features my projects with live demos, screen recordings and a case study page for each.
+My portfolio at [nathanzimmerman.com](https://nathanzimmerman.com): a React and TypeScript single-page site that features my projects with live demos, screen recordings and a page of details for each.
 
 [![CI](https://github.com/natezimm/nathanzimmerman.com/actions/workflows/deploy.yml/badge.svg)](https://github.com/natezimm/nathanzimmerman.com/actions/workflows/deploy.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
@@ -9,7 +9,7 @@ My portfolio at [nathanzimmerman.com](https://nathanzimmerman.com): a React and 
 ## What's on it
 
 - **A playable hero**: the portrait card is a small Brick Breaker game that pauses off screen and under reduced motion.
-- **Featured projects**: [Wheelhouse](https://calendar.nathanzimmerman.com), [Know Ball](https://knowball.nathanzimmerman.com), [Rabbit Ears](https://rabbitears.nathanzimmerman.com) and [Brick Breaker Resume](https://resume.nathanzimmerman.com). Each card plays a short recording on hover and links to its demo, its code and a case study at `/projects/<slug>` with the problem, engineering highlights and architecture diagram.
+- **Featured projects**: [Wheelhouse](https://calendar.nathanzimmerman.com), [Know Ball](https://knowball.nathanzimmerman.com), [Rabbit Ears](https://rabbitears.nathanzimmerman.com) and [Brick Breaker Resume](https://resume.nathanzimmerman.com). Each card plays a short recording on hover and links to its demo, its code and a project page at `/projects/<slug>` with the problem, engineering highlights and architecture diagram.
 - **Earlier projects**: Nerdle, Sudoku and Blackjack, whose demos are retired, with links to their code.
 - **Experience** as a git graph, a contact form through EmailJS, and light and dark themes.
 
@@ -37,7 +37,7 @@ See [`docs/architecture.md`](docs/architecture.md) for runtime boundaries, quali
 - `npm run test:e2e` – Playwright end-to-end tests against a production preview.
 - `npm run test:e2e:headed` / `npm run test:e2e:ui` – Debug Playwright in headed or UI mode.
 - `npm run images:project -- <screenshot.png> <slug>` – Convert a project screenshot into the site's image set (see below).
-- `npm run diagrams` – Render `docs/diagrams/*.mmd` to the SVGs the case studies show (set `PUPPETEER_EXECUTABLE_PATH` to use an installed Chromium).
+- `npm run diagrams` – Render `docs/diagrams/*.mmd` to the SVGs the project pages show (set `PUPPETEER_EXECUTABLE_PATH` to use an installed Chromium).
 
 ## Project screenshots
 
@@ -55,7 +55,7 @@ That writes to `src/assets/`:
 | `project-<slug>.avif`, `project-<slug>.webp`             | 1200 px wide | `1200w` srcset entry                                    |
 | `project-<slug>-small.avif`, `project-<slug>-small.webp` | 600 px wide  | `600w` srcset entry                                     |
 
-The slug is lowercase with dashes and becomes the file name, so rerunning with an existing slug replaces that project's images in place. Import the new files in `src/data/portfolioData.ts`, which both the card and the case study read. Settings live at the top of `scripts/project-images.mjs`.
+The slug is lowercase with dashes and becomes the file name, so rerunning with an existing slug replaces that project's images in place. Import the new files in `src/data/portfolioData.ts`, which both the card and the project page read. Settings live at the top of `scripts/project-images.mjs`.
 
 ## Adding a featured project
 
@@ -64,7 +64,7 @@ A project needs four things, all referenced from its entry in `projectEntries` i
 1. A screenshot set from `npm run images:project`.
 2. A short silent MP4 (about 20 seconds, 1280 px wide, no audio) in `src/assets/video/`.
 3. Its containers diagram: copy the Mermaid block from the project's README into `docs/diagrams/<slug>.mmd` and run `npm run diagrams`.
-4. The card summary, the case study's problem, features and highlights, and its live, code and architecture links.
+4. The card summary, the project page's problem, features and highlights, and its live, code and architecture links.
 
 Add its URL to `public/sitemap.xml`.
 
@@ -72,7 +72,7 @@ Add its URL to `public/sitemap.xml`.
 
 | Area    | Tools                                                                |
 | ------- | -------------------------------------------------------------------- |
-| App     | React 18, TypeScript, Vite, React Router (home and case study pages) |
+| App     | React 18, TypeScript, Vite, React Router (home and project pages)    |
 | Styling | Tailwind CSS with `tailwindcss-animate`, Framer Motion, Lucide icons |
 | UI      | A few shadcn-style primitives on Radix Slot, Sonner toasts           |
 | Contact | `@emailjs/browser`                                                   |
@@ -82,11 +82,11 @@ Add its URL to `public/sitemap.xml`.
 
 - `src/components/` – Hero, About, Projects, Contact, Footer, and shared UI primitives (including a theme toggle).
 - `src/contexts/ThemeContext.tsx` – theme persistence, system preference detection, and toggles wrapped around the app.
-- `src/pages/` – `Index` for the home page, `ProjectDetail` for case studies at `/projects/:slug`, `NotFound` for everything else.
+- `src/pages/` – `Index` for the home page, `ProjectDetail` for project pages at `/projects/:slug`, `NotFound` for everything else.
 - `src/data/portfolioData.ts` – featured and earlier projects, and the experience timeline.
 - `src/lib/` – utilities such as `cn()` (clsx + tailwind-merge) helpers used throughout.
 - `src/assets/` – screenshots, recordings (`video/`) and rendered diagrams (`diagrams/`); `public/` is served as is.
-- `docs/diagrams/` – Mermaid sources for the case study diagrams.
+- `docs/diagrams/` – Mermaid sources for the project page diagrams.
 
 ## Testing & quality
 
@@ -131,7 +131,7 @@ The site implements multiple layers of security:
 
 ## Deployment
 
-Every push to `main` runs the quality gate in GitHub Actions, then rsyncs `dist/` to the GCP VM, where nginx serves it over HTTPS, and checks that the site answers. nginx falls back to `index.html` so case study URLs load directly. See [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
+Every push to `main` runs the quality gate in GitHub Actions, then rsyncs `dist/` to the GCP VM, where nginx serves it over HTTPS, and checks that the site answers. nginx falls back to `index.html` so project page URLs load directly. See [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
 
 ## License
 
