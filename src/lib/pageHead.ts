@@ -15,7 +15,7 @@ export type PageHead = {
 export const HOME_HEAD: PageHead = {
   title: 'Nathan Zimmerman | Software Engineer',
   description:
-    'Nathan Zimmerman – Software Engineer specializing in React, Angular, TypeScript, Java, .NET, Node.js, MongoDB, AWS, and Azure.',
+    'Nathan Zimmerman – Software Engineer specializing in C#, .NET, and Angular, building full-stack web apps on AWS and Azure.',
   path: '/',
   image: '/og-image.jpg',
 };
