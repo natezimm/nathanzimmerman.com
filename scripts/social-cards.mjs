@@ -51,7 +51,7 @@ const siteCard = async () => {
     <div style="flex:0 0 470px;display:flex;flex-direction:column;gap:22px">
       <p class="name">nathanzimmerman.com</p>
       <h1>Nathan<br>Zimmerman</h1>
-      <p class="lead">Software engineer building full-stack apps in .NET, Angular and React.</p>
+      <p class="lead">Software engineer specializing in C#, .NET and Angular.</p>
     </div>
     <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:18px">
       ${shots.map((src) => `<img class="shot" src="${src}" style="width:100%;aspect-ratio:1200/648">`).join('')}
