@@ -1,0 +1,46 @@
+# Dependency updates once a month, one grouped pull request per ecosystem, so they do not
+# eat into the monthly Actions minutes. Security updates are grouped the same way.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ['*']
+      actions-security:
+        applies-to: security-updates
+        patterns: ['*']
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      npm:
+        patterns: ['*']
+      npm-security:
+        applies-to: security-updates
+        patterns: ['*']
+    # A major release (React, Vite, Tailwind) can change the API or config format and arrives
+    # bundled with routine updates. Take major upgrades by hand.
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      docker:
+        patterns: ['*']
+      docker-security:
+        applies-to: security-updates
+        patterns: ['*']
+    # The Dockerfile's Node version is kept in step with .nvmrc and CI. Move it by hand, to the
+    # next long-term-support release, rather than to whatever the newest release is.
+    ignore:
+      - dependency-name: node
+        update-types: ['version-update:semver-major']
