@@ -1,0 +1,81 @@
+name: Security
+
+# Static analysis and dependency checks, kept apart from the build-and-deploy workflow so that an
+# advisory published overnight against an unchanged dependency marks pull requests red without
+# holding a deploy that is already tested.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    # Mondays, so new advisories and CodeQL queries reach code nobody has touched lately.
+    - cron: '17 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  codeql:
+    name: CodeQL (${{ matrix.language }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        # Nothing here needs a build to be scanned (build-mode none).
+        language: [javascript-typescript, actions]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: none
+          # The default queries plus the extended security set.
+          queries: security-extended
+          config: |
+            paths-ignore:
+              - node_modules
+              - dist
+              - coverage
+      - uses: github/codeql-action/analyze@v4
+        with:
+          category: /language:${{ matrix.language }}
+
+  # A pull request that adds or upgrades to a dependency with a known high or critical advisory
+  # fails here, for npm, Actions and Docker alike, from GitHub's dependency graph.
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/dependency-review-action@v5.0.0
+        with:
+          fail-on-severity: high
+          comment-summary-in-pr: on-failure
+
+  # The dependencies already in the lock files, checked against today's advisories.
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - name: npm packages the app ships
+        # Development tools (the build, test runners) never reach a browser, so only the
+        # packages bundled into the app can fail this.
+        run: npm audit --omit=dev --audit-level=high
