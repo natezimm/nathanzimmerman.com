@@ -6,7 +6,7 @@ import { createServer } from 'vite';
 
 const root = path.resolve(import.meta.dirname, '..');
 
-export const SITE_URL = 'https://nathanzimmerman.com';
+export const SITE_URL = new URL('https://nathanzimmerman.com').origin;
 
 export async function loadProjects() {
   const server = await createServer({
