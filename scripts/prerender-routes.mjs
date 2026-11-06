@@ -27,17 +27,21 @@ const escape = (text) =>
 // index.html fails the build instead of shipping a page with the home page's
 // canonical link.
 const replaceOnce = (html, pattern, replacement) => {
-  const matches = html.match(new RegExp(pattern, 'g')) ?? [];
-  if (matches.length !== 1) {
+  let matches = 0;
+  const result = html.replace(pattern, () => {
+    matches += 1;
+    return replacement;
+  });
+  if (matches !== 1) {
     throw new Error(
-      `Expected one match for ${pattern} in dist/index.html, found ${matches.length}`
+      `Expected one match for ${pattern} in dist/index.html, found ${matches}`
     );
   }
-  return html.replace(pattern, replacement);
+  return result;
 };
 
 const tag = (attr, key) =>
-  new RegExp(`<meta\\s+${attr}="${key}"\\s+content="[^"]*"\\s*/?>`);
+  new RegExp(`<meta\\s+${attr}="${key}"\\s+content="[^"]*"\\s*/?>`, 'g');
 
 const pageFor = (project) => {
   const { head } = project;
@@ -48,10 +52,10 @@ const pageFor = (project) => {
   const alt = escape(`${project.title}: ${project.tagline}`);
 
   let html = shell;
-  html = replaceOnce(html, /<title>[^<]*<\/title>/, `<title>${title}</title>`);
+  html = replaceOnce(html, /<title>[^<]*<\/title>/g, `<title>${title}</title>`);
   html = replaceOnce(
     html,
-    /<link\s+rel="canonical"\s+href="[^"]*"\s*\/?>/,
+    /<link\s+rel="canonical"\s+href="[^"]*"\s*\/?>/g,
     `<link rel="canonical" href="${url}" />`
   );
   for (const [attr, key, value] of [
