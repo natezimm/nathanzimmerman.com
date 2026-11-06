@@ -9,23 +9,27 @@ export default defineConfig(({ mode }) => ({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(import.meta.dirname, './src'),
     },
   },
   build: {
     cssCodeSplit: true,
     chunkSizeWarningLimit: 500,
-    rollupOptions: {
+    rolldownOptions: {
       output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom'],
-          'vendor-router': ['react-router-dom'],
-          'vendor-ui': [
-            '@radix-ui/react-slot',
-            'class-variance-authority',
-            'clsx',
-            'tailwind-merge',
-          ],
+        manualChunks(id) {
+          if (!id.includes('/node_modules/')) return undefined;
+          if (/\/node_modules\/(react|react-dom|scheduler)\//.test(id))
+            return 'vendor-react';
+          if (/\/node_modules\/(react-router|react-router-dom)\//.test(id))
+            return 'vendor-router';
+          if (
+            /\/node_modules\/(@radix-ui\/react-slot|class-variance-authority|clsx|tailwind-merge)\//.test(
+              id
+            )
+          )
+            return 'vendor-ui';
+          return undefined;
         },
       },
     },
