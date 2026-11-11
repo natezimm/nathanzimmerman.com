@@ -8,6 +8,7 @@
         "README.md",
         "docs/architecture.md",
         "docs/adr/0*.md",
+        "docs/security.md",
         "api/generated/portfolio.md"
       ],
       "citeAs": { "api/generated/portfolio.md": "src/data/portfolioData.ts" }

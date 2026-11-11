@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import Ask from './Ask';
 import type { AskMeta } from '@/lib/askClient';
 
@@ -46,6 +47,13 @@ const reply = (status: number, body: unknown) =>
     )
   );
 
+const renderAsk = () =>
+  render(
+    <MemoryRouter>
+      <Ask meta={meta} />
+    </MemoryRouter>
+  );
+
 const input = () => screen.getByRole('textbox', { name: 'Your question' });
 
 afterEach(() => vi.unstubAllGlobals());
@@ -54,7 +62,7 @@ describe('Ask', () => {
   it('asks a suggested question and shows the answer with its sources', async () => {
     const fetchMock = reply(200, answer);
     vi.stubGlobal('fetch', fetchMock);
-    render(<Ask meta={meta} />);
+    renderAsk();
 
     fireEvent.click(
       screen.getByRole('button', { name: 'Why does Rabbit Ears use mpv?' })
@@ -79,7 +87,7 @@ describe('Ask', () => {
   it('submits a typed question with Enter and clears the box after an answer', async () => {
     const fetchMock = reply(200, answer);
     vi.stubGlobal('fetch', fetchMock);
-    render(<Ask meta={meta} />);
+    renderAsk();
 
     fireEvent.change(input(), { target: { value: 'Why mpv?' } });
     fireEvent.submit(input().closest('form')!);
@@ -90,7 +98,7 @@ describe('Ask', () => {
   });
 
   it('caps the question at 300 characters and counts them', () => {
-    render(<Ask meta={meta} />);
+    renderAsk();
 
     expect(input()).toHaveAttribute('maxlength', '300');
     expect(screen.getByText('0/300')).toBeInTheDocument();
@@ -99,7 +107,7 @@ describe('Ask', () => {
   });
 
   it('keeps the Ask button off until there is a question', () => {
-    render(<Ask meta={meta} />);
+    renderAsk();
 
     const button = screen.getByRole('button', { name: 'Ask' });
     expect(button).toBeDisabled();
@@ -119,7 +127,7 @@ describe('Ask', () => {
         reason: 'not_in_docs',
       })
     );
-    render(<Ask meta={meta} />);
+    renderAsk();
 
     fireEvent.change(input(), { target: { value: 'What is the weather?' } });
     fireEvent.submit(input().closest('form')!);
@@ -134,7 +142,7 @@ describe('Ask', () => {
 
   it('shows the paused state with links to the repos', async () => {
     vi.stubGlobal('fetch', reply(503, { refused: true, reason: 'paused' }));
-    render(<Ask meta={meta} />);
+    renderAsk();
 
     fireEvent.click(screen.getByRole('button', { name: /Know Ball/ }));
 
@@ -147,7 +155,7 @@ describe('Ask', () => {
 
   it('asks the visitor to slow down after a 429', async () => {
     vi.stubGlobal('fetch', reply(429, { reason: 'rate_limited' }));
-    render(<Ask meta={meta} />);
+    renderAsk();
 
     fireEvent.click(screen.getByRole('button', { name: /Know Ball/ }));
 
@@ -160,7 +168,7 @@ describe('Ask', () => {
       'fetch',
       vi.fn(() => new Promise<Response>((resolve) => (finish = resolve)))
     );
-    const { container } = render(<Ask meta={meta} />);
+    const { container } = renderAsk();
     const region = container.querySelector('[aria-live="polite"]')!;
 
     fireEvent.click(screen.getByRole('button', { name: /Know Ball/ }));
@@ -173,8 +181,17 @@ describe('Ask', () => {
     await waitFor(() => expect(region).toHaveAttribute('aria-busy', 'false'));
   });
 
+  it('links to the privacy page', () => {
+    renderAsk();
+
+    expect(screen.getByRole('link', { name: 'Privacy' })).toHaveAttribute(
+      'href',
+      '/privacy/'
+    );
+  });
+
   it('shows how much the index holds', () => {
-    render(<Ask meta={meta} />);
+    renderAsk();
 
     expect(
       screen.getByText(

@@ -1,4 +1,5 @@
 import { ArrowUp } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Github, Linkedin } from '@/components/shared/BrandIcons';
 
 const Footer = () => {
@@ -25,6 +26,13 @@ const Footer = () => {
             © {new Date().getFullYear()} Nathan Zimmerman. Built with React &
             Tailwind. Thanks for stopping by.
           </p>
+
+          <Link
+            to="/privacy/"
+            className="text-xs text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+          >
+            Privacy
+          </Link>
 
           <div className="flex items-center justify-center gap-6">
             <a

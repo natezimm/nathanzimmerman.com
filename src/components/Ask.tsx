@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { ArrowUpRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { SectionCaption } from '@/components/shared/SectionCaption';
 import { ScrollReveal } from '@/components/ScrollReveal';
@@ -230,7 +231,13 @@ const Ask = ({ meta }: { meta: AskMeta }) => {
               >
                 <span>
                   Your question goes to Anthropic&apos;s Claude API to write the
-                  answer. Nothing is stored.
+                  answer. Nothing is stored.{' '}
+                  <Link
+                    to="/privacy/"
+                    className="underline underline-offset-4 hover:text-primary"
+                  >
+                    Privacy
+                  </Link>
                 </span>
                 <span>
                   {question.length}/{MAX_QUESTION_CHARS}

@@ -5,6 +5,7 @@
     <Project Path="src/PortfolioAsk.Indexer/PortfolioAsk.Indexer.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/PortfolioAsk.Evals/PortfolioAsk.Evals.csproj" />
     <Project Path="tests/PortfolioAsk.Tests/PortfolioAsk.Tests.csproj" />
   </Folder>
 </Solution>
