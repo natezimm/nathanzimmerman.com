@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/PortfolioAsk.Api/PortfolioAsk.Api.csproj" />
     <Project Path="src/PortfolioAsk.Core/PortfolioAsk.Core.csproj" />
     <Project Path="src/PortfolioAsk.Indexer/PortfolioAsk.Indexer.csproj" />
   </Folder>
