@@ -63,6 +63,23 @@ public sealed class EvalScoreTests
     }
 
     [Fact]
+    public void A_model_outage_is_never_a_correct_refusal()
+    {
+        var outage = new EvalOutcome(
+            new EvalCase("refuse-salary", "What salary?", true),
+            AskResponse.Refusal(RefusalReasons.Unavailable),
+            0,
+            0,
+            TimeSpan.FromSeconds(20));
+
+        var score = new EvalScore([outage, Answered("hit", [Adr], Cite(1, Adr))]);
+
+        Assert.Equal(0, score.RefusalAccuracy);
+        Assert.Contains(score.Failures(), f => f.StartsWith("refuse-salary got no answer from the model", StringComparison.Ordinal));
+        Assert.Contains("⚠️ refuse-salary", score.ToMarkdown("test"), StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void The_eval_set_loads_with_enough_cases_of_each_kind()
     {
         var api = new DirectoryInfo(AppContext.BaseDirectory);

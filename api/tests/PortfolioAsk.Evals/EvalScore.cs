@@ -17,6 +17,15 @@ public sealed record EvalOutcome(EvalCase Case, AskResponse Response, long Input
     /// <summary>Cited files that are expected or allowed for this question.</summary>
     public int PreciseCitations => Response.Citations.Count(c => Allowed.Any(e => Matches(e, c)));
 
+    /// <summary>
+    /// The pipeline never got a verdict from the model (an outage, the budget or the kill switch). That says nothing
+    /// about refusal behavior, so it never counts as a correct refusal and fails the run.
+    /// </summary>
+    public bool NoVerdict => Response.Reason is RefusalReasons.Unavailable or RefusalReasons.Budget or RefusalReasons.Paused;
+
+    /// <summary>A must-refuse question that was refused for a real reason, not because the model was unreachable.</summary>
+    public bool CorrectlyRefused => Case.Refuse && Response.Refused && !NoVerdict;
+
     public bool ContainsAll => (Case.MustContain ?? []).All(term => Response.Answer.Contains(term, StringComparison.OrdinalIgnoreCase));
 
     private static bool Matches(ExpectedSource expected, Citation cited) => expected.Repo == cited.Repo && expected.Path == cited.Path;
@@ -44,7 +53,7 @@ public sealed class EvalScore(IReadOnlyList<EvalOutcome> outcomes)
 
     public double FalseRefusals => Ratio(Answerable.Count(o => o.Response.Refused), Answerable.Count);
 
-    public double RefusalAccuracy => Ratio(MustRefuse.Count(o => o.Response.Refused), MustRefuse.Count);
+    public double RefusalAccuracy => Ratio(MustRefuse.Count(o => o.CorrectlyRefused), MustRefuse.Count);
 
     public double Precision
     {
@@ -79,6 +88,11 @@ public sealed class EvalScore(IReadOnlyList<EvalOutcome> outcomes)
     public IReadOnlyList<string> Failures()
     {
         var failures = new List<string>();
+        foreach (var unscored in outcomes.Where(o => o.NoVerdict))
+        {
+            failures.Add($"{unscored.Case.Id} got no answer from the model ({unscored.Response.Reason}); rerun the eval");
+        }
+
         foreach (var missed in MustRefuse.Where(o => !o.Response.Refused))
         {
             failures.Add($"{missed.Case.Id} should have been refused");
@@ -119,7 +133,7 @@ public sealed class EvalScore(IReadOnlyList<EvalOutcome> outcomes)
         {
             var expected = o.Case.Refuse ? "refuse" : "answer";
             var got = o.Response.Refused ? $"refused ({o.Response.Reason})" : "answered";
-            var mark = o.Case.Refuse == o.Response.Refused && (o.Case.Refuse || o.Hit) ? "✅" : "❌";
+            var mark = o.NoVerdict ? "⚠️" : o.Case.Refuse ? (o.CorrectlyRefused ? "✅" : "❌") : (o.Hit ? "✅" : "❌");
             var cited = string.Join(", ", o.Response.Citations.Select(c => $"{c.Repo}/{c.Path}"));
             md.AppendLine(CultureInfo.InvariantCulture,
                 $"| {mark} {o.Case.Id} | {expected} | {got} | {cited} | {o.InputTokens} / {o.OutputTokens} | {o.Elapsed.TotalMilliseconds:F0} |");
