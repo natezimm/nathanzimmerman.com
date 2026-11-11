@@ -34,7 +34,9 @@ public static class IndexBuilder
                 p.File.Repo.Key,
                 p.File.CitePath,
                 p.Chunk.Heading,
-                p.Chunk.Anchor,
+                // A heading anchor only exists in the file it came from. A generated file cited as its
+                // source (portfolio.md as portfolioData.ts) links to the top of that source instead.
+                p.File.CitePath == p.File.RelativePath ? p.Chunk.Anchor : "",
                 p.Chunk.Text,
                 embeddings[i].Vector.ToArray()))
             .ToList();

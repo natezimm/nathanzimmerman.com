@@ -80,6 +80,24 @@ public sealed class IndexTests : IDisposable
     }
 
     [Fact]
+    public async Task A_generated_file_cited_as_its_source_drops_the_heading_anchors()
+    {
+        Write("generated/data.md", "# Data\n\n## Experience\n\nTeacher, then engineer.\n");
+        var repo = Repo with
+        {
+            Include = ["README.md", "generated/data.md"],
+            CiteAs = new Dictionary<string, string> { ["generated/data.md"] = "src/data.ts" },
+        };
+
+        var index = await IndexBuilder.BuildAsync(
+            [new RepoCheckout(repo, root, "0123456789012345678901234567890123456789")], new FakeEmbeddingGenerator(), Model);
+
+        var generated = Assert.Single(index.Chunks, c => c.Path == "src/data.ts");
+        Assert.Equal("", generated.Anchor);
+        Assert.Contains(index.Chunks, c => c.Path == "README.md" && c.Anchor == "games");
+    }
+
+    [Fact]
     public void Links_are_pinned_to_the_indexed_commit()
     {
         var repo = new IndexedRepo("know-ball", "Know Ball", "natezimm/know-ball", "0123456789012345678901234567890123456789");
