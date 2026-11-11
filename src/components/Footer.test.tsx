@@ -1,10 +1,15 @@
 import { describe, expect, it, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import Footer from './Footer';
 
 describe('Footer', () => {
   it('renders the current year', () => {
-    render(<Footer />);
+    render(
+      <MemoryRouter>
+        <Footer />
+      </MemoryRouter>
+    );
 
     const year = new Date().getFullYear().toString();
     expect(
@@ -14,7 +19,11 @@ describe('Footer', () => {
 
   it('scrolls back to the top', () => {
     const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
-    render(<Footer />);
+    render(
+      <MemoryRouter>
+        <Footer />
+      </MemoryRouter>
+    );
 
     fireEvent.click(screen.getByRole('button', { name: 'Back to top' }));
 

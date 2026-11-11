@@ -13,6 +13,12 @@ public sealed class AskOptions
 
     public string Model { get; set; } = "claude-haiku-5-5";
 
+    /// <summary>
+    /// Adaptive thinking at low effort instead of none. Off unless the eval shows it answers better; thinking
+    /// tokens count against <see cref="MaxOutputTokens"/>, so raise that too when turning it on.
+    /// </summary>
+    public bool Thinking { get; set; }
+
     /// <summary>About twice a normal answer. An answer cut off here becomes a refusal.</summary>
     public int MaxOutputTokens { get; set; } = 600;
 

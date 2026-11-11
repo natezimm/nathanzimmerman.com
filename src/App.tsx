@@ -6,6 +6,7 @@ import Index from './pages/Index';
 import NotFound from './pages/NotFound';
 
 const ProjectDetail = lazy(() => import('./pages/ProjectDetail'));
+const Privacy = lazy(() => import('./pages/Privacy'));
 
 const App = () => (
   <ThemeProvider>
@@ -18,6 +19,14 @@ const App = () => (
           element={
             <Suspense fallback={null}>
               <ProjectDetail />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/privacy"
+          element={
+            <Suspense fallback={null}>
+              <Privacy />
             </Suspense>
           }
         />

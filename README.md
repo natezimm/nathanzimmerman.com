@@ -11,9 +11,10 @@ My portfolio at [nathanzimmerman.com](https://nathanzimmerman.com): a React and 
 - **A playable hero**: the portrait card is a small Brick Breaker game that pauses off screen and under reduced motion.
 - **Featured projects**: [Wheelhouse](https://calendar.nathanzimmerman.com), [Know Ball](https://knowball.nathanzimmerman.com), [Rabbit Ears](https://rabbitears.nathanzimmerman.com) and [Brick Breaker Resume](https://resume.nathanzimmerman.com). Each card plays a short recording on hover and links to its demo, its code and a project page at `/projects/<slug>` with the problem, engineering highlights and architecture diagram.
 - **Earlier projects**: Nerdle, Sudoku and Blackjack, whose demos are retired, with links to their code.
+- **Ask my portfolio**: a question box that answers from the READMEs, architecture notes and decision records of my repositories, with a link to every source. It refuses rather than guesses, and its spend is capped. See [`docs/adr/0001-ask-my-portfolio.md`](docs/adr/0001-ask-my-portfolio.md).
 - **Experience** as a git graph, a contact form through EmailJS, and light and dark themes.
 
-See [`docs/architecture.md`](docs/architecture.md) for runtime boundaries, quality gates, deployment and how the five project repositories are hosted.
+See [`docs/architecture.md`](docs/architecture.md) for runtime boundaries, quality gates, deployment and how the five project repositories are hosted, [`docs/security.md`](docs/security.md) for the threat model and [`docs/adr/`](docs/adr/README.md) for decision records.
 
 ## Quick start
 
@@ -84,13 +85,14 @@ The preview pictures are drawn by `npm run images:social` from each project's ti
 
 ## Tech stack
 
-| Area    | Tools                                                                  |
-| ------- | ---------------------------------------------------------------------- |
-| App     | React 19, TypeScript 7, Vite, React Router (home and project pages)    |
-| Styling | Tailwind CSS 4 with `tailwindcss-animate`, Framer Motion, Lucide icons |
-| UI      | A few shadcn-style primitives on Radix Slot, Sonner toasts             |
-| Contact | `@emailjs/browser`                                                     |
-| Quality | Vitest and Testing Library, Playwright, ESLint, Prettier               |
+| Area    | Tools                                                                                    |
+| ------- | ---------------------------------------------------------------------------------------- |
+| App     | React 19, TypeScript 7, Vite, React Router (home and project pages)                      |
+| Styling | Tailwind CSS 4 with `tailwindcss-animate`, Framer Motion, Lucide icons                   |
+| UI      | A few shadcn-style primitives on Radix Slot, Sonner toasts                               |
+| Contact | `@emailjs/browser`                                                                       |
+| AI      | Microsoft.Extensions.AI, Claude Haiku 5.5, ONNX Runtime (bge-small), .NET 11 minimal API |
+| Quality | Vitest and Testing Library, Playwright, ESLint, Prettier                                 |
 
 ## Project layout
 
@@ -101,6 +103,7 @@ The preview pictures are drawn by `npm run images:social` from each project's ti
 - `src/lib/` – utilities such as `cn()` (clsx + tailwind-merge) helpers used throughout.
 - `src/assets/` – screenshots, recordings (`video/`) and rendered diagrams (`diagrams/`); `public/` is served as is.
 - `docs/diagrams/` – Mermaid sources for the project page diagrams.
+- `api/` – the Ask my portfolio API, indexer and tests (.NET 11); `deploy/` – its Compose file, nginx location and runbook.
 
 ## Testing & quality
 
@@ -115,7 +118,8 @@ The preview pictures are drawn by `npm run images:social` from each project's ti
 Tooling:
 
 - Vitest + Testing Library for component, context, and integration tests
-- Playwright for cross-viewport end-to-end smoke coverage
+- Playwright for cross-viewport end-to-end smoke coverage, with `/api/ask` stubbed
+- `ask.yml` runs the API tests (no key needed) and a free retrieval check on every pull request that touches the API or the docs; the paid end-to-end eval (`ask-evals.yml`) runs on demand
 - ESLint for consistent TypeScript and React conventions
 - Prettier for formatting
 
@@ -146,6 +150,8 @@ The site implements multiple layers of security:
 ## Deployment
 
 Every push to `main` runs the quality gate in GitHub Actions, then rsyncs `dist/` to the GCP VM, where nginx serves it over HTTPS, and checks that the site answers. nginx falls back to `index.html` so project page URLs load directly. See [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
+
+The Ask my portfolio API ships separately: `ask.yml` builds `ghcr.io/natezimm/nathanzimmerman-ask` with the index baked in and deploys it to its own container on the VM, which nginx serves at `/api/ask`. It starts switched off; `deploy/README.md` has the setup, the kill switch and monitoring.
 
 ## License
 

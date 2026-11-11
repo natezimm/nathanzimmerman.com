@@ -153,6 +153,31 @@ test.describe('portfolio experience', () => {
     );
   });
 
+  test('serves the privacy page with its own head, linked from the footer', async ({
+    page,
+    request,
+  }) => {
+    const html = await (await request.get('/privacy/')).text();
+    expect(html).toContain('<title>Privacy · Nathan Zimmerman</title>');
+    expect(html).toContain(
+      '<link rel="canonical" href="https://nathanzimmerman.com/privacy/" />'
+    );
+    const sitemap = await (await request.get('/sitemap.xml')).text();
+    expect(sitemap).toContain(
+      '<loc>https://nathanzimmerman.com/privacy/</loc>'
+    );
+
+    await page.goto('/');
+    await page
+      .getByRole('contentinfo')
+      .getByRole('link', { name: 'Privacy' })
+      .click();
+    await expect(page).toHaveURL('/privacy/');
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Privacy' })
+    ).toBeVisible();
+  });
+
   test('loads the social card the home page links to', async ({ request }) => {
     const home = await (await request.get('/')).text();
     expect(home).toContain(

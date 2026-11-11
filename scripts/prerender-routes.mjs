@@ -3,9 +3,9 @@
 // to get the home page's HTML, including a canonical link back to "/", which
 // tells search engines each project page is a copy of the home page.
 //
-// This writes dist/projects/<slug>/index.html for each project with its own
-// title, description, canonical link and Open Graph tags, and a sitemap that
-// lists exactly those pages. Project URLs end in a slash: nginx's
+// This writes dist/projects/<slug>/index.html for each project, and
+// dist/privacy/index.html, each with its own title, description, canonical
+// link and Open Graph tags, and a sitemap that lists exactly those pages. Project URLs end in a slash: nginx's
 // `try_files $uri $uri/ /index.html` serves /projects/<slug>/index.html for
 // /projects/<slug>/ and redirects /projects/<slug> there, so the slash form is
 // the canonical one and the app links to it. The React app then takes over.
@@ -43,13 +43,21 @@ const replaceOnce = (html, pattern, replacement) => {
 const tag = (attr, key) =>
   new RegExp(`<meta\\s+${attr}="${key}"\\s+content="[^"]*"\\s*/?>`, 'g');
 
-const pageFor = (project) => {
-  const { head } = project;
+// The privacy page's head; src/lib/pageHead.ts has the same PRIVACY_HEAD for moves inside the app.
+const PRIVACY_HEAD = {
+  title: 'Privacy · Nathan Zimmerman',
+  description:
+    'What nathanzimmerman.com sends where: Ask my portfolio questions go to the Claude API, contact messages go through EmailJS, and the site stores neither.',
+  path: '/privacy/',
+  image: '/og-image.jpg',
+};
+
+const pageFor = (head, altText, type = 'article') => {
   const url = `${SITE_URL}${head.path}`;
   const title = escape(head.title);
   const description = escape(head.description);
   const image = `${SITE_URL}${head.image}`;
-  const alt = escape(`${project.title}: ${project.tagline}`);
+  const alt = escape(altText);
 
   let html = shell;
   html = replaceOnce(html, /<title>[^<]*<\/title>/g, `<title>${title}</title>`);
@@ -60,7 +68,7 @@ const pageFor = (project) => {
   );
   for (const [attr, key, value] of [
     ['name', 'description', description],
-    ['property', 'og:type', 'article'],
+    ['property', 'og:type', type],
     ['property', 'og:title', title],
     ['property', 'og:description', description],
     ['property', 'og:url', url],
@@ -79,8 +87,21 @@ const pageFor = (project) => {
 for (const project of projects) {
   const dir = path.join(dist, 'projects', project.slug);
   await mkdir(dir, { recursive: true });
-  await writeFile(path.join(dir, 'index.html'), pageFor(project));
+  await writeFile(
+    path.join(dir, 'index.html'),
+    pageFor(project.head, `${project.title}: ${project.tagline}`)
+  );
 }
+
+await mkdir(path.join(dist, 'privacy'), { recursive: true });
+await writeFile(
+  path.join(dist, 'privacy', 'index.html'),
+  pageFor(
+    PRIVACY_HEAD,
+    'Nathan Zimmerman, software engineer, with screenshots of Wheelhouse, Know Ball, Rabbit Ears and Brick Breaker Resume.',
+    'website'
+  )
+);
 
 const today = new Date().toISOString().slice(0, 10);
 const urls = [
@@ -89,6 +110,7 @@ const urls = [
     loc: `${SITE_URL}${p.head.path}`,
     priority: '0.8',
   })),
+  { loc: `${SITE_URL}${PRIVACY_HEAD.path}`, priority: '0.3' },
 ];
 await writeFile(
   path.join(dist, 'sitemap.xml'),
@@ -108,5 +130,5 @@ ${urls
 );
 
 console.log(
-  `Prerendered ${projects.length} project pages and the sitemap into dist/`
+  `Prerendered ${projects.length} project pages, the privacy page and the sitemap into dist/`
 );

@@ -1,0 +1,111 @@
+name: Ask my portfolio evals
+
+# The paid eval: every question in api/evals/evals.json through the real pipeline and Claude Haiku 5.5,
+# scored for citation hit rate, precision, refusal accuracy and false refusals, with the table in the job
+# summary. About 30 calls, a fraction of a cent. Runs only from the Run workflow button, never on a pull
+# request. The key is the ANTHROPIC_EVAL_KEY secret of the protected `evals` environment: a key of its own in
+# the same capped Anthropic workspace as the VM's, so either can be revoked alone.
+#
+# The inputs try a setting without a code change; ship a winner by changing AskOptions or the VM's .env.
+
+on:
+  workflow_dispatch:
+    inputs:
+      min_score:
+        description: Retrieval gate (Ask__MinScore)
+        default: '0.60'
+        required: true
+      thinking:
+        description: Adaptive thinking instead of none (Ask__Thinking)
+        type: boolean
+        default: false
+      max_output_tokens:
+        description: Output cap (Ask__MaxOutputTokens); raise it when thinking is on
+        default: '600'
+        required: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: ask-evals
+  cancel-in-progress: false
+
+jobs:
+  eval:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    environment: evals
+    env:
+      DOTNET_NOLOGO: '1'
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+
+    steps:
+      - name: Check for the key
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_EVAL_KEY }}
+        run: |
+          # Without the key the eval test skips and the job would pass having checked nothing.
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::error::Add the ANTHROPIC_EVAL_KEY secret to the evals environment to run the eval."
+            exit 1
+          fi
+
+      - name: Checkout repo
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: api/global.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Cache embedding model
+        uses: actions/cache@v6
+        with:
+          path: api/models/files
+          key: ask-model-${{ hashFiles('api/models/manifest.json') }}
+
+      - name: Fetch embedding model
+        run: api/scripts/fetch-model.sh
+
+      - name: Fetch corpus
+        run: echo "REPOS=$(api/scripts/fetch-corpus.sh)" >> "$GITHUB_ENV"
+
+      - name: Build index
+        run: |
+          # REPOS holds several --repo arguments, so it is split on purpose.
+          # shellcheck disable=SC2086
+          dotnet run --project api/src/PortfolioAsk.Indexer -c Release -- build \
+            --corpus api/corpus.json --manifest api/models/manifest.json --models api/models/files \
+            --out api/index.json $REPOS
+
+      - name: Run the eval
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_EVAL_KEY }}
+          Ask__MinScore: ${{ inputs.min_score }}
+          Ask__Thinking: ${{ inputs.thinking }}
+          Ask__MaxOutputTokens: ${{ inputs.max_output_tokens }}
+        run: |
+          dotnet test api/tests/PortfolioAsk.Evals -c Release --filter Category=Eval \
+            --logger "console;verbosity=normal"
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ask-eval-report
+          path: api/tests/PortfolioAsk.Evals/bin/Release/net11.0/eval-report.md
+          if-no-files-found: ignore
