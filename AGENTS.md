@@ -16,6 +16,7 @@ Preserve unrelated working-tree changes. `docs/architecture.md` has broader desi
 - `src/contexts/ThemeContext.tsx`: saves `light`/`dark` under the `theme` localStorage key and defaults to dark when no valid value is saved.
 - `src/lib/`: shared helpers, analytics, and skill metrics. The `@/` import alias resolves to `src/`.
 - `src/index.css`, `tailwind.config.ts`, and `src/assets/`: styling and bundled imagery; `public/` contains directly served assets and `_headers`.
+- `infra/`: Terraform for the GCP project every app runs in (the VM, its address and firewall, and uptime checks, alerts and SLOs for every app), run by hand; CI only runs `terraform fmt -check` and `validate`. Real project, VM, domain and email values live in its git-ignored `terraform.tfvars`, never in committed files. See `infra/README.md`.
 
 ## Commands
 

@@ -1,0 +1,46 @@
+# Copy to terraform.tfvars (not committed) and fill in. Nothing here is a secret, but the real values
+# stay out of a public repository all the same.
+project_id   = "your-project-id"
+zone         = "us-east1-b"
+vm_name      = "your-vm"
+address_name = "your-vm-ip"
+alert_email  = "you@example.com"
+
+sites = {
+  portfolio = {
+    name = "Portfolio"
+    host = "example.com"
+    slo  = 0.995
+  }
+  knowball = {
+    name    = "Know Ball"
+    host    = "knowball.example.com"
+    path    = "/health"
+    slo     = 0.995
+    runbook = "https://github.com/natezimm/know-ball/blob/main/deploy/README.md"
+  }
+  wheelhouse_demo = {
+    name    = "Wheelhouse demo"
+    host    = "wheelhouse.example.com"
+    path    = "/health"
+    slo     = 0.995
+    runbook = "https://github.com/natezimm/wheelhouse/blob/main/docs/runbook.md#site-down"
+  }
+  # A family instance: watched, with the calendar's own check, but no SLO to publish.
+  wheelhouse_family = {
+    name             = "Wheelhouse family"
+    host             = "home.example.com"
+    path             = "/health"
+    healthy_contains = "\"calendar\":\"Healthy\""
+    runbook          = "https://github.com/natezimm/wheelhouse/blob/main/docs/runbook.md"
+  }
+  rabbit_ears = {
+    name = "Rabbit Ears demo"
+    host = "rabbitears.example.com"
+    path = "/api/health"
+  }
+  brick_breaker = {
+    name = "Brick Breaker resume"
+    host = "bricks.example.com"
+  }
+}

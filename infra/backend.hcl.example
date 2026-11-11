@@ -1,0 +1,5 @@
+# Copy to backend.hcl (not committed). Make the bucket once, with versioning so an old state can be
+# recovered:
+#   gcloud storage buckets create gs://<bucket> --location=us-east1 --uniform-bucket-level-access
+#   gcloud storage buckets update gs://<bucket> --versioning
+bucket = "your-terraform-state-bucket"
