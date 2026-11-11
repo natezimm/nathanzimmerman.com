@@ -30,6 +30,12 @@ on:
 permissions:
   contents: read
 
+# Plain bash in a step runs without pipefail, so `check | tee` would pass even when check fails.
+# shell: bash adds -o pipefail to every step.
+defaults:
+  run:
+    shell: bash
+
 concurrency:
   group: ask-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
