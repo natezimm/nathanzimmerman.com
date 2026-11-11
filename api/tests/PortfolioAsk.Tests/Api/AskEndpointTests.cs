@@ -156,6 +156,24 @@ public sealed class AskEndpointTests
         Assert.Equal(HttpStatusCode.OK, (await host.CreateClient().GetAsync("/api/ask/meta")).StatusCode);
     }
 
+    [Theory]
+    [InlineData("/api/ask/")]
+    [InlineData("/API/Ask")]
+    public async Task Every_url_that_reaches_the_question_endpoint_is_rate_limited(string path)
+    {
+        using var host = new AskHost();
+        var client = host.CreateClient();
+        Task<HttpResponseMessage> Post() => client.PostAsync(path, JsonContent.Create(new { question = Question }));
+
+        for (var i = 0; i < 5; i++)
+        {
+            Assert.Equal(HttpStatusCode.OK, (await Post()).StatusCode);
+        }
+
+        Assert.Equal(HttpStatusCode.TooManyRequests, (await Post()).StatusCode);
+        Assert.Equal(5, host.Chat.Requests.Count);
+    }
+
     [Fact]
     public async Task A_question_posted_from_another_site_gets_403()
     {
