@@ -103,7 +103,7 @@ describe('Ask', () => {
       'fetch',
       vi.fn(() => new Promise<Response>((resolve) => (finish = resolve)))
     );
-    render(<Ask meta={meta} />);
+    renderAsk();
 
     fireEvent.change(input(), { target: { value: 'Why mpv?' } });
     fireEvent.submit(input().closest('form')!);
