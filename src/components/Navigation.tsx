@@ -2,11 +2,13 @@ import { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import ThemeToggle from '@/components/ThemeToggle';
 import { FileText, ArrowUpRight } from 'lucide-react';
+import { useAskMeta } from '@/lib/askClient';
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const rafRef = useRef<number | null>(null);
+  const askEnabled = useAskMeta() !== null;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,6 +36,7 @@ const Navigation = () => {
     { label: 'About', id: 'about' },
     { label: 'Experience', id: 'experience' },
     { label: 'Projects', id: 'projects' },
+    ...(askEnabled ? [{ label: 'Ask', id: 'ask' }] : []),
     { label: 'Contact', id: 'contact' },
   ];
 
