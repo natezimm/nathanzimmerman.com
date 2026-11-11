@@ -206,7 +206,8 @@ resource "google_monitoring_alert_policy" "certificate" {
 resource "google_monitoring_custom_service" "site" {
   for_each = { for key, site in var.sites : key => site if site.slo != null }
 
-  service_id   = "site-${each.key}"
+  # Service ids allow only lowercase letters, digits and hyphens.
+  service_id   = "site-${replace(lower(each.key), "_", "-")}"
   display_name = each.value.name
   depends_on   = [google_project_service.monitoring]
 }
