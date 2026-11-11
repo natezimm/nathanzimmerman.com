@@ -1,0 +1,7 @@
+**/bin
+**/obj
+corpus-repos
+generated
+tests
+evals
+scripts

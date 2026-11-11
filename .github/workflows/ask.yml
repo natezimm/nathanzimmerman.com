@@ -1,8 +1,13 @@
 name: Ask my portfolio
 
-# Builds and tests the Ask my portfolio indexer, builds the index from the five repositories'
-# docs and checks retrieval against the eval questions. Needs no API key: the embedding model
-# runs locally. Deploying the API comes in a later change.
+# Builds and tests the Ask my portfolio API and indexer, builds the index from the five
+# repositories' docs, checks retrieval against the eval questions and builds the image. On main
+# (a push, the nightly run or the Run workflow button) it also pushes the image to GHCR and deploys
+# it to the VM. Needs no Anthropic key: the embedding model runs locally, and the key lives only in
+# the VM's .env (deploy/README.md).
+#
+# The nightly run rebuilds only when an indexed repository's default branch has moved since the
+# live index was built, so a sibling's doc change reaches the site within a day with no manual step.
 
 on:
   pull_request:
@@ -14,6 +19,7 @@ on:
       - 'src/data/portfolioData.ts'
       - 'README.md'
       - 'docs/**'
+      - 'deploy/**'
       - '.github/workflows/ask.yml'
   push:
     branches: ['main']
@@ -24,7 +30,11 @@ on:
       - 'src/data/portfolioData.ts'
       - 'README.md'
       - 'docs/**'
+      - 'deploy/**'
       - '.github/workflows/ask.yml'
+  schedule:
+    # 09:17 UTC, about 4am Eastern, after the sibling apps' nightly jobs.
+    - cron: '17 9 * * *'
   workflow_dispatch:
 
 permissions:
@@ -41,7 +51,32 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  changes:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      rebuild: ${{ steps.compare.outputs.rebuild }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+
+      - name: Compare the live index with each repository
+        id: compare
+        run: |
+          if [ "$GITHUB_EVENT_NAME" != schedule ]; then
+            echo "rebuild=true" >> "$GITHUB_OUTPUT"
+          elif api/scripts/index-is-current.sh | tee changes.txt; then
+            echo "rebuild=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "rebuild=true" >> "$GITHUB_OUTPUT"
+          fi
+          if [ -f changes.txt ]; then
+            { echo '### Index freshness'; echo '```'; cat changes.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
   index:
+    needs: changes
+    if: needs.changes.outputs.rebuild == 'true'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     env:
@@ -102,3 +137,126 @@ jobs:
           name: ask-index
           path: api/index.json
           if-no-files-found: error
+
+  image:
+    needs: index
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: write
+    env:
+      PUBLISH: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' }}
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+
+      - name: Download index
+        uses: actions/download-artifact@v8
+        with:
+          name: ask-index
+          path: api
+
+      - name: Cache embedding model
+        uses: actions/cache@v6
+        with:
+          path: api/models/files
+          key: ask-model-${{ hashFiles('api/models/manifest.json') }}
+
+      - name: Fetch embedding model
+        run: api/scripts/fetch-model.sh
+
+      # A nightly rebuild has the same commit as the last deploy but a new index, so the tag adds the run.
+      - name: Choose the image tag
+        id: tag
+        run: echo "tag=${GITHUB_SHA}-${GITHUB_RUN_NUMBER}" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4
+
+      - if: env.PUBLISH == 'true'
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Pull requests build the image to prove the Dockerfile works; only main pushes it.
+      - uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
+        with:
+          context: api
+          push: ${{ env.PUBLISH == 'true' }}
+          tags: |
+            ghcr.io/natezimm/nathanzimmerman-ask:latest
+            ghcr.io/natezimm/nathanzimmerman-ask:${{ steps.tag.outputs.tag }}
+          cache-from: type=gha,scope=ask
+          cache-to: type=gha,mode=max,scope=ask
+
+  deploy:
+    needs: image
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: read
+    concurrency: deploy-ask
+    env:
+      GCP_HOST: ${{ secrets.GCP_HOST }}
+      GCP_USER: ${{ secrets.GCP_USER }}
+      TAG: ${{ needs.image.outputs.tag }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+
+      - name: Deploy to the VM
+        env:
+          GCP_SSH_KEY: ${{ secrets.GCP_SSH_KEY }}
+          GCP_KNOWN_HOSTS: ${{ secrets.GCP_KNOWN_HOSTS }}
+          REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -z "$GCP_HOST" ]; then
+            echo "::notice::Deploy secrets are not set; skipping the deploy."
+            exit 0
+          fi
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$GCP_SSH_KEY" > ~/.ssh/deploy && chmod 600 ~/.ssh/deploy
+          # GCP_KNOWN_HOSTS pins the VM's host key, so the deploy never hands credentials to a
+          # machine posing as it.
+          if [ -z "$GCP_KNOWN_HOSTS" ]; then
+            echo "::error::The GCP_KNOWN_HOSTS secret is not set."
+            exit 1
+          fi
+          printf '%s\n' "$GCP_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          SSH="ssh -i $HOME/.ssh/deploy -o StrictHostKeyChecking=yes"
+          $SSH "$GCP_USER@$GCP_HOST" 'mkdir -p portfolio-ask'
+          scp -i ~/.ssh/deploy deploy/compose.yaml "$GCP_USER@$GCP_HOST:portfolio-ask/compose.yaml"
+          # A first deploy creates .env with the feature paused and no key; deploy/README.md says how
+          # to add the key. An existing .env is never overwritten, only its ASK_TAG line.
+          $SSH "$GCP_USER@$GCP_HOST" 'cd portfolio-ask && if [ ! -f .env ]; then (umask 077 && printf "ANTHROPIC_API_KEY=\nASK_ENABLED=false\n" > .env); fi'
+          # The job's token can read the image and expires when this job ends. It goes to this app's own
+          # Docker config, so another app deploying at the same time cannot overwrite or sign out of it.
+          DOCKER_CONFIG_SETUP='export DOCKER_CONFIG=$HOME/.docker-portfolio-ask; mkdir -p "$DOCKER_CONFIG"; [ -L "$DOCKER_CONFIG/cli-plugins" ] || [ ! -d "$HOME/.docker/cli-plugins" ] || ln -s "$HOME/.docker/cli-plugins" "$DOCKER_CONFIG/cli-plugins"'
+          printf '%s' "$REGISTRY_TOKEN" | $SSH "$GCP_USER@$GCP_HOST" "$DOCKER_CONFIG_SETUP; docker login ghcr.io -u ${{ github.actor }} --password-stdin"
+          $SSH "$GCP_USER@$GCP_HOST" "$DOCKER_CONFIG_SETUP; cd portfolio-ask && sed -i '/^ASK_TAG=/d' .env && echo 'ASK_TAG=$TAG' >> .env && docker compose pull -q && docker compose up -d --remove-orphans && docker image prune -f"
+          for i in $(seq 1 30); do
+            if $SSH "$GCP_USER@$GCP_HOST" "curl -fs http://127.0.0.1:8095/api/ask/health" >/dev/null; then
+              echo "Deployed $TAG; the API is healthy on the VM."
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::The API did not become healthy after the deploy."
+          $SSH "$GCP_USER@$GCP_HOST" "cd portfolio-ask && docker compose logs --tail 80 ask"
+          exit 1
+
+      - name: Check the public endpoint
+        if: env.GCP_HOST != ''
+        run: |
+          if curl -fsS --max-time 20 https://nathanzimmerman.com/api/ask/health; then
+            echo
+            echo "https://nathanzimmerman.com/api/ask/health answers."
+          else
+            echo "::warning::The API is healthy on the VM but https://nathanzimmerman.com/api/ask/health does not answer. Is deploy/nginx-ask.conf installed?"
+          fi
