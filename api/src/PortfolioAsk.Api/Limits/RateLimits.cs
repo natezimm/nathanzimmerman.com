@@ -6,6 +6,9 @@ using PortfolioAsk.Api.Ask;
 
 namespace PortfolioAsk.Api.Limits;
 
+/// <summary>Marks an endpoint whose requests can call the model, so the limits below apply to it.</summary>
+public sealed class CostsMoney;
+
 /// <summary>
 /// Limits on <c>POST /api/ask</c>, stricter than the sibling apps' because every question can cost money:
 /// per address, a few a minute and a few dozen a day; across everyone, a ceiling a minute and two at a time
@@ -51,8 +54,12 @@ public static class RateLimits
         return services;
     }
 
+    /// <summary>
+    /// Whether routing picked the question endpoint. Matching the endpoint rather than the path means every URL
+    /// that reaches it (<c>/api/ask/</c>, <c>/API/ASK</c>) is limited the same way.
+    /// </summary>
     private static bool IsQuestion(HttpContext http) =>
-        HttpMethods.IsPost(http.Request.Method) && http.Request.Path.Equals(AskEndpoints.AskPath, StringComparison.OrdinalIgnoreCase);
+        http.GetEndpoint()?.Metadata.GetMetadata<CostsMoney>() is not null;
 
     /// <summary>
     /// The visitor's address, from X-Forwarded-For when nginx is a trusted proxy. A request with no address

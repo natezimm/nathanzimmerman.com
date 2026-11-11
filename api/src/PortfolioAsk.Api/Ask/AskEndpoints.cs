@@ -13,7 +13,7 @@ public static class AskEndpoints
 
     public static IEndpointRouteBuilder MapAsk(this IEndpointRouteBuilder app)
     {
-        app.MapPost(AskPath, Ask);
+        app.MapPost(AskPath, Ask).WithMetadata(new CostsMoney());
         app.MapGet($"{AskPath}/meta", Meta);
         return app;
     }
