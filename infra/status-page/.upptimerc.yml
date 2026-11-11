@@ -1,0 +1,33 @@
+# Upptime config for a public status page, to copy into a repository made from
+# https://github.com/upptime/upptime (Use this template). Upptime runs on that repository's
+# GitHub Actions, commits each check's history and serves the page from GitHub Pages, all free.
+# Only the public sites are here; a family's Wheelhouse instance is watched by Terraform alone.
+owner: natezimm
+repo: status
+
+sites:
+  - name: Portfolio
+    url: https://nathanzimmerman.com
+  - name: Know Ball
+    url: https://knowball.nathanzimmerman.com/health
+  - name: Wheelhouse demo
+    url: https://calendar.nathanzimmerman.com/health
+  - name: Rabbit Ears demo
+    url: https://rabbitears.nathanzimmerman.com/api/health
+  - name: Brick Breaker resume
+    url: https://resume.nathanzimmerman.com
+
+status-website:
+  cname: status.nathanzimmerman.com
+  name: Nathan Zimmerman's apps
+  introTitle: 'Status of the portfolio apps'
+  introMessage: Checked every five minutes from GitHub Actions. Alerts come separately, from Google Cloud Monitoring.
+  navbar:
+    - title: Status
+      href: /
+    - title: Portfolio
+      href: https://nathanzimmerman.com
+
+# Upptime opens an issue when a site goes down and closes it when it is back.
+assignees:
+  - natezimm
