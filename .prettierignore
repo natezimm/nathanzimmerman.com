@@ -57,3 +57,11 @@ bun.lockb
 *.png
 *.webp
 *.wav
+
+# Ask my portfolio build output and generated files
+api/**/bin/
+api/**/obj/
+api/models/files/
+api/corpus-repos/
+api/generated/
+api/index.json

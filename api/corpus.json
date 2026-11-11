@@ -1,0 +1,45 @@
+{
+  "repos": [
+    {
+      "key": "nathanzimmerman.com",
+      "title": "nathanzimmerman.com (this portfolio)",
+      "gitHub": "natezimm/nathanzimmerman.com",
+      "include": [
+        "README.md",
+        "docs/architecture.md",
+        "docs/adr/0*.md",
+        "api/generated/portfolio.md"
+      ],
+      "citeAs": { "api/generated/portfolio.md": "src/data/portfolioData.ts" }
+    },
+    {
+      "key": "wheelhouse",
+      "title": "Wheelhouse",
+      "gitHub": "natezimm/wheelhouse",
+      "include": [
+        "README.md",
+        "docs/architecture.md",
+        "docs/adr/0*.md",
+        "docs/security.md"
+      ]
+    },
+    {
+      "key": "know-ball",
+      "title": "Know Ball",
+      "gitHub": "natezimm/know-ball",
+      "include": ["README.md", "docs/architecture.md", "docs/adr/0*.md"]
+    },
+    {
+      "key": "rabbit-ears",
+      "title": "Rabbit Ears",
+      "gitHub": "natezimm/rabbit-ears",
+      "include": ["README.md", "docs/architecture.md", "docs/adr/0*.md"]
+    },
+    {
+      "key": "brick-breaker-resume",
+      "title": "Brick Breaker Resume",
+      "gitHub": "natezimm/brick-breaker-resume",
+      "include": ["README.md", "docs/architecture.md", "docs/adr/0*.md"]
+    }
+  ]
+}

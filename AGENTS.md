@@ -45,6 +45,15 @@ Run from this repository root. Node 26 LTS is specified by `.nvmrc`, `package.js
 - Keep project links, resume claims, and metrics consistent across their consumers; preserve the public `/resume.pdf` link.
 - Tests are colocated as `*.test.ts(x)`; `src/setupTests.ts` supplies browser mocks. `e2e/portfolio.spec.ts` covers Chromium desktop/mobile, including a card to project page round trip. Coverage thresholds live in `vite.config.ts`.
 
+## Ask my portfolio (`api/`)
+
+`api/` is a .NET 11 solution (`api/PortfolioAsk.slnx`, SDK pinned by `api/global.json`) for the planned "Ask my portfolio" box. So far it holds the indexer: `PortfolioAsk.Core` (index model, in-memory cosine search, `GitHubLinks`, and `OnnxEmbeddingGenerator`, a local bge-small model behind Microsoft.Extensions.AI's `IEmbeddingGenerator`) and `PortfolioAsk.Indexer` (corpus allowlist, Markdown chunker, `build` and `check` commands).
+
+- `api/corpus.json` is an allowlist: only the files it names, in the five repositories, can ever be indexed. Never widen it to globs like `**`, archives or notes; `CorpusLoaderTests` guards this.
+- `api/models/manifest.json` pins the embedding model by SHA-256; `api/scripts/fetch-model.sh` downloads it to `api/models/files/` (not committed). `api/scripts/fetch-corpus.sh` clones the sibling repositories into `api/corpus-repos/`, writes `api/generated/portfolio.md` from `portfolioData.ts` (`scripts/export-site-data.mjs`) and prints the indexer's `--repo` arguments.
+- Tests: `dotnet test api/PortfolioAsk.slnx` (no model needed). Build and check an index: `dotnet run --project api/src/PortfolioAsk.Indexer -- build --corpus api/corpus.json --manifest api/models/manifest.json --models api/models/files --out api/index.json $(api/scripts/fetch-corpus.sh)`, then `check --index api/index.json --manifest api/models/manifest.json --models api/models/files --evals api/evals/evals.json`.
+- `.github/workflows/ask.yml` runs all of that on pull requests that touch the API, the docs or the project data; the retrieval check must find an expected file in the top 6 for at least 90% of `api/evals/evals.json`'s answerable questions.
+
 ## Verification and delivery
 
 Run relevant checks for the change and use `npm run quality` for broad application changes. Report failures and checks not run.

@@ -1,0 +1,104 @@
+name: Ask my portfolio
+
+# Builds and tests the Ask my portfolio indexer, builds the index from the five repositories'
+# docs and checks retrieval against the eval questions. Needs no API key: the embedding model
+# runs locally. Deploying the API comes in a later change.
+
+on:
+  pull_request:
+    branches: ['main']
+    paths:
+      - 'api/**'
+      - 'scripts/export-site-data.mjs'
+      - 'scripts/site-data.mjs'
+      - 'src/data/portfolioData.ts'
+      - 'README.md'
+      - 'docs/**'
+      - '.github/workflows/ask.yml'
+  push:
+    branches: ['main']
+    paths:
+      - 'api/**'
+      - 'scripts/export-site-data.mjs'
+      - 'scripts/site-data.mjs'
+      - 'src/data/portfolioData.ts'
+      - 'README.md'
+      - 'docs/**'
+      - '.github/workflows/ask.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Plain bash in a step runs without pipefail, so `check | tee` would pass even when check fails.
+# shell: bash adds -o pipefail to every step.
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: ask-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  index:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      DOTNET_NOLOGO: '1'
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v7
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: api/global.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Test
+        run: dotnet test api/PortfolioAsk.slnx
+
+      - name: Cache embedding model
+        uses: actions/cache@v6
+        with:
+          path: api/models/files
+          key: ask-model-${{ hashFiles('api/models/manifest.json') }}
+
+      - name: Fetch embedding model
+        run: api/scripts/fetch-model.sh
+
+      - name: Fetch corpus
+        run: echo "REPOS=$(api/scripts/fetch-corpus.sh)" >> "$GITHUB_ENV"
+
+      - name: Build index
+        run: |
+          # REPOS holds several --repo arguments, so it is split on purpose.
+          # shellcheck disable=SC2086
+          dotnet run --project api/src/PortfolioAsk.Indexer -c Release -- build \
+            --corpus api/corpus.json --manifest api/models/manifest.json --models api/models/files \
+            --out api/index.json $REPOS
+
+      - name: Check retrieval
+        run: |
+          dotnet run --project api/src/PortfolioAsk.Indexer -c Release --no-build -- check \
+            --index api/index.json --manifest api/models/manifest.json --models api/models/files \
+            --evals api/evals/evals.json --min 0.9 | tee retrieval.txt
+          { echo '### Retrieval check'; echo '```'; cat retrieval.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload index
+        uses: actions/upload-artifact@v7
+        with:
+          name: ask-index
+          path: api/index.json
+          if-no-files-found: error
