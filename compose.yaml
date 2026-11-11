@@ -4,3 +4,13 @@ services:
     ports:
       - '8081:80'
     restart: unless-stopped
+    # The same limits as the server's containers: a read-only root filesystem with nginx's cache and
+    # run folders in tmpfs, only the capabilities nginx needs to start its workers, no privilege gain.
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx
+      - /var/run
+      - /tmp
+    cap_drop: [ALL]
+    cap_add: [CHOWN, SETUID, SETGID, NET_BIND_SERVICE]
+    security_opt: ["no-new-privileges:true"]
