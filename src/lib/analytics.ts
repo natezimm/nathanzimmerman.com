@@ -3,6 +3,8 @@ type AnalyticsValue = string | number | boolean | null | undefined;
 export type PortfolioEventProperties = Record<string, AnalyticsValue>;
 
 export type PortfolioEventName =
+  | 'ask_result'
+  | 'ask_submit'
   | 'contact_link_click'
   | 'contact_submit_failure'
   | 'contact_submit_success'
