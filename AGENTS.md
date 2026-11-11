@@ -19,7 +19,9 @@ Preserve unrelated working-tree changes. `docs/architecture.md` has broader desi
 
 ## Commands
 
-Run from this repository root. Node 22 is specified by both `.nvmrc` and `package.json`.
+Run from this repository root. Node 26 LTS is specified by `.nvmrc`, `package.json`, and the Dockerfile; CI reads `.nvmrc`. Keep them aligned.
+
+`npm run typecheck` uses TypeScript 7's `tsc`, installed through the `@typescript/native` alias. The `typescript` alias supplies Microsoft's TypeScript 6 compatibility API for ESLint. Preserve both aliases when updating dependencies.
 
 - Install: `npm ci`.
 - Develop: `npm run dev` (configured port **8081**).

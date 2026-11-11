@@ -47,12 +47,15 @@ const HeroGame = ({ reducedMotion }: HeroGameProps) => {
   const [alive, setAlive] = useState(() => [...game.alive]);
   const [score, setScore] = useState(0);
   const [paused, setPaused] = useState(reducedMotion);
+  const [previousReducedMotion, setPreviousReducedMotion] =
+    useState(reducedMotion);
   const [inView, setInView] = useState(true);
   const [playerHasPaddle, setPlayerHasPaddle] = useState(false);
 
-  useEffect(() => {
+  if (previousReducedMotion !== reducedMotion) {
+    setPreviousReducedMotion(reducedMotion);
     if (reducedMotion) setPaused(true);
-  }, [reducedMotion]);
+  }
 
   useEffect(() => {
     const area = areaRef.current;

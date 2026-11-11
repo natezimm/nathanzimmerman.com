@@ -1,12 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import {
-  ArrowLeft,
-  ArrowRight,
-  ExternalLink,
-  FileText,
-  Github,
-} from 'lucide-react';
+import { ArrowLeft, ArrowRight, ExternalLink, FileText } from 'lucide-react';
+import { Github } from '@/components/shared/BrandIcons';
 import { projectBySlug, projectEntries } from '@/data/portfolioData';
 import { trackPortfolioEvent } from '@/lib/analytics';
 import { projectHead, usePageHead } from '@/lib/pageHead';
