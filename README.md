@@ -17,6 +17,13 @@ See [`docs/architecture.md`](docs/architecture.md) for runtime boundaries, quali
 
 ## Quick start
 
+Use Node 26 LTS (see `.nvmrc`).
+
+Typechecking uses TypeScript 7 through the `@typescript/native` npm alias. The
+`typescript` dependency aliases Microsoft's TypeScript 6 compatibility package
+for tools such as ESLint that still need the compiler API. Keep both aliases
+when updating dependencies; `npm run typecheck` runs TypeScript 7's `tsc`.
+
 1. `npm ci`
 2. `npm run dev`
 3. Open `http://localhost:8081`.
@@ -77,13 +84,13 @@ The preview pictures are drawn by `npm run images:social` from each project's ti
 
 ## Tech stack
 
-| Area    | Tools                                                                |
-| ------- | -------------------------------------------------------------------- |
-| App     | React 18, TypeScript, Vite, React Router (home and project pages)    |
-| Styling | Tailwind CSS with `tailwindcss-animate`, Framer Motion, Lucide icons |
-| UI      | A few shadcn-style primitives on Radix Slot, Sonner toasts           |
-| Contact | `@emailjs/browser`                                                   |
-| Quality | Vitest and Testing Library, Playwright, ESLint, Prettier             |
+| Area    | Tools                                                                  |
+| ------- | ---------------------------------------------------------------------- |
+| App     | React 19, TypeScript 7, Vite, React Router (home and project pages)    |
+| Styling | Tailwind CSS 4 with `tailwindcss-animate`, Framer Motion, Lucide icons |
+| UI      | A few shadcn-style primitives on Radix Slot, Sonner toasts             |
+| Contact | `@emailjs/browser`                                                     |
+| Quality | Vitest and Testing Library, Playwright, ESLint, Prettier               |
 
 ## Project layout
 

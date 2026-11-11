@@ -19,6 +19,7 @@ server/.gradle/
 .angular/
 .vite/
 .cache/
+.ua/
 TestResults/
 playwright-report/
 test-results/

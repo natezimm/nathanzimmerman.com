@@ -110,7 +110,22 @@ describe('HeroGame', () => {
     await advanceFrames(600);
 
     expect(screen.getByText('You have the paddle')).toBeInTheDocument();
-    expect(paddle.style.transform).toBe('translate3d(0%, 0, 0)');
+    expect(paddle.style.transform).toBe('translate3d(0%, 0px, 0px)');
+  });
+
+  it('pauses when reduced motion is enabled and allows an explicit restart', async () => {
+    const { rerender } = render(<HeroGame reducedMotion={false} />);
+    const ball = screen.getByTestId('hero-game-ball');
+    await advanceFrames(200);
+
+    rerender(<HeroGame reducedMotion />);
+    const pausedTransform = ball.style.transform;
+    await advanceFrames(400);
+    expect(ball.style.transform).toBe(pausedTransform);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Play brick breaker' }));
+    await advanceFrames(400);
+    expect(ball.style.transform).not.toBe(pausedTransform);
   });
 
   it('ignores pointer movement before the card has a size', async () => {

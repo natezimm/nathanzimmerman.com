@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ExternalLink, Github } from 'lucide-react';
+import { ArrowRight, ExternalLink } from 'lucide-react';
+import { Github } from '@/components/shared/BrandIcons';
 import { Button } from '@/components/ui/button';
 import { SpotlightGroup } from '@/components/ui/spotlight-group';
 import { SectionCaption } from '@/components/shared/SectionCaption';

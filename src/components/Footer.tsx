@@ -1,4 +1,5 @@
-import { ArrowUp, Github, Linkedin } from 'lucide-react';
+import { ArrowUp } from 'lucide-react';
+import { Github, Linkedin } from '@/components/shared/BrandIcons';
 
 const Footer = () => {
   return (

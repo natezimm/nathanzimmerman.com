@@ -1,6 +1,4 @@
 import {
-  Github,
-  Linkedin,
   ArrowDown,
   ArrowRight,
   ArrowUpRight,
@@ -8,6 +6,7 @@ import {
   FileText,
   Gamepad2,
 } from 'lucide-react';
+import { Github, Linkedin } from '@/components/shared/BrandIcons';
 import { Button } from '@/components/ui/button';
 import HeroGame from '@/components/HeroGame';
 import {
@@ -54,14 +53,15 @@ const Hero = () => {
   const [displayText, setDisplayText] = useState('');
   const [roleIndex, setRoleIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(
+    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
   const sectionRef = useRef<HTMLElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const pointerFrame = useRef(0);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
 
     const handleChange = (e: MediaQueryListEvent) => {
       setPrefersReducedMotion(e.matches);
@@ -95,7 +95,6 @@ const Hero = () => {
 
   useEffect(() => {
     if (prefersReducedMotion) {
-      setDisplayText(ROLES[roleIndex]);
       return;
     }
 
@@ -214,7 +213,7 @@ const Hero = () => {
                   aria-hidden="true"
                   className="inline-flex items-center font-heading"
                 >
-                  {displayText}
+                  {prefersReducedMotion ? ROLES[roleIndex] : displayText}
                   <span
                     className="inline-block w-[3px] h-[1em] bg-sky-400 ml-1 animate-blink"
                     aria-hidden="true"

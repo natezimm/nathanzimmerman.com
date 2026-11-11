@@ -32,7 +32,7 @@ const Button = ({
     icon: 'h-10 w-10',
   };
 
-  if (asChild && React.isValidElement(children)) {
+  if (asChild && React.isValidElement<{ className?: string }>(children)) {
     return React.cloneElement(children, {
       className: `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className} ${children.props.className || ''}`,
     });
