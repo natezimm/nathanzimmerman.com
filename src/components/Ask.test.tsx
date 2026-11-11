@@ -89,6 +89,23 @@ describe('Ask', () => {
     expect(input()).toHaveValue('');
   });
 
+  it('keeps a new question typed while the answer loads', async () => {
+    let finish: (value: Response) => void = () => {};
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() => new Promise<Response>((resolve) => (finish = resolve)))
+    );
+    render(<Ask meta={meta} />);
+
+    fireEvent.change(input(), { target: { value: 'Why mpv?' } });
+    fireEvent.submit(input().closest('form')!);
+    fireEvent.change(input(), { target: { value: 'And the backups?' } });
+    finish(new Response(JSON.stringify(answer), { status: 200 }));
+
+    await screen.findByText('mpv');
+    expect(input()).toHaveValue('And the backups?');
+  });
+
   it('caps the question at 300 characters and counts them', () => {
     render(<Ask meta={meta} />);
 

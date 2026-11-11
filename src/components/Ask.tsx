@@ -73,7 +73,9 @@ const Ask = ({ meta }: { meta: AskMeta }) => {
       trackPortfolioEvent('ask_result', {
         outcome: result.kind === 'answer' ? 'answer' : result.problem,
       });
-      if (result.kind === 'answer') setQuestion('');
+      // Clear the box only if the visitor hasn't started a new question while this one loaded.
+      if (result.kind === 'answer')
+        setQuestion((current) => (current === text ? '' : current));
     } catch {
       // Aborted: a newer question or leaving the page replaced this one.
     }
