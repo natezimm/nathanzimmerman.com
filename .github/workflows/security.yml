@@ -31,8 +31,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Nothing here needs a build to be scanned (build-mode none).
-        language: [javascript-typescript, actions]
+        # Nothing here needs a build to be scanned (build-mode none), C# included.
+        language: [javascript-typescript, actions, csharp]
     steps:
       - uses: actions/checkout@v7
       - uses: github/codeql-action/init@v4
@@ -46,6 +46,8 @@ jobs:
               - node_modules
               - dist
               - coverage
+              - api/**/bin
+              - api/**/obj
       - uses: github/codeql-action/analyze@v4
         with:
           category: /language:${{ matrix.language }}
@@ -75,6 +77,23 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: api/global.json
+      - name: NuGet packages of the Ask my portfolio API, direct and transitive
+        working-directory: api
+        run: |
+          dotnet restore PortfolioAsk.slnx
+          dotnet list PortfolioAsk.slnx package --vulnerable --include-transitive --format json > "$RUNNER_TEMP/nuget.json"
+          found=$(jq '[.. | objects | select(has("vulnerabilities")) | .id as $id | .resolvedVersion as $v
+            | .vulnerabilities[] | select(.severity == "High" or .severity == "Critical")
+            | "\($id) \($v): \(.severity) \(.advisoryurl)"] | unique' "$RUNNER_TEMP/nuget.json")
+          if [ "$(jq length <<< "$found")" -gt 0 ]; then
+            echo "NuGet packages with high or critical advisories:"
+            jq -r '.[]' <<< "$found"
+            exit 1
+          fi
+          echo "No NuGet package has a high or critical advisory."
       - name: npm packages the app ships
         # Development tools (the build, test runners) never reach a browser, so only the
         # packages bundled into the app can fail this.
