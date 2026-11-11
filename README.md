@@ -147,6 +147,8 @@ The site implements multiple layers of security:
 
 Every push to `main` runs the quality gate in GitHub Actions, then rsyncs `dist/` to the GCP VM, where nginx serves it over HTTPS, and checks that the site answers. nginx falls back to `index.html` so project page URLs load directly. See [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
 
+Each deploy also signs a provenance attestation for every file it ships, and CI keeps an SPDX SBOM of the npm packages with the run's artifacts. To check that a file on the live site came from this repository's workflow, download it and run `gh attestation verify <file> --owner natezimm`.
+
 ## License
 
 [MIT](LICENSE)
