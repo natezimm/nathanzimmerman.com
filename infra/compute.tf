@@ -21,6 +21,9 @@ resource "google_compute_instance" "vm" {
   # Changing the machine type needs the VM stopped; Terraform may do that, and it starts again after.
   allow_stopping_for_update = true
 
+  # The console sets this on new VMs. Leaving it out reads as a change that replaces the VM.
+  key_revocation_action_type = "NONE"
+
   # The disk was made with the VM; its image and size are left as they are. The console makes boot
   # disks that go with the VM, which is also the provider's default.
   boot_disk {
