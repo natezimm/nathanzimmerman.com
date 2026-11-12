@@ -20,6 +20,7 @@ which are git-ignored. The examples beside them show the shape.
 From Cloud Shell or a machine with `gcloud auth application-default login`:
 
 ```sh
+gcloud services enable cloudresourcemanager.googleapis.com   # Terraform reads the project's APIs through it
 cd infra
 cp terraform.tfvars.example terraform.tfvars   # fill in
 cp backend.hcl.example backend.hcl             # make the bucket it names first
@@ -32,6 +33,7 @@ It should show those as imported with no changes, or in-place updates you agree 
 monitoring resources. If it wants to replace or destroy the VM or its address, stop: the VM differs
 from `compute.tf` somewhere `ignore_changes` doesn't cover, so fix `compute.tf` to match the VM rather
 than letting Terraform change it. Both have `prevent_destroy`, so an apply refuses to delete them anyway.
+"connection refused" from Cloud Shell is its network, not the plan: run the command again.
 
 Then `terraform apply`. Google emails the alert address once to confirm the channel.
 
