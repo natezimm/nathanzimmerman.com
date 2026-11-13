@@ -1,4 +1,4 @@
-import { ArrowUp } from 'lucide-react';
+import { Activity, ArrowUp } from 'lucide-react';
 import { Github, Linkedin } from '@/components/shared/BrandIcons';
 
 const Footer = () => {
@@ -44,6 +44,16 @@ const Footer = () => {
               aria-label="LinkedIn"
             >
               <Linkedin className="w-5 h-5" />
+            </a>
+            <a
+              href="https://status.nathanzimmerman.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors hover:scale-110 duration-300"
+              aria-label="Status of the apps"
+              title="Status of the apps"
+            >
+              <Activity className="w-5 h-5" />
             </a>
           </div>
         </div>
