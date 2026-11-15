@@ -175,7 +175,7 @@ test.describe('portfolio experience', () => {
     await expect(page.locator('#main')).toBeFocused();
   });
 
-  test('keeps decoration still and content in place under reduced motion', async ({
+  test('stops looping animations and keeps content in place under reduced motion', async ({
     browser,
   }) => {
     const context = await browser.newContext({ reducedMotion: 'reduce' });
@@ -187,11 +187,19 @@ test.describe('portfolio experience', () => {
       'opacity',
       '1'
     );
-    const running = await page.evaluate(
-      () =>
-        document.getAnimations().filter((a) => a.playState === 'running').length
+    // One-shot transitions (the nav turning glassy as the page scrolls) finish on
+    // their own; what must stop is anything that loops.
+    const looping = await page.evaluate(() =>
+      document
+        .getAnimations()
+        .filter(
+          (a) =>
+            a.playState === 'running' &&
+            a.effect?.getComputedTiming().iterations === Infinity
+        )
+        .map((a) => (a instanceof CSSAnimation ? a.animationName : a.id))
     );
-    expect(running).toBe(0);
+    expect(looping).toEqual([]);
     await context.close();
   });
 
