@@ -66,7 +66,7 @@ const About = () => {
             </p>
           </ScrollReveal>
 
-          <div className="grid md:grid-cols-2 gap-12 items-center mb-4">
+          <div className="grid md:grid-cols-2 gap-12 items-start mb-4">
             {/* Story column */}
             <ScrollReveal
               delay={0.1}
@@ -102,7 +102,7 @@ const About = () => {
               {skills.map((skill, index) => {
                 const Icon = skill.icon;
                 return (
-                  <ScrollReveal key={skill.title} delay={0.2 + index * 0.1}>
+                  <ScrollReveal key={skill.title} delay={0.1 + index * 0.05}>
                     <Card className="spotlight-card glass-card group overflow-hidden h-full rounded-2xl border border-slate-200/90 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 card-glow shadow-sm">
                       {/* Oversized icon watermark */}
                       <Icon

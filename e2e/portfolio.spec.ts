@@ -60,14 +60,15 @@ test.describe('portfolio experience', () => {
       const mobileMenu = page.getByTestId('mobile-menu');
 
       await expect(mobileMenu).toBeVisible();
-      await mobileMenu.getByRole('button', { name: 'Contact' }).click();
+      await mobileMenu.getByRole('link', { name: 'Contact' }).click();
     } else {
       await page
         .getByRole('navigation')
-        .getByRole('button', { name: 'Contact' })
+        .getByRole('link', { name: 'Contact' })
         .click();
     }
 
+    await expect(page).toHaveURL(/#contact$/);
     await expect(page.locator('#contact')).toBeInViewport();
     await expect(page.getByLabel('Name')).toHaveAttribute('maxlength', '100');
     await expect(page.getByRole('textbox', { name: 'Email' })).toHaveAttribute(
@@ -161,6 +162,37 @@ test.describe('portfolio experience', () => {
     const card = await request.get('/og-image.jpg');
     expect(card.ok()).toBe(true);
     expect(card.headers()['content-type']).toContain('image/jpeg');
+  });
+
+  test('offers a skip link to the main content', async ({ page }) => {
+    await page.goto('/');
+
+    await page.keyboard.press('Tab');
+    const skip = page.getByRole('link', { name: 'Skip to content' });
+    await expect(skip).toBeFocused();
+    await expect(skip).toBeInViewport();
+    await skip.press('Enter');
+    await expect(page.locator('#main')).toBeFocused();
+  });
+
+  test('keeps decoration still and content in place under reduced motion', async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ reducedMotion: 'reduce' });
+    const page = await context.newPage();
+    await page.goto('/');
+    await page.locator('#about').scrollIntoViewIfNeeded();
+
+    await expect(page.getByRole('heading', { name: /About Me/i })).toHaveCSS(
+      'opacity',
+      '1'
+    );
+    const running = await page.evaluate(
+      () =>
+        document.getAnimations().filter((a) => a.playState === 'running').length
+    );
+    expect(running).toBe(0);
+    await context.close();
   });
 
   test('shows a not found state for unknown routes', async ({ page }) => {

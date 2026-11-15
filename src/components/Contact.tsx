@@ -162,7 +162,7 @@ const Contact = () => {
                       </h4>
                       <a
                         href="mailto:nathan.a.zimmerman@gmail.com"
-                        className="text-muted-foreground hover:text-sky-500 dark:hover:text-sky-400 transition-colors text-sm font-mono"
+                        className="inline-block py-3 -my-3 text-muted-foreground hover:text-sky-700 dark:hover:text-sky-400 transition-colors text-sm font-mono"
                       >
                         nathan.a.zimmerman@gmail.com
                       </a>
@@ -188,10 +188,9 @@ const Contact = () => {
               </SpotlightGroup>
             </ScrollReveal>
 
-            <ScrollReveal delay={0.3}>
-              {/* Form card, edged by the same rotating beam as the hero portrait */}
-              <div className="relative overflow-hidden rounded-2xl p-[1.5px] bg-slate-200/90 dark:bg-white/10 shadow-sm">
-                <div aria-hidden="true" className="card-beam" />
+            <ScrollReveal delay={0.1}>
+              {/* Form card, edged by the same gradient as the hero portrait */}
+              <div className="relative overflow-hidden rounded-2xl p-[1.5px] bg-gradient-to-br from-sky-400/60 via-slate-200/90 to-slate-200/90 dark:from-sky-400/50 dark:via-white/15 dark:to-white/10 shadow-sm">
                 <Card className="relative rounded-[calc(1rem-1.5px)] border-0 bg-card p-6 md:p-8 shadow-none">
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-2">
@@ -206,7 +205,7 @@ const Contact = () => {
                         placeholder="Your name"
                         required
                         maxLength={MAX_NAME_LENGTH}
-                        className="bg-background/60 border border-slate-300 dark:border-white/25 focus-visible:border-primary focus-visible:ring-primary/40 transition-colors"
+                        className="h-11 bg-background/60 border border-slate-300 dark:border-white/25 focus-visible:border-primary focus-visible:ring-primary/40 transition-colors"
                       />
                     </div>
 
@@ -223,7 +222,7 @@ const Contact = () => {
                         placeholder="your.email@example.com"
                         required
                         maxLength={MAX_EMAIL_LENGTH}
-                        className="bg-background/60 border border-slate-300 dark:border-white/25 focus-visible:border-primary focus-visible:ring-primary/40 transition-colors"
+                        className="h-11 bg-background/60 border border-slate-300 dark:border-white/25 focus-visible:border-primary focus-visible:ring-primary/40 transition-colors"
                       />
                     </div>
 
@@ -248,14 +247,10 @@ const Contact = () => {
                       type="submit"
                       size="lg"
                       disabled={isSubmitting}
-                      className="group/send relative overflow-hidden w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-sky-500/20 hover:shadow-sky-500/35 transition-all duration-300"
+                      className="group/send w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-sky-500/20 hover:shadow-sky-500/35 transition-all duration-300"
                     >
                       {isSubmitting ? 'Sending...' : 'Send Message'}
                       <Send className="w-4 h-4 ml-2 transition-transform duration-300 group-hover/send:translate-x-0.5 group-hover/send:-translate-y-0.5" />
-                      <span
-                        aria-hidden="true"
-                        className="animate-sheen absolute inset-y-0 left-0 w-2/5 bg-gradient-to-r from-transparent via-sky-400/40 to-transparent pointer-events-none"
-                      />
                     </Button>
                   </form>
                 </Card>

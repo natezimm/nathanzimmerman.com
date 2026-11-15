@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import Hero from '@/components/Hero';
@@ -11,25 +11,32 @@ import { HOME_HEAD, usePageHead } from '@/lib/pageHead';
 
 const Index = () => {
   const { hash } = useLocation();
+  const arrivalHash = useRef(hash);
   usePageHead(HOME_HEAD);
 
-  // Links back from a project page land on /#projects; scroll there once.
+  // Links back from a project page land on /#projects; jump there once on
+  // arrival. Later hash changes come from in-page links the browser scrolls to.
   useEffect(() => {
-    if (hash) document.getElementById(hash.slice(1))?.scrollIntoView();
-  }, [hash]);
+    const id = arrivalHash.current.slice(1);
+    if (id) {
+      document
+        .getElementById(id)
+        ?.scrollIntoView({ behavior: 'instant' as ScrollBehavior });
+    }
+  }, []);
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-sky-500/20 selection:text-sky-300 relative">
-      {/* Ambient page illumination */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-radial from-sky-500/12 via-indigo-500/6 to-transparent blur-3xl opacity-75" />
-        <div className="absolute top-[38%] -left-32 w-[600px] h-[600px] bg-gradient-radial from-cyan-500/8 via-transparent to-transparent blur-3xl opacity-60" />
-        <div className="absolute top-[72%] -right-32 w-[600px] h-[600px] bg-gradient-radial from-purple-500/8 via-transparent to-transparent blur-3xl opacity-60" />
-      </div>
+    <div className="min-h-screen bg-background text-foreground selection:bg-sky-500/20 selection:text-sky-900 dark:selection:text-sky-200 relative">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60] focus:rounded-md focus:bg-background focus:px-4 focus:py-2.5 focus:text-sm focus:font-medium focus:shadow-lg"
+      >
+        Skip to content
+      </a>
 
       <div className="relative z-10">
         <Navigation />
-        <main className="relative">
+        <main id="main" tabIndex={-1} className="relative focus:outline-none">
           {/* The hero's grid, continued faintly behind the rest of the page */}
           <div
             aria-hidden="true"
