@@ -28,21 +28,10 @@ const DELETING_SPEED = 50;
 const PAUSE_DURATION = 2000;
 
 const GREETING_WORDS = [
-  { word: 'Hi,', delay: '[--rise-delay:60ms]' },
-  { word: 'my', delay: '[--rise-delay:120ms]' },
-  { word: 'name', delay: '[--rise-delay:180ms]' },
-  { word: 'is', delay: '[--rise-delay:240ms]' },
-];
-
-// Light pulses that run along the 28px background grid lines.
-const GRID_PACKETS = [
-  'hero-packet-x top-[195px] w-[120px] text-sky-400 [--packet-duration:7s]',
-  'hero-packet-x top-[391px] w-[90px] text-cyan-400 [--packet-duration:9s] [--packet-delay:2.5s]',
-  'hero-packet-x top-[615px] w-[140px] text-violet-400 [--packet-duration:8s] [--packet-delay:1.2s]',
-  'hero-packet-x top-[755px] w-[100px] text-sky-400 [--packet-duration:11s] [--packet-delay:4s]',
-  'hero-packet-y left-[251px] h-[120px] text-cyan-400 [--packet-duration:6s] [--packet-delay:1s]',
-  'hero-packet-y left-[867px] h-[100px] text-sky-400 [--packet-duration:7.5s] [--packet-delay:3s]',
-  'hero-packet-y left-[1231px] h-[130px] text-violet-400 [--packet-duration:9s]',
+  { word: 'Hi,', delay: '[--rise-delay:40ms]' },
+  { word: 'my', delay: '[--rise-delay:80ms]' },
+  { word: 'name', delay: '[--rise-delay:120ms]' },
+  { word: 'is', delay: '[--rise-delay:160ms]' },
 ];
 
 const MAX_TILT_X = 9;
@@ -105,7 +94,9 @@ const Hero = () => {
   }, [typeEffect, isDeleting, prefersReducedMotion, roleIndex]);
 
   const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById(id)?.scrollIntoView({
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
+    });
   };
 
   // Points the grid spotlight at the cursor and leans the portrait card toward it.
@@ -146,14 +137,14 @@ const Hero = () => {
       id="home"
       ref={sectionRef}
       onPointerMove={handlePointerMove}
-      className="relative min-h-[95vh] flex items-center justify-center overflow-hidden bg-background pt-24 pb-16 lg:py-24"
+      className="relative min-h-[95vh] flex items-center justify-center overflow-hidden bg-background pt-20 pb-12 sm:pt-24 sm:pb-16 lg:py-24"
     >
       <div aria-hidden="true" className="absolute inset-0 pointer-events-none">
         {/* Dynamic Background Atmosphere */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="animate-aurora absolute top-[-10%] left-[-10%] w-[45%] h-[45%] rounded-full bg-purple-500/20 blur-[70px] md:blur-[130px] [--aurora-duration:16s]" />
-          <div className="animate-aurora absolute top-[15%] right-[-10%] w-[40%] h-[40%] rounded-full bg-sky-500/20 blur-[60px] md:blur-[120px] [--aurora-duration:20s] [animation-direction:reverse]" />
-          <div className="animate-aurora absolute bottom-[-10%] left-[25%] w-[50%] h-[50%] rounded-full bg-cyan-500/15 blur-[80px] md:blur-[140px] [--aurora-duration:24s]" />
+          <div className="absolute top-[-10%] left-[-10%] w-[45%] h-[45%] rounded-full bg-purple-500/20 blur-[70px] md:blur-[130px]" />
+          <div className="absolute top-[15%] right-[-10%] w-[40%] h-[40%] rounded-full bg-sky-500/20 blur-[60px] md:blur-[120px]" />
+          <div className="absolute bottom-[-10%] left-[25%] w-[50%] h-[50%] rounded-full bg-cyan-500/15 blur-[80px] md:blur-[140px]" />
         </div>
 
         {/* Grid Pattern Overlay */}
@@ -162,13 +153,6 @@ const Hero = () => {
         {/* Cursor spotlight: ambient glow plus the grid lines it lights up */}
         <div className="hero-spotlight absolute inset-0" />
         <div className="hero-lit-grid absolute inset-0" />
-
-        {/* Grid packets */}
-        <div className="absolute inset-0 overflow-hidden">
-          {GRID_PACKETS.map((packet) => (
-            <span key={packet} className={`hero-packet ${packet}`} />
-          ))}
-        </div>
       </div>
 
       {/* Hero Content */}
@@ -177,13 +161,13 @@ const Hero = () => {
           {/* Left Column: Headlines, Role typing, Bio, CTAs. On mobile the
               column dissolves so the resume links can sit below the card. */}
           <div className="contents lg:block lg:col-span-7 text-center lg:text-left lg:space-y-6">
-            <div className="space-y-6">
+            <div className="space-y-5 sm:space-y-6">
               {/* Live Role Badge */}
               <div className="animate-rise inline-flex items-center gap-2.5 rounded-full border border-sky-400/40 dark:border-sky-400/35 bg-sky-500/10 dark:bg-sky-500/15 px-4 py-1.5 text-xs sm:text-sm font-semibold sm:font-medium text-sky-700 dark:text-sky-200 shadow-sm backdrop-blur-md">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-                </span>
+                <span
+                  aria-hidden="true"
+                  className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"
+                />
                 <span>Software Engineer II @ Nelnet</span>
               </div>
 
@@ -196,17 +180,14 @@ const Hero = () => {
                     </span>{' '}
                   </Fragment>
                 ))}
-                <span className="animate-rise inline-block [--rise-delay:320ms]">
-                  <span className="gradient-text gradient-text-live">
-                    Nathan
-                  </span>
-                  .
+                <span className="animate-rise inline-block [--rise-delay:200ms]">
+                  <span className="gradient-text">Nathan</span>.
                 </span>
               </h1>
 
               {/* Accessible Typing Subtitle */}
               <p
-                className="animate-rise [--rise-delay:420ms] text-xl sm:text-2xl md:text-3xl text-muted-foreground font-light min-h-[1.5em]"
+                className="animate-rise [--rise-delay:240ms] text-xl sm:text-2xl md:text-3xl text-muted-foreground font-light min-h-[1.5em]"
                 aria-label={fullRolesText}
               >
                 <span
@@ -224,7 +205,7 @@ const Hero = () => {
               </p>
 
               {/* Bio Paragraph */}
-              <p className="animate-rise [--rise-delay:500ms] text-base sm:text-lg text-foreground/85 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+              <p className="animate-rise [--rise-delay:280ms] text-base sm:text-lg text-foreground/85 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
                 Former special education teacher turned software engineer,
                 bringing empathy and clear thinking to enterprise fintech. I
                 build clean, reliable systems from frontend interfaces to
@@ -232,18 +213,14 @@ const Hero = () => {
               </p>
 
               {/* Buttons & Socials */}
-              <div className="animate-rise [--rise-delay:580ms] pt-2">
+              <div className="animate-rise [--rise-delay:320ms] pt-2">
                 <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
                   <Button
                     size="lg"
-                    className="relative overflow-hidden h-12 px-8 text-base rounded-full bg-primary text-primary-foreground font-medium shadow-lg shadow-sky-500/20 hover:shadow-sky-500/35 transition-all duration-300 hover:-translate-y-0.5"
+                    className="h-12 px-8 text-base rounded-full bg-primary text-primary-foreground font-medium shadow-lg shadow-sky-500/20 hover:shadow-sky-500/35 transition-all duration-300 hover:-translate-y-0.5"
                     onClick={() => scrollToSection('projects')}
                   >
                     View My Work
-                    <span
-                      aria-hidden="true"
-                      className="animate-sheen absolute inset-y-0 left-0 w-2/5 bg-gradient-to-r from-transparent via-sky-400/40 to-transparent pointer-events-none"
-                    />
                   </Button>
                   <Button
                     size="lg"
@@ -284,12 +261,12 @@ const Hero = () => {
             </div>
 
             {/* Resume links: the playable Brick Breaker version and the PDF */}
-            <div className="animate-rise [--rise-delay:660ms] order-last lg:order-none flex flex-wrap items-center justify-center lg:justify-start gap-x-5 gap-y-3">
+            <div className="animate-rise [--rise-delay:360ms] order-last lg:order-none flex flex-wrap items-center justify-center lg:justify-start gap-x-5 gap-y-3">
               <a
                 href={BRICK_BREAKER_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group/game inline-flex items-center gap-2.5 text-sm font-medium text-sky-700 dark:text-sky-300 hover:text-sky-600 dark:hover:text-sky-200 transition-colors"
+                className="group/game inline-flex min-h-11 items-center gap-2.5 text-sm font-medium text-sky-700 dark:text-sky-300 hover:text-sky-600 dark:hover:text-sky-200 transition-colors"
               >
                 <Gamepad2 className="w-[18px] h-[18px] shrink-0" />
                 <span>
@@ -301,7 +278,7 @@ const Hero = () => {
                 href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 dark:border-white/15 bg-slate-100/70 dark:bg-white/5 hover:bg-slate-200/70 dark:hover:bg-white/10 text-sm font-medium text-foreground px-4 py-2 transition-all hover:scale-105 shadow-sm"
+                className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-slate-300 dark:border-white/15 bg-slate-100/70 dark:bg-white/5 hover:bg-slate-200/70 dark:hover:bg-white/10 text-sm font-medium text-foreground px-4 transition-colors shadow-sm"
               >
                 <FileText className="w-4 h-4 text-sky-500 dark:text-sky-400" />
                 <span>Resume PDF</span>
@@ -318,8 +295,8 @@ const Hero = () => {
 
               <div className="hero-tilt relative">
                 {/* Floating Top Telemetry Pill, lifted off the card for depth */}
-                <div className="absolute -top-3 right-0 sm:-top-4 sm:-right-3 z-20 [transform:translateZ(40px)]">
-                  <div className="animate-float-slow bg-white/60 dark:bg-card/50 backdrop-blur-md rounded-2xl p-2.5 sm:p-3.5 border border-slate-200/90 dark:border-white/20 shadow-xl shadow-slate-900/10 dark:shadow-slate-950/50 flex items-center gap-2 sm:gap-3">
+                <div className="hidden sm:block absolute -top-4 -right-3 z-20 [transform:translateZ(40px)]">
+                  <div className="bg-white/60 dark:bg-card/50 backdrop-blur-md rounded-2xl p-2.5 sm:p-3.5 border border-slate-200/90 dark:border-white/20 shadow-xl shadow-slate-900/10 dark:shadow-slate-950/50 flex items-center gap-2 sm:gap-3">
                     <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
                       <Activity className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </div>
@@ -327,20 +304,18 @@ const Hero = () => {
                       <div className="text-[11px] sm:text-xs font-semibold text-foreground flex items-center gap-1.5 font-heading">
                         Enterprise Fintech
                       </div>
-                      <div className="text-[10px] sm:text-[11px] text-emerald-500 dark:text-emerald-400 font-medium whitespace-nowrap">
+                      <div className="text-[10px] sm:text-[11px] text-emerald-700 dark:text-emerald-400 font-medium whitespace-nowrap">
                         Payments & Microservices
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Central Portrait Card, edged by a rotating beam */}
+                {/* Central Portrait Card, edged by a soft gradient */}
                 <div
                   ref={cardRef}
-                  className="group relative rounded-[2rem] p-[1.5px] overflow-hidden bg-slate-200/90 dark:bg-white/20 shadow-2xl shadow-slate-900/10 dark:shadow-slate-950/50"
+                  className="group relative rounded-[2rem] p-[1.5px] overflow-hidden bg-gradient-to-br from-sky-400/60 via-slate-200/90 to-slate-200/90 dark:from-sky-400/50 dark:via-white/15 dark:to-white/10 shadow-2xl shadow-slate-900/10 dark:shadow-slate-950/50"
                 >
-                  <div aria-hidden="true" className="card-beam" />
-
                   <div className="relative rounded-[calc(2rem-1.5px)] p-3 sm:p-3.5 bg-card">
                     {/* Header System Line */}
                     <div className="flex items-center justify-between mb-2 sm:mb-2.5">
@@ -361,13 +336,13 @@ const Hero = () => {
         </div>
 
         {/* Scroll Indicator */}
-        <div className="text-center pt-8 sm:pt-10">
+        <div className="hidden sm:block text-center pt-10">
           <button
             onClick={() => scrollToSection('about')}
-            className="inline-block text-muted-foreground hover:text-sky-400 transition-colors animate-bounce p-2"
+            className="inline-flex items-center justify-center w-11 h-11 rounded-full text-muted-foreground hover:text-foreground transition-colors"
             aria-label="Scroll to about section"
           >
-            <ArrowDown className="w-6 h-6 sm:w-7 sm:h-7" />
+            <ArrowDown className="w-6 h-6" />
           </button>
         </div>
       </div>

@@ -85,10 +85,10 @@ const ProjectCard = ({ project }: { project: ProjectEntry }) => {
           />
 
           <div className="absolute top-3 left-3 inline-flex items-center gap-2 rounded-full border border-white/20 bg-slate-950/70 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-md">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-            </span>
+            <span
+              aria-hidden="true"
+              className="h-2 w-2 rounded-full bg-emerald-400"
+            />
             {project.kind}
           </div>
 
@@ -105,7 +105,7 @@ const ProjectCard = ({ project }: { project: ProjectEntry }) => {
           <CardTitle className="text-2xl font-bold font-heading">
             <Link
               to={caseStudy}
-              className="group-hover:text-primary transition-colors duration-300 focus-visible:outline-none focus-visible:underline"
+              className="group-hover:text-primary transition-colors duration-300 rounded-sm"
             >
               {project.title}
             </Link>
@@ -131,7 +131,7 @@ const ProjectCard = ({ project }: { project: ProjectEntry }) => {
         <div className="flex flex-wrap items-center justify-between gap-2.5 pt-1">
           <Link
             to={caseStudy}
-            className="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline underline-offset-4"
+            className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-primary hover:underline underline-offset-4"
             aria-label={`${project.title} details`}
           >
             Details
@@ -141,7 +141,7 @@ const ProjectCard = ({ project }: { project: ProjectEntry }) => {
             <Button
               variant="outline"
               size="sm"
-              className="rounded-lg border-slate-300 dark:border-white/15 bg-slate-100/80 dark:bg-white/5 hover:bg-slate-200/80 dark:hover:bg-white/10 text-foreground hover:border-sky-500 dark:hover:border-sky-400/50 transition-all text-xs font-medium shadow-sm"
+              className="h-11 md:h-9 rounded-lg border-slate-300 dark:border-white/15 bg-slate-100/80 dark:bg-white/5 hover:bg-slate-200/80 dark:hover:bg-white/10 text-foreground hover:border-sky-500 dark:hover:border-sky-400/50 transition-all text-xs font-medium shadow-sm"
               asChild
             >
               <a
@@ -162,7 +162,7 @@ const ProjectCard = ({ project }: { project: ProjectEntry }) => {
             </Button>
             <Button
               size="sm"
-              className="rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm shadow-primary/20 hover:shadow-primary/40 text-xs font-medium"
+              className="h-11 md:h-9 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm shadow-primary/20 hover:shadow-primary/40 text-xs font-medium"
               asChild
             >
               <a
@@ -218,7 +218,7 @@ const Projects = () => (
 
         <SpotlightGroup className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {projectEntries.map((project, index) => (
-            <ScrollReveal key={project.slug} delay={0.1 + index * 0.1}>
+            <ScrollReveal key={project.slug} delay={index * 0.05}>
               <ProjectCard project={project} />
             </ScrollReveal>
           ))}
