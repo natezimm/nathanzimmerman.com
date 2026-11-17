@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PortfolioAsk.Core/PortfolioAsk.Core.csproj" />
+    <Project Path="src/PortfolioAsk.Indexer/PortfolioAsk.Indexer.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PortfolioAsk.Tests/PortfolioAsk.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PortfolioAsk.Core\PortfolioAsk.Core.csproj" />
+  </ItemGroup>
+</Project>

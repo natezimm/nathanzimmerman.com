@@ -34,3 +34,20 @@ export async function loadProjects() {
     await server.close();
   }
 }
+
+// The raw content of src/data/portfolioData.ts, for scripts that need more than
+// the project list (the Ask my portfolio corpus export).
+export async function loadPortfolioData() {
+  const server = await createServer({
+    root,
+    configFile: path.join(root, 'vite.config.ts'),
+    server: { middlewareMode: true, hmr: false },
+    appType: 'custom',
+    logLevel: 'error',
+  });
+  try {
+    return await server.ssrLoadModule('/src/data/portfolioData.ts');
+  } finally {
+    await server.close();
+  }
+}

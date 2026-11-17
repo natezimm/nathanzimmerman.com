@@ -40,3 +40,11 @@ test-results
 
 # Local Roadmaps and Plans
 PORTFOLIO_ROADMAP.md
+
+# Ask my portfolio: build output, the downloaded model, sibling checkouts and generated files
+api/**/bin/
+api/**/obj/
+api/models/files/
+api/corpus-repos/
+api/generated/
+api/index.json
