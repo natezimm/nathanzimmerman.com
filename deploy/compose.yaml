@@ -1,0 +1,49 @@
+# Production: the Ask my portfolio API, behind the host's nginx, which forwards
+# https://nathanzimmerman.com/api/ask here (deploy/nginx-ask.conf). The static site itself is not a
+# container: deploy.yml copies dist/ to /var/www.
+#
+# Lives in ~/portfolio-ask on the VM next to a .env file (see deploy/README.md). The deploy job in
+# .github/workflows/ask.yml copies this file there and runs:  docker compose pull && docker compose up -d
+#
+# Settings, from .env (mode 600, never committed):
+#   ANTHROPIC_API_KEY  the key of the dedicated Anthropic workspace; leave empty until launch
+#   ASK_ENABLED        the kill switch: false (the default) pauses every model call
+#   ASK_TAG            the image tag to run (default latest; CI sets the commit it deploys)
+name: portfolio-ask
+
+# Cap the container's logs at three 10 MB files so they cannot fill the shared VM's disk.
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: '10m'
+    max-file: '3'
+
+services:
+  ask:
+    image: ghcr.io/natezimm/nathanzimmerman-ask:${ASK_TAG:-latest}
+    logging: *logging
+    environment:
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      Ask__Enabled: ${ASK_ENABLED:-false}
+      # nginx reaches the container from this network's gateway, so only its X-Forwarded-For counts.
+      ForwardedHeaders__KnownNetworks__0: 172.31.252.0/24
+    # Only nginx on this machine can reach it.
+    ports:
+      - '127.0.0.1:8095:8080'
+    # Measured locally under this cap: 98 MB at start, 121 MB after 51 questions (deploy/README.md).
+    mem_limit: 256m
+    # Nothing in the container writes to disk, so its filesystem is read-only and it keeps no privileges.
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: 172.31.252.0/24
