@@ -1,4 +1,4 @@
-import { ArrowUp } from 'lucide-react';
+import { Activity, ArrowUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Github, Linkedin } from '@/components/shared/BrandIcons';
 
@@ -15,7 +15,7 @@ const Footer = () => {
         <div className="max-w-6xl mx-auto flex flex-col items-center gap-6 text-center">
           <button
             type="button"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            onClick={() => window.scrollTo({ top: 0 })}
             aria-label="Back to top"
             className="group flex items-center justify-center w-11 h-11 rounded-full border border-slate-300 dark:border-white/15 bg-slate-100/70 dark:bg-white/5 text-muted-foreground hover:text-foreground hover:border-sky-500 dark:hover:border-sky-400/50 transition-all duration-300 shadow-sm"
           >
@@ -34,12 +34,12 @@ const Footer = () => {
             Privacy
           </Link>
 
-          <div className="flex items-center justify-center gap-6">
+          <div className="flex items-center justify-center gap-2">
             <a
               href="https://github.com/natezimm"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors hover:scale-110 duration-300"
+              className="inline-flex items-center justify-center w-11 h-11 rounded-full text-muted-foreground hover:text-primary hover:bg-accent/60 transition-colors"
               aria-label="GitHub"
             >
               <Github className="w-5 h-5" />
@@ -48,10 +48,20 @@ const Footer = () => {
               href="https://www.linkedin.com/in/zimmermannathan"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors hover:scale-110 duration-300"
+              className="inline-flex items-center justify-center w-11 h-11 rounded-full text-muted-foreground hover:text-primary hover:bg-accent/60 transition-colors"
               aria-label="LinkedIn"
             >
               <Linkedin className="w-5 h-5" />
+            </a>
+            <a
+              href="https://status.nathanzimmerman.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center w-11 h-11 rounded-full text-muted-foreground hover:text-primary hover:bg-accent/60 transition-colors"
+              aria-label="Status of the apps"
+              title="Status of the apps"
+            >
+              <Activity className="w-5 h-5" />
             </a>
           </div>
         </div>

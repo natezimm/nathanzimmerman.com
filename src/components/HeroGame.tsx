@@ -12,7 +12,9 @@ import {
 import nathanPortraitAvif from '@/assets/nathan-portrait.avif';
 import nathanPortraitWebp from '@/assets/nathan-portrait.webp';
 import nathanPortraitJpg from '@/assets/nathan-portrait.jpg';
+import nathanVectorAvif from '@/assets/nathan-vector.avif';
 import nathanVectorJpg from '@/assets/nathan-vector.jpg';
+import nathanVectorLightAvif from '@/assets/nathan-vector-light.avif';
 import nathanVectorLightJpg from '@/assets/nathan-vector-light.jpg';
 
 const STEER_TIMEOUT = 2500;
@@ -25,6 +27,16 @@ const BRICK_ROW_STYLES = [
 ];
 
 const percent = (fraction: number) => `${fraction * 100}%`;
+
+/** The illustrated portraits only appear on mouse hover, so touch screens never fetch them. */
+const VECTOR_PORTRAITS = [
+  { avif: nathanVectorAvif, jpg: nathanVectorJpg, theme: 'hidden dark:block' },
+  {
+    avif: nathanVectorLightAvif,
+    jpg: nathanVectorLightJpg,
+    theme: 'block dark:hidden',
+  },
+];
 
 const ballTransform = ({ ball }: GameState) =>
   `translate3d(${percent(ball.x)}, ${percent(ball.y)}, 0)`;
@@ -51,6 +63,7 @@ const HeroGame = ({ reducedMotion }: HeroGameProps) => {
     useState(reducedMotion);
   const [inView, setInView] = useState(true);
   const [playerHasPaddle, setPlayerHasPaddle] = useState(false);
+  const [showVector, setShowVector] = useState(false);
 
   if (previousReducedMotion !== reducedMotion) {
     setPreviousReducedMotion(reducedMotion);
@@ -128,6 +141,10 @@ const HeroGame = ({ reducedMotion }: HeroGameProps) => {
     };
   };
 
+  const handlePointerEnter = (event: PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType === 'mouse') setShowVector(true);
+  };
+
   const status = paused
     ? 'Paused'
     : playerHasPaddle
@@ -139,6 +156,7 @@ const HeroGame = ({ reducedMotion }: HeroGameProps) => {
       <div
         ref={areaRef}
         onPointerMove={handlePointerMove}
+        onPointerEnter={handlePointerEnter}
         className="relative rounded-2xl overflow-hidden aspect-[4/5.15] touch-pan-y bg-slate-200 dark:bg-slate-950/50 group-hover:ring-2 group-hover:ring-sky-400/30 group-hover:shadow-[0_0_30px_rgba(56,189,248,0.2)] transition-all duration-500"
       >
         {/* Portrait with Clean Photo Crossfade Transition */}
@@ -153,27 +171,31 @@ const HeroGame = ({ reducedMotion }: HeroGameProps) => {
               fetchPriority="high"
               width={480}
               height={600}
-              className="w-full h-full object-cover object-top select-none transition-opacity duration-700 group-hover:opacity-0"
+              className={cn(
+                'w-full h-full object-cover object-top select-none transition-opacity duration-700',
+                showVector && 'group-hover:opacity-0'
+              )}
             />
           </picture>
 
-          {/* Illustrated Vector Portrait - Dark Theme (Reveals on Hover) */}
-          <img
-            src={nathanVectorJpg}
-            alt="Nathan Zimmerman - Illustrated Vector Portrait"
-            width={480}
-            height={600}
-            className="hidden dark:block absolute inset-0 w-full h-full object-cover object-top select-none opacity-0 transition-opacity duration-700 group-hover:opacity-100"
-          />
-
-          {/* Illustrated Vector Portrait - Light Theme (Reveals on Hover) */}
-          <img
-            src={nathanVectorLightJpg}
-            alt="Nathan Zimmerman - Illustrated Vector Portrait"
-            width={480}
-            height={600}
-            className="block dark:hidden absolute inset-0 w-full h-full object-cover object-top select-none opacity-0 transition-opacity duration-700 group-hover:opacity-100"
-          />
+          {/* Illustrated portraits, one per theme, revealed on hover */}
+          {showVector &&
+            VECTOR_PORTRAITS.map(({ avif, jpg, theme }) => (
+              <picture key={jpg}>
+                <source srcSet={avif} type="image/avif" />
+                <img
+                  src={jpg}
+                  alt="Nathan Zimmerman - Illustrated Vector Portrait"
+                  width={480}
+                  height={600}
+                  decoding="async"
+                  className={cn(
+                    theme,
+                    'absolute inset-0 w-full h-full object-cover object-top select-none opacity-0 transition-opacity duration-700 group-hover:opacity-100'
+                  )}
+                />
+              </picture>
+            ))}
         </div>
 
         {/* Subtle inner shadow / gradient */}
@@ -247,7 +269,7 @@ const HeroGame = ({ reducedMotion }: HeroGameProps) => {
           type="button"
           onClick={() => setPaused((current) => !current)}
           aria-label={paused ? 'Play brick breaker' : 'Pause brick breaker'}
-          className="shrink-0 flex items-center justify-center w-8 h-8 rounded-full border border-slate-300 dark:border-white/15 bg-slate-100/70 dark:bg-white/5 text-muted-foreground hover:text-foreground hover:border-sky-500 dark:hover:border-sky-400/50 transition-colors"
+          className="relative shrink-0 flex items-center justify-center w-8 h-8 rounded-full before:absolute before:-inset-1.5 before:content-[''] border border-slate-300 dark:border-white/15 bg-slate-100/70 dark:bg-white/5 text-muted-foreground hover:text-foreground hover:border-sky-500 dark:hover:border-sky-400/50 transition-colors"
         >
           {paused ? (
             <Play className="w-3.5 h-3.5" />

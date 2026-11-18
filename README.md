@@ -153,6 +153,8 @@ Every push to `main` runs the quality gate in GitHub Actions, then rsyncs `dist/
 
 The Ask my portfolio API ships separately: `ask.yml` builds `ghcr.io/natezimm/nathanzimmerman-ask` with the index baked in and deploys it to its own container on the VM, which nginx serves at `/api/ask`. It starts switched off; `deploy/README.md` has the setup, the kill switch and monitoring.
 
+Each deploy also signs a provenance attestation for every file it ships, and CI keeps an SPDX SBOM of the npm packages with the run's artifacts. To check that a file on the live site came from this repository's workflow, download it and run `gh attestation verify <file> --owner natezimm`.
+
 ## License
 
 [MIT](LICENSE)

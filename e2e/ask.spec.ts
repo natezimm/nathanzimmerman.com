@@ -94,7 +94,7 @@ test.describe('ask my portfolio', () => {
     ).toBeVisible();
     await expect(section(page)).toHaveCount(0);
     await expect(
-      page.getByRole('navigation').getByRole('button', { name: 'Ask' })
+      page.getByRole('navigation').getByRole('link', { name: 'Ask' })
     ).toHaveCount(0);
   });
 
@@ -116,12 +116,12 @@ test.describe('ask my portfolio', () => {
       await page.getByRole('button', { name: 'Toggle menu' }).click();
       await page
         .getByTestId('mobile-menu')
-        .getByRole('button', { name: 'Ask' })
+        .getByRole('link', { name: 'Ask' })
         .click();
     } else {
       await page
         .getByRole('navigation')
-        .getByRole('button', { name: 'Ask' })
+        .getByRole('link', { name: 'Ask' })
         .click();
     }
     await expect(
