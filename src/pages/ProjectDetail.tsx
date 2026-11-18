@@ -23,7 +23,7 @@ const ProjectDetail = () => {
   const [autoPlay] = useState(() => !prefersReducedMotion());
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   }, [project]);
   usePageHead(project && projectHead(project));
 

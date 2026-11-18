@@ -18,7 +18,15 @@ describe('Footer', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Back to top' }));
 
-    expect(scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
+    expect(scrollTo).toHaveBeenCalledWith({ top: 0 });
     scrollTo.mockRestore();
+  });
+
+  it('links to the status page', () => {
+    render(<Footer />);
+
+    expect(
+      screen.getByRole('link', { name: 'Status of the apps' })
+    ).toHaveAttribute('href', 'https://status.nathanzimmerman.com');
   });
 });

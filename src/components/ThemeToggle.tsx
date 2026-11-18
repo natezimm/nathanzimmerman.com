@@ -12,7 +12,7 @@ const ThemeToggle = () => {
       size="icon"
       onClick={toggleTheme}
       className={cn(
-        'relative w-10 h-10 rounded-full transition-all duration-300',
+        'relative w-11 h-11 rounded-full transition-all duration-300',
         'hover:bg-accent/50 hover:scale-110',
         'group overflow-hidden'
       )}

@@ -240,16 +240,23 @@ describe('Hero section', () => {
   });
 
   describe('Portrait card', () => {
-    it('renders system line and both real and vector portrait images for crossfade across themes', () => {
+    it('loads the illustrated portraits only once a mouse hovers the card', () => {
       render(<Hero />);
 
       expect(screen.getByText('nathan_zimmerman.dev')).toBeInTheDocument();
-      expect(
-        screen.getByAltText('Nathan Zimmerman - Software Engineer')
-      ).toBeInTheDocument();
-      expect(
-        screen.getAllByAltText('Nathan Zimmerman - Illustrated Vector Portrait')
-      ).toHaveLength(2);
+      const photo = screen.getByAltText('Nathan Zimmerman - Software Engineer');
+      const vectorAlt = 'Nathan Zimmerman - Illustrated Vector Portrait';
+      expect(screen.queryAllByAltText(vectorAlt)).toHaveLength(0);
+
+      const area = screen.getByTestId('hero-game-paddle')
+        .parentElement as HTMLElement;
+      fireEvent.pointerEnter(area, { pointerType: 'touch' });
+      expect(screen.queryAllByAltText(vectorAlt)).toHaveLength(0);
+      expect(photo).not.toHaveClass('group-hover:opacity-0');
+
+      fireEvent.pointerEnter(area, { pointerType: 'mouse' });
+      expect(screen.getAllByAltText(vectorAlt)).toHaveLength(2);
+      expect(photo).toHaveClass('group-hover:opacity-0');
     });
 
     it('pairs the playable card with a link to the full Brick Breaker Resume', () => {

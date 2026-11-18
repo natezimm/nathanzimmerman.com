@@ -47,14 +47,6 @@ const Experience = () => {
 
               {/* Engineering Branch */}
               <div className="relative">
-                {/* Highlight climbing the lane toward HEAD */}
-                <div
-                  aria-hidden="true"
-                  className="absolute z-10 top-[42px] bottom-0 left-[calc(var(--lane)_-_2px)] w-1 overflow-hidden rounded-full pointer-events-none"
-                >
-                  <div className="lane-comet h-full w-full" />
-                </div>
-
                 <SpotlightGroup className="space-y-8">
                   {experienceItems.map((item, index) => {
                     const isCurrent = item.period.includes('Present');
@@ -93,7 +85,6 @@ const Experience = () => {
                         >
                           {isCurrent ? (
                             <span className="absolute flex h-[18px] w-[18px] -translate-x-1/2 -translate-y-1/2">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                               <span className="relative inline-flex h-[18px] w-[18px] rounded-full bg-emerald-400 border-[3px] border-emerald-100 shadow-[0_0_16px_rgba(52,211,153,0.8)]" />
                             </span>
                           ) : (
@@ -116,7 +107,7 @@ const Experience = () => {
                                 <h3 className="text-xl sm:text-2xl font-bold text-foreground group-hover:text-primary transition-colors font-heading">
                                   {item.title}
                                 </h3>
-                                <div className="flex items-center gap-2 text-sky-600 dark:text-sky-400 font-medium text-base mt-1">
+                                <div className="flex items-center gap-2 text-sky-700 dark:text-sky-400 font-medium text-base mt-1">
                                   <Building2 className="w-4 h-4" />
                                   <span>{item.company}</span>
                                 </div>

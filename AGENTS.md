@@ -16,6 +16,7 @@ Preserve unrelated working-tree changes. `docs/architecture.md` has broader desi
 - `src/contexts/ThemeContext.tsx`: saves `light`/`dark` under the `theme` localStorage key and defaults to dark when no valid value is saved.
 - `src/lib/`: shared helpers, analytics, and skill metrics. The `@/` import alias resolves to `src/`.
 - `src/index.css`, `tailwind.config.ts`, and `src/assets/`: styling and bundled imagery; `public/` contains directly served assets and `_headers`.
+- `infra/`: Terraform for the GCP project every app runs in (the VM, its address and firewall, and uptime checks, alerts and SLOs for every app), run by hand; CI only runs `terraform fmt -check` and `validate`. Real project, VM, domain and email values live in its git-ignored `terraform.tfvars`, never in committed files. See `infra/README.md`.
 
 ## Commands
 
@@ -65,4 +66,4 @@ Run relevant checks for the change and use `npm run quality` for broad applicati
 
 All five repos default to Playwright port 4173, and local runs reuse a server already listening there. Stop unrelated previews and run browser suites sequentially to avoid testing the wrong app or stale build. This repo can use another port with `PLAYWRIGHT_PORT=4174 npm run test:e2e`.
 
-`.github/workflows/deploy.yml` gates pull requests and pushes to `main`; a successful push to `main` deploys `dist/` to GCP. The VM's nginx must fall back to `index.html` so `/projects/<slug>` loads on a direct visit. Build, coverage, and browser-report directories are generated output. `.github/workflows/security.yml` runs CodeQL (TypeScript/JavaScript and the workflows), GitHub's dependency review on pull requests and an audit of shipped npm packages for high or critical advisories, on pull requests, `main` and every Monday; it is apart from the deploy, so a new advisory never holds one.
+`.github/workflows/deploy.yml` gates pull requests and pushes to `main`; a successful push to `main` deploys `dist/` to GCP. The VM's nginx must fall back to `index.html` so `/projects/<slug>` loads on a direct visit. Build, coverage, and browser-report directories are generated output. `.github/workflows/security.yml` runs CodeQL (TypeScript/JavaScript and the workflows), GitHub's dependency review on pull requests and an audit of shipped npm packages for high or critical advisories, on pull requests, `main` and every Monday; it is apart from the deploy, so a new advisory never holds one. Actions are pinned to commit SHAs with their version in a comment (`@<sha> # v7`); Dependabot updates both.
