@@ -46,6 +46,22 @@ public sealed class AnthropicRequestTests
         Assert.DoesNotContain(Key, host.Logs.All, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public async Task Thinking_can_be_turned_on_for_the_eval()
+    {
+        var handler = new Messages("end_turn");
+        using var host = Host(handler);
+        host.Settings["Ask:Thinking"] = "true";
+        host.Settings["Ask:MaxOutputTokens"] = "2000";
+
+        await host.AskOk("How does a family's data stay private?");
+
+        using var body = JsonDocument.Parse(handler.Body);
+        Assert.Equal("adaptive", body.RootElement.GetProperty("thinking").GetProperty("type").GetString());
+        Assert.Equal(2000, body.RootElement.GetProperty("max_tokens").GetInt32());
+        Assert.Equal("low", body.RootElement.GetProperty("output_config").GetProperty("effort").GetString());
+    }
+
     [Theory]
     [InlineData("max_tokens", RefusalReasons.Incomplete)]
     [InlineData("refusal", RefusalReasons.Declined)]

@@ -2,7 +2,7 @@
 
 ## Runtime Topology
 
-The portfolio is a React 18, TypeScript, and Vite single-page application. Vite builds static assets into `dist/`, while runtime behavior is fully client-side except for third-party EmailJS contact submission.
+The portfolio is a React 18, TypeScript, and Vite single-page application. Vite builds static assets into `dist/`, while runtime behavior is client-side except for EmailJS contact submission and one same-origin API, `/api/ask`, behind Ask my portfolio.
 
 ## Architecture Diagram
 
@@ -17,11 +17,16 @@ flowchart LR
   ProjectPages --> Content
   Content --> Media["Screenshots, recordings,<br/>diagrams in src/assets"]
   App --> Theme["ThemeContext<br/>localStorage + system preference"]
+  Sections --> AskSection["Ask section<br/>shown when /api/ask/meta says on"]
+  AskSection --> AskApi["/api/ask<br/>.NET 11 container"]
+  AskApi --> Index["index.json<br/>in the image"]
+  AskApi --> Claude["Claude Haiku 5.5<br/>Anthropic API"]
   Sections --> Contact["Contact form"]
   Contact --> EmailJS["@emailjs/browser"]
   Sections & ProjectPages --> ProjectSites["Project demos<br/>calendar, knowball, rabbitears, resume"]
   Repo["Repo quality gate<br/>npm run quality"] --> Build["Vite build<br/>dist/"]
   Build --> Deploy["GitHub Actions<br/>rsync to GCP"]
+  Indexer["Indexer in CI<br/>5 repos' docs"] --> Index
 
   classDef user fill:#f8fafc,stroke:#475569,color:#0f172a
   classDef site fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
@@ -31,10 +36,11 @@ flowchart LR
   classDef external fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d
   class Visitor user
   class Site,ProjectSites site
-  class App,Router,Sections,ProjectPages,Theme,Contact client
-  class Content,Media data
-  class Repo,Build,Deploy delivery
-  class EmailJS external
+  class App,Router,Sections,ProjectPages,Theme,Contact,AskSection client
+  class Content,Media,Index data
+  class Repo,Build,Deploy,Indexer delivery
+  class EmailJS,Claude external
+  class AskApi site
 ```
 
 ## Source Boundaries
@@ -71,11 +77,12 @@ flowchart LR
   PortfolioRepo & BrickRepo & WheelhouseRepo & KnowBallRepo & RabbitRepo --> Actions
   Actions -->|"rsync dist/"| PortfolioSite & BrickSite
   Actions -->|"push images"| Ghcr
-  Ghcr -->|"pull on deploy"| WheelhouseSite & KnowBallSite
+  Ghcr -->|"pull on deploy"| WheelhouseSite & KnowBallSite & AskSite
 
   subgraph Vm["GCP VM"]
     Nginx["nginx<br/>HTTPS for every subdomain"]
     PortfolioSite["nathanzimmerman.com<br/>static files"]
+    AskSite["nathanzimmerman.com/api/ask<br/>Compose: ask API, 256 MB"]
     BrickSite["resume.nathanzimmerman.com<br/>static files"]
     WheelhouseSite["calendar.nathanzimmerman.com<br/>Compose: web, API, PostgreSQL<br/>demo, then family instances"]
     KnowBallSite["knowball.nathanzimmerman.com<br/>Compose: API, importer, PostgreSQL"]
@@ -83,7 +90,7 @@ flowchart LR
   end
 
   Visitor["Visitor"] --> Nginx
-  Nginx --> PortfolioSite & BrickSite & WheelhouseSite & KnowBallSite & RabbitSite
+  Nginx --> PortfolioSite & AskSite & BrickSite & WheelhouseSite & KnowBallSite & RabbitSite
 
   classDef user fill:#f8fafc,stroke:#475569,color:#0f172a
   classDef site fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
@@ -93,11 +100,15 @@ flowchart LR
   class Visitor user
   class PortfolioRepo,BrickRepo,WheelhouseRepo,KnowBallRepo,RabbitRepo repo
   class PortfolioSite,BrickSite site
-  class Nginx,WheelhouseSite,KnowBallSite,RabbitSite server
+  class Nginx,WheelhouseSite,KnowBallSite,RabbitSite,AskSite server
   class Actions,Ghcr delivery
 ```
 
 Nerdle, Sudoku and Blackjack were retired in October 2026: their demos and subdomains are gone from the VM, and the portfolio lists them under Earlier projects with links to their repositories.
+
+## Ask my portfolio
+
+The homepage's Ask section sends a question to `/api/ask`, a .NET 11 minimal API in its own container on the VM. The API embeds the question with a local ONNX model, searches `index.json` (built in CI from the READMEs, architecture notes, decision records and security notes of the five repositories, and baked into the image), refuses when nothing is close, and otherwise asks Claude Haiku 5.5 to answer from the top 6 passages. The server checks every citation and builds every link. A kill switch, a daily token budget, rate limits and prepaid credit cap the spend. [ADR 0001](adr/0001-ask-my-portfolio.md) has the decision and its alternatives, [`security.md`](security.md) the threat model, and `deploy/README.md` the runbook. The nightly `ask.yml` run rebuilds the index when a repository's docs have moved.
 
 ## Deferred Architecture Follow-Ups
 

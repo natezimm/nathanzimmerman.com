@@ -35,8 +35,8 @@ public static class AnthropicModel
         client.AsIChatClient(options.Model, options.MaxOutputTokens);
 
     /// <summary>
-    /// Thinking off at low effort (Haiku 5.5 accepts disabled thinking at effort high or below), and the answer
-    /// constrained to <see cref="ModelAnswer"/>'s JSON schema.
+    /// Thinking off at low effort (Haiku 5.5 accepts disabled thinking at effort high or below), or adaptive when
+    /// <see cref="AskOptions.Thinking"/> is on, and the answer constrained to <see cref="ModelAnswer"/>'s JSON schema.
     /// </summary>
     public static ChatOptions ChatOptions(AskOptions options) => new()
     {
@@ -47,7 +47,7 @@ public static class AnthropicModel
             Model = options.Model,
             MaxTokens = options.MaxOutputTokens,
             Messages = [],
-            Thinking = new ThinkingConfigDisabled(),
+            Thinking = options.Thinking ? new ThinkingConfigAdaptive() : new ThinkingConfigDisabled(),
             OutputConfig = new OutputConfig
             {
                 Effort = Effort.Low,

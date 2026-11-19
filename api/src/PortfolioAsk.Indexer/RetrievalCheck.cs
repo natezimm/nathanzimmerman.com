@@ -7,13 +7,17 @@ namespace PortfolioAsk.Indexer;
 /// <summary>A file an answer should cite.</summary>
 public sealed record ExpectedSource(string Repo, string Path);
 
-/// <summary>One case of api/evals/evals.json.</summary>
+/// <summary>
+/// One case of api/evals/evals.json. <c>Expect</c> lists files a good answer cites; <c>Allow</c> lists other files that
+/// are fine to cite, for the paid eval's precision score.
+/// </summary>
 public sealed record EvalCase(
     string Id,
     string Question,
     bool Refuse,
     IReadOnlyList<ExpectedSource>? Expect = null,
-    IReadOnlyList<string>? MustContain = null);
+    IReadOnlyList<string>? MustContain = null,
+    IReadOnlyList<ExpectedSource>? Allow = null);
 
 public sealed record EvalSet(IReadOnlyList<EvalCase> Cases)
 {

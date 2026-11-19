@@ -20,6 +20,15 @@ export const HOME_HEAD: PageHead = {
   image: '/og-image.jpg',
 };
 
+/** scripts/prerender-routes.mjs writes the same head into dist/privacy/index.html. */
+export const PRIVACY_HEAD: PageHead = {
+  title: 'Privacy · Nathan Zimmerman',
+  description:
+    'What nathanzimmerman.com sends where: Ask my portfolio questions go to the Claude API, contact messages go through EmailJS, and the site stores neither.',
+  path: '/privacy/',
+  image: '/og-image.jpg',
+};
+
 const setMeta = (attr: 'name' | 'property', key: string, value: string) => {
   let tag = document.head.querySelector<HTMLMetaElement>(
     `meta[${attr}="${key}"]`
