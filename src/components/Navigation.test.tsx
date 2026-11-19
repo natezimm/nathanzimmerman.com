@@ -8,6 +8,7 @@ import {
   within,
 } from '@testing-library/react';
 import Navigation from './Navigation';
+import { resetAskMeta } from '@/lib/askClient';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 
 const SECTION_IDS = ['home', 'about', 'experience', 'projects', 'contact'];
@@ -116,5 +117,57 @@ describe('Navigation', () => {
     fireEvent.keyDown(document, { key: 'Escape' });
     expect(screen.queryByTestId('mobile-menu')).not.toBeInTheDocument();
     expect(toggle).toHaveFocus();
+  });
+});
+
+describe('Navigation Ask link', () => {
+  const renderWithMeta = (body: unknown) => {
+    resetAskMeta();
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() =>
+        Promise.resolve(
+          new Response(JSON.stringify(body), {
+            headers: { 'Content-Type': 'application/json' },
+          })
+        )
+      )
+    );
+    render(
+      <ThemeProvider>
+        <Navigation />
+      </ThemeProvider>
+    );
+  };
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    resetAskMeta();
+  });
+
+  it('links to the Ask section when the API says it is on', async () => {
+    renderWithMeta({
+      enabled: true,
+      suggestions: [],
+      counts: { files: 1, decisionRecords: 0, readmes: 1, chunks: 1 },
+      repos: [],
+    });
+
+    expect(
+      await screen.findByRole('link', { name: 'Ask' })
+    ).toBeInTheDocument();
+  });
+
+  it('leaves the link out while Ask is paused', async () => {
+    renderWithMeta({
+      enabled: false,
+      suggestions: [],
+      counts: { files: 1, decisionRecords: 0, readmes: 1, chunks: 1 },
+      repos: [],
+    });
+
+    await waitFor(() => expect(fetch).toHaveBeenCalled());
+    await Promise.resolve();
+    expect(screen.queryByRole('link', { name: 'Ask' })).toBeNull();
   });
 });

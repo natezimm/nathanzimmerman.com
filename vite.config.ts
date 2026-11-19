@@ -5,7 +5,13 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: '::',
     port: 8081,
+    // The Ask API (dotnet run --project api/src/PortfolioAsk.Api) listens on 5090.
+    proxy: {
+      '/api': 'http://localhost:5090',
+    },
   },
+  // vite preview serves the built site to Playwright, which stubs /api itself.
+  preview: { proxy: {} },
   plugins: [react()],
   resolve: {
     alias: {

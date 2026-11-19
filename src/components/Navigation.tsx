@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import ThemeToggle from '@/components/ThemeToggle';
 import { FileText, ArrowUpRight } from 'lucide-react';
+import { useAskMeta } from '@/lib/askClient';
 
 const NAV_ITEMS = [
   { label: 'Home', id: 'home' },
@@ -13,17 +14,21 @@ const NAV_ITEMS = [
 
 const MOBILE_MENU_ID = 'mobile-menu';
 
+type NavItem = { label: string; id: string };
+
+const NAV_ITEMS_WITH_ASK: readonly NavItem[] = [
+  ...NAV_ITEMS.slice(0, 4),
+  { label: 'Ask', id: 'ask' },
+  ...NAV_ITEMS.slice(4),
+];
+
 /** The section whose top half fills the middle of the viewport is the current one. */
-const useActiveSection = () => {
-  const [active, setActive] = useState<string>(NAV_ITEMS[0].id);
+const useActiveSection = (items: readonly NavItem[]) => {
+  const [active, setActive] = useState<string>(items[0].id);
+  const ids = items.map(({ id }) => id).join(' ');
 
   useEffect(() => {
-    const sections = NAV_ITEMS.map(({ id }) =>
-      document.getElementById(id)
-    ).filter((section): section is HTMLElement => section !== null);
-    if (!sections.length || typeof IntersectionObserver === 'undefined') {
-      return;
-    }
+    if (typeof IntersectionObserver === 'undefined') return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -32,9 +37,31 @@ const useActiveSection = () => {
       },
       { rootMargin: '-45% 0px -50% 0px' }
     );
-    sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
-  }, []);
+    const watched = new Set<string>();
+    const watchSections = () => {
+      for (const id of ids.split(' ')) {
+        const section = document.getElementById(id);
+        if (section && !watched.has(id)) {
+          observer.observe(section);
+          watched.add(id);
+        }
+      }
+      return watched.size === ids.split(' ').length;
+    };
+
+    // The Ask section is loaded lazily, so it can appear after this runs; watch for it.
+    const late = watchSections()
+      ? null
+      : new MutationObserver(() => {
+          if (watchSections()) late?.disconnect();
+        });
+    late?.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      observer.disconnect();
+      late?.disconnect();
+    };
+  }, [ids]);
 
   return active;
 };
@@ -44,7 +71,10 @@ const Navigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const rafRef = useRef<number | null>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const activeSection = useActiveSection();
+  // The Ask link appears only while the API says Ask is on, after Projects.
+  const askEnabled = useAskMeta() !== null;
+  const navItems = askEnabled ? NAV_ITEMS_WITH_ASK : NAV_ITEMS;
+  const activeSection = useActiveSection(navItems);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -105,7 +135,7 @@ const Navigation = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-5">
             <ul className="flex items-center gap-1">
-              {NAV_ITEMS.map((item) => {
+              {navItems.map((item) => {
                 const isActive = activeSection === item.id;
                 return (
                   <li key={item.id}>
@@ -201,7 +231,7 @@ const Navigation = () => {
             className="md:hidden pt-3 pb-2 border-t border-border/50 animate-fade-in"
           >
             <ul className="flex flex-col gap-1 font-medium text-sm pt-1">
-              {NAV_ITEMS.map((item) => {
+              {navItems.map((item) => {
                 const isActive = activeSection === item.id;
                 return (
                   <li key={item.id}>

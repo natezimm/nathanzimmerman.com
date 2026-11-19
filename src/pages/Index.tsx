@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { lazy, Suspense, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navigation from '@/components/Navigation';
 import Hero from '@/components/Hero';
@@ -8,11 +8,16 @@ import Projects from '@/components/Projects';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 import { HOME_HEAD, usePageHead } from '@/lib/pageHead';
+import { useAskMeta } from '@/lib/askClient';
+
+// Its own chunk, fetched only when the API says Ask is on, so the first load does not grow.
+const Ask = lazy(() => import('@/components/Ask'));
 
 const Index = () => {
   const { hash } = useLocation();
   const arrivalHash = useRef(hash);
   usePageHead(HOME_HEAD);
+  const askMeta = useAskMeta();
 
   // Links back from a project page land on /#projects; jump there once on
   // arrival. Later hash changes come from in-page links the browser scrolls to.
@@ -46,6 +51,11 @@ const Index = () => {
           <About />
           <Experience />
           <Projects />
+          {askMeta && (
+            <Suspense fallback={null}>
+              <Ask meta={askMeta} />
+            </Suspense>
+          )}
           <Contact />
         </main>
         <Footer />
