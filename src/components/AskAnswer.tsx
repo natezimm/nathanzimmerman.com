@@ -95,9 +95,9 @@ export const AskCitations = ({ citations }: { citations: AskCitation[] }) => {
             href={citation.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex max-w-full items-center gap-2 rounded-full border border-slate-200 dark:border-white/10 bg-slate-50/80 dark:bg-white/5 px-3 py-1.5 text-xs text-foreground/90 transition-colors hover:border-sky-500/50 hover:text-primary dark:hover:border-cyan-400/40"
+            className="inline-flex max-w-full items-center gap-2 rounded-full border border-edge bg-surface px-3 py-1.5 text-xs text-foreground/90 transition-colors hover:border-brand/50 hover:text-primary"
           >
-            <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-sky-500/15 text-[10px] font-semibold text-sky-700 dark:text-cyan-300">
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand/15 text-xs font-semibold text-brand">
               {citation.n}
             </span>
             <span className="truncate">

@@ -189,6 +189,45 @@ test.describe('portfolio experience', () => {
     expect(card.headers()['content-type']).toContain('image/jpeg');
   });
 
+  test('serves the home page prerendered, readable without JavaScript', async ({
+    browser,
+  }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const page = await context.newPage();
+    await page.goto('/');
+
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(
+      'Nathan'
+    );
+    const experience = page.locator('#experience');
+    await experience.scrollIntoViewIfNeeded();
+    await expect(experience.getByText('Nelnet')).toBeVisible();
+    await expect(
+      experience.getByText(/10\+ applications and 100\+ environments/)
+    ).toBeVisible();
+    await context.close();
+  });
+
+  test('hydrates the prerendered home page without errors and loads no third-party fonts', async ({
+    page,
+  }) => {
+    const errors: string[] = [];
+    const hosts = new Set<string>();
+    page.on('pageerror', (error) => errors.push(error.message));
+    page.on('console', (message) => {
+      if (message.type() === 'error' && !message.text().includes('404'))
+        errors.push(message.text());
+    });
+    page.on('request', (request) => hosts.add(new URL(request.url()).host));
+
+    await page.goto('/', { waitUntil: 'networkidle' });
+    await page.getByRole('button', { name: 'Toggle theme' }).first().click();
+    await expect(page.locator('html')).toHaveClass(/light/);
+
+    expect(errors).toEqual([]);
+    expect([...hosts].filter((host) => host.includes('font'))).toEqual([]);
+  });
+
   test('offers a skip link to the main content', async ({ page }) => {
     await page.goto('/');
 

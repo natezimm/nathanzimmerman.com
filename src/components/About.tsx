@@ -36,7 +36,7 @@ const About = () => {
     {
       icon: Users,
       color:
-        'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20 shadow-[0_0_24px_-6px_rgba(52,211,153,0.55)]',
+        'text-success bg-emerald-500/10 border-emerald-500/20 shadow-[0_0_24px_-6px_rgba(52,211,153,0.55)]',
       watermark: 'text-emerald-500',
       title: 'Team Collaboration',
       description:
@@ -103,7 +103,7 @@ const About = () => {
                 const Icon = skill.icon;
                 return (
                   <ScrollReveal key={skill.title} delay={0.1 + index * 0.05}>
-                    <Card className="spotlight-card glass-card group overflow-hidden h-full rounded-2xl border border-slate-200/90 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 card-glow shadow-sm">
+                    <Card className="spotlight-card group overflow-hidden h-full hover:border-brand/40 transition-all duration-300 card-glow shadow-sm">
                       {/* Oversized icon watermark */}
                       <Icon
                         aria-hidden="true"

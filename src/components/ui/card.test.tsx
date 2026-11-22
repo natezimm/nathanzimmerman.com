@@ -18,7 +18,7 @@ describe('Card primitives', () => {
     );
 
     const card = screen.getByTestId('base-card');
-    expect(card).toHaveClass('rounded-lg');
+    expect(card).toHaveClass('glass-card');
     expect(card).toHaveClass('custom-card');
   });
 

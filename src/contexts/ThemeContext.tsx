@@ -17,6 +17,10 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setTheme] = useState<Theme>(() => {
+    // The homepage is prerendered at build time, where there is no storage.
+    // Nothing renders differently by theme (the toggle follows the <html>
+    // class), so this state never makes hydration disagree with the HTML.
+    if (typeof window === 'undefined') return 'dark';
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'light' || savedTheme === 'dark') {
       return savedTheme;

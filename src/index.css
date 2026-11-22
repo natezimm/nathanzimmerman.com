@@ -1,3 +1,6 @@
+/* Self-hosted variable fonts; the browser fetches only the subsets a page uses. */
+@import '@fontsource-variable/inter/wght.css';
+@import '@fontsource-variable/outfit/wght.css';
 @import 'tailwindcss';
 @config '../tailwind.config.ts';
 
@@ -37,8 +40,16 @@
     --destructive-foreground: 210 40% 98%;
 
     --border: 220 24% 22%;
-    --input: 220 24% 22%;
+    --input: 0 0% 100% / 0.25;
     --ring: 210 90% 60%;
+
+    /* Semantic tokens: components use these, not raw palette classes */
+    --edge: 0 0% 100% / 0.1; /* card and divider borders */
+    --edge-strong: 0 0% 100% / 0.15; /* control borders */
+    --surface: 0 0% 100% / 0.05; /* control fill */
+    --surface-hover: 0 0% 100% / 0.1;
+    --brand: 198 93% 60%; /* accent text and icons (sky-400) */
+    --success: 158 64% 52%; /* live and current labels (emerald-400) */
 
     --radius: 0.75rem;
 
@@ -84,8 +95,15 @@
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
+    --input: 213 27% 84%;
     --ring: 222.2 47.4% 11.2%;
+
+    --edge: 214 32% 91% / 0.9; /* slate-200 */
+    --edge-strong: 213 27% 84%; /* slate-300 */
+    --surface: 210 40% 96% / 0.7; /* slate-100 */
+    --surface-hover: 214 32% 91% / 0.7;
+    --brand: 201 96% 32%; /* sky-700, 5.9:1 on white */
+    --success: 163 94% 24%; /* emerald-700 */
 
     /* Custom design tokens for light mode */
     --gradient-primary: linear-gradient(
@@ -110,7 +128,6 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Inter', sans-serif;
   }
 
   html {
@@ -141,7 +158,6 @@
   h5,
   h6 {
     @apply tracking-tight font-heading;
-    font-family: 'Outfit', sans-serif;
   }
 }
 
@@ -151,11 +167,12 @@
   }
 
   .glass {
-    @apply bg-background/85 dark:bg-background/60 backdrop-blur-lg border border-slate-200/80 dark:border-white/10;
+    @apply bg-background/85 dark:bg-background/60 backdrop-blur-lg border border-edge;
   }
 
+  /* The one card surface. Add hover:border-brand/40 where the card responds to the pointer. */
   .glass-card {
-    @apply bg-card/90 dark:bg-card/50 backdrop-blur-md border border-slate-200/80 dark:border-white/15 hover:border-slate-300 dark:hover:border-white/25 transition-all duration-300;
+    @apply rounded-2xl bg-card/90 dark:bg-card/50 backdrop-blur-md border border-edge transition-colors duration-300;
   }
 
   .card-glow {

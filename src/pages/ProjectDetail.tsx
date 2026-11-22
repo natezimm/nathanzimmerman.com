@@ -15,7 +15,7 @@ const prefersReducedMotion = () =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const outlineButton =
-  'rounded-lg border-slate-300 dark:border-white/15 bg-slate-100/80 dark:bg-white/5 hover:bg-slate-200/80 dark:hover:bg-white/10 text-foreground hover:border-sky-500 dark:hover:border-sky-400/50';
+  'rounded-lg border-edge-strong bg-surface hover:bg-surface-hover text-foreground hover:border-brand/60';
 
 const ProjectDetail = () => {
   const { slug = '' } = useParams();
@@ -107,7 +107,7 @@ const ProjectDetail = () => {
             </Button>
           </div>
 
-          <figure className="mt-8 overflow-hidden rounded-2xl border border-slate-200/90 dark:border-white/10 bg-slate-950 shadow-sm">
+          <figure className="mt-8 overflow-hidden rounded-2xl border border-edge bg-slate-950 shadow-sm">
             <video
               src={project.video}
               poster={project.media.webp}
@@ -160,10 +160,7 @@ const ProjectDetail = () => {
             </div>
 
             <aside className="space-y-6">
-              <section
-                aria-labelledby="features"
-                className="glass-card rounded-2xl border border-slate-200/90 dark:border-white/10 p-5"
-              >
+              <section aria-labelledby="features" className="glass-card p-5">
                 <h2 id="features" className="font-semibold font-heading mb-3">
                   What it does
                 </h2>
@@ -176,10 +173,7 @@ const ProjectDetail = () => {
                 </ul>
               </section>
 
-              <section
-                aria-labelledby="stack"
-                className="glass-card rounded-2xl border border-slate-200/90 dark:border-white/10 p-5"
-              >
+              <section aria-labelledby="stack" className="glass-card p-5">
                 <h2 id="stack" className="font-semibold font-heading mb-3">
                   Tech stack
                 </h2>
@@ -187,7 +181,7 @@ const ProjectDetail = () => {
                   {project.stack.map((item) => (
                     <li
                       key={item}
-                      className="px-2.5 py-0.5 text-xs font-medium bg-slate-100/90 dark:bg-secondary/80 border border-slate-200/80 dark:border-white/10 rounded-md"
+                      className="px-2.5 py-0.5 text-xs font-medium bg-secondary/80 border border-edge rounded-md"
                     >
                       {item}
                     </li>
@@ -204,7 +198,7 @@ const ProjectDetail = () => {
             >
               Architecture
             </h2>
-            <figure className="rounded-2xl border border-slate-200/90 dark:border-white/10 bg-white p-4 md:p-6 overflow-x-auto">
+            <figure className="rounded-2xl border border-edge bg-white p-4 md:p-6 overflow-x-auto">
               <img
                 src={project.diagram}
                 alt={project.diagramAlt}

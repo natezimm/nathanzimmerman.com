@@ -4,7 +4,9 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 const ThemeToggle = () => {
-  const { theme, toggleTheme } = useTheme();
+  // The icons follow the class on <html>, not React state, so the prerendered
+  // markup is right for either theme before and after hydration.
+  const { toggleTheme } = useTheme();
 
   return (
     <Button
@@ -23,9 +25,8 @@ const ThemeToggle = () => {
         className={cn(
           'absolute h-5 w-5 transition-all duration-500',
           'text-amber-500',
-          theme === 'light'
-            ? 'rotate-0 scale-100 opacity-100'
-            : 'rotate-90 scale-0 opacity-0'
+          'rotate-90 scale-0 opacity-0',
+          '[html.light_&]:rotate-0 [html.light_&]:scale-100 [html.light_&]:opacity-100'
         )}
       />
 
@@ -34,9 +35,8 @@ const ThemeToggle = () => {
         className={cn(
           'absolute h-5 w-5 transition-all duration-500',
           'text-blue-400',
-          theme === 'dark'
-            ? 'rotate-0 scale-100 opacity-100'
-            : '-rotate-90 scale-0 opacity-0'
+          'rotate-0 scale-100 opacity-100',
+          '[html.light_&]:-rotate-90 [html.light_&]:scale-0 [html.light_&]:opacity-0'
         )}
       />
 
@@ -44,7 +44,7 @@ const ThemeToggle = () => {
       <span
         className={cn(
           'absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300',
-          theme === 'light' ? 'bg-amber-500/10' : 'bg-blue-400/10'
+          'bg-blue-400/10 [html.light_&]:bg-amber-500/10'
         )}
       />
     </Button>

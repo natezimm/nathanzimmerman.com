@@ -19,11 +19,21 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        heading: ['Outfit', 'sans-serif'],
+        sans: ['"Inter Variable"', 'system-ui', 'sans-serif'],
+        heading: ['"Outfit Variable"', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: 'hsl(var(--border))',
+        edge: {
+          DEFAULT: 'hsl(var(--edge))',
+          strong: 'hsl(var(--edge-strong))',
+        },
+        surface: {
+          DEFAULT: 'hsl(var(--surface))',
+          hover: 'hsl(var(--surface-hover))',
+        },
+        brand: 'hsl(var(--brand))',
+        success: 'hsl(var(--success))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',

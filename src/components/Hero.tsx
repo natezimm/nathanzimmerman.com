@@ -9,6 +9,7 @@ import {
 import { Github, Linkedin } from '@/components/shared/BrandIcons';
 import { Button } from '@/components/ui/button';
 import HeroGame from '@/components/HeroGame';
+import { usePrefersReducedMotion } from '@/lib/usePrefersReducedMotion';
 import {
   Fragment,
   useState,
@@ -42,23 +43,10 @@ const Hero = () => {
   const [displayText, setDisplayText] = useState('');
   const [roleIndex, setRoleIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(
-    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  );
+  const prefersReducedMotion = usePrefersReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const pointerFrame = useRef(0);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-    const handleChange = (e: MediaQueryListEvent) => {
-      setPrefersReducedMotion(e.matches);
-    };
-
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
 
   useEffect(() => () => cancelAnimationFrame(pointerFrame.current), []);
 
@@ -187,7 +175,7 @@ const Hero = () => {
 
               {/* Accessible Typing Subtitle */}
               <p
-                className="animate-rise [--rise-delay:240ms] text-xl sm:text-2xl md:text-3xl text-muted-foreground font-light min-h-[1.5em]"
+                className="text-xl sm:text-2xl md:text-3xl text-muted-foreground font-light min-h-[1.5em]"
                 aria-label={fullRolesText}
               >
                 <span
@@ -204,8 +192,8 @@ const Hero = () => {
                 <span className="sr-only">{fullRolesText}</span>
               </p>
 
-              {/* Bio Paragraph */}
-              <p className="animate-rise [--rise-delay:280ms] text-base sm:text-lg text-foreground/85 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+              {/* Bio Paragraph: the largest text on a phone, so it paints at once, with no entrance */}
+              <p className="text-base sm:text-lg text-foreground/85 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
                 Former special education teacher turned software engineer,
                 bringing empathy and clear thinking to enterprise fintech. I
                 build clean, reliable systems from frontend interfaces to
@@ -225,7 +213,7 @@ const Hero = () => {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="h-12 px-8 text-base rounded-full border border-slate-300 dark:border-white/20 bg-slate-100/70 dark:bg-white/5 hover:bg-slate-200/70 dark:hover:bg-white/10 text-foreground backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 shadow-sm"
+                    className="h-12 px-8 text-base rounded-full border border-edge-strong bg-surface hover:bg-surface-hover text-foreground backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 shadow-sm"
                     onClick={() => scrollToSection('contact')}
                   >
                     Get In Touch
@@ -249,7 +237,7 @@ const Hero = () => {
                         href={href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-center w-11 h-11 rounded-full border border-slate-300 dark:border-white/15 bg-slate-100/70 dark:bg-white/5 text-muted-foreground hover:text-foreground hover:border-sky-500 dark:hover:border-sky-400/50 hover:bg-slate-200/70 dark:hover:bg-white/10 transition-all duration-300 hover:scale-105 shadow-sm"
+                        className="flex items-center justify-center w-11 h-11 rounded-full border border-edge-strong bg-surface text-muted-foreground hover:text-foreground hover:border-brand/60 hover:bg-surface-hover transition-all duration-300 hover:scale-105 shadow-sm"
                         aria-label={label}
                       >
                         <Icon className="w-5 h-5" />
@@ -278,7 +266,7 @@ const Hero = () => {
                 href="/resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-slate-300 dark:border-white/15 bg-slate-100/70 dark:bg-white/5 hover:bg-slate-200/70 dark:hover:bg-white/10 text-sm font-medium text-foreground px-4 transition-colors shadow-sm"
+                className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-edge-strong bg-surface hover:bg-surface-hover text-sm font-medium text-foreground px-4 transition-colors shadow-sm"
               >
                 <FileText className="w-4 h-4 text-sky-500 dark:text-sky-400" />
                 <span>Resume PDF</span>
@@ -301,10 +289,10 @@ const Hero = () => {
                       <Activity className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     </div>
                     <div>
-                      <div className="text-[11px] sm:text-xs font-semibold text-foreground flex items-center gap-1.5 font-heading">
+                      <div className="text-xs font-semibold text-foreground flex items-center gap-1.5 font-heading">
                         Enterprise Fintech
                       </div>
-                      <div className="text-[10px] sm:text-[11px] text-emerald-700 dark:text-emerald-400 font-medium whitespace-nowrap">
+                      <div className="text-xs text-success font-medium whitespace-nowrap">
                         Payments & Microservices
                       </div>
                     </div>
@@ -319,9 +307,9 @@ const Hero = () => {
                   <div className="relative rounded-[calc(2rem-1.5px)] p-3 sm:p-3.5 bg-card">
                     {/* Header System Line */}
                     <div className="flex items-center justify-between mb-2 sm:mb-2.5">
-                      <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-slate-100/90 dark:bg-secondary/60 border border-slate-200/80 dark:border-white/10 text-[10px] sm:text-[11px] font-mono text-muted-foreground transition-colors group-hover:border-sky-400/30">
+                      <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-secondary/80 border border-edge text-xs font-mono text-muted-foreground transition-colors group-hover:border-sky-400/30">
                         <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0" />
-                        <span className="font-semibold text-foreground/80 group-hover:text-sky-500 dark:group-hover:text-sky-400 transition-colors truncate">
+                        <span className="font-semibold text-foreground/80 group-hover:text-brand transition-colors truncate">
                           nathan_zimmerman.dev
                         </span>
                       </div>

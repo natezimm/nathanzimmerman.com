@@ -8,32 +8,37 @@ import NotFound from './pages/NotFound';
 const ProjectDetail = lazy(() => import('./pages/ProjectDetail'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 
-const App = () => (
+/** The routes, shared by the browser app and the build-time prerender (src/entry-server.tsx). */
+export const AppRoutes = () => (
   <ThemeProvider>
     <Toaster />
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route
-          path="/projects/:slug"
-          element={
-            <Suspense fallback={null}>
-              <ProjectDetail />
-            </Suspense>
-          }
-        />
-        <Route
-          path="/privacy"
-          element={
-            <Suspense fallback={null}>
-              <Privacy />
-            </Suspense>
-          }
-        />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Index />} />
+      <Route
+        path="/projects/:slug"
+        element={
+          <Suspense fallback={null}>
+            <ProjectDetail />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/privacy"
+        element={
+          <Suspense fallback={null}>
+            <Privacy />
+          </Suspense>
+        }
+      />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   </ThemeProvider>
+);
+
+const App = () => (
+  <BrowserRouter>
+    <AppRoutes />
+  </BrowserRouter>
 );
 
 export default App;

@@ -1,4 +1,5 @@
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { usePrefersReducedMotion } from '@/lib/usePrefersReducedMotion';
 import { ReactNode } from 'react';
 
 interface ScrollRevealProps {
@@ -13,7 +14,7 @@ export const ScrollReveal = ({
   delay = 0,
 }: ScrollRevealProps) => {
   // Visitors who asked for less motion get the content in place, without a fade.
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = usePrefersReducedMotion();
   if (reduceMotion) return <div className={className}>{children}</div>;
 
   return (
