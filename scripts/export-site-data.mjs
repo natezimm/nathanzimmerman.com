@@ -40,6 +40,7 @@ for (const e of data.experienceItems) {
   lines.push(
     `- **${e.title}, ${e.company}** (${e.period}): ${e.summary} Skills: ${e.tags.join(', ')}.`
   );
+  for (const h of e.highlights) lines.push(`  - ${h}`);
 }
 for (const c of data.careerOriginItems) {
   lines.push(`- **${c.title}**: ${c.detail}`);
