@@ -12,17 +12,28 @@ describe('Experience section', () => {
     expect(screen.getByText('Software Engineer II')).toBeInTheDocument();
     expect(screen.getByText('Nelnet')).toBeInTheDocument();
     expect(
-      screen.getByText(
-        'Built payment-plan and billing workflows across .NET microservices and Angular UI.'
-      )
+      screen.getByText(/greenfield Payment Plans & Billing domain/)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/10\+ applications and 100\+ environments/)
     ).toBeInTheDocument();
     expect(
       screen.getByText('Software Development Engineer')
     ).toBeInTheDocument();
     expect(screen.getByText('Amazon')).toBeInTheDocument();
     expect(
-      screen.getByText('Delivered customer-facing mortgage platform features.')
+      screen.getByText(/Customer-facing mortgage platform work/)
     ).toBeInTheDocument();
+  });
+
+  it('lists two or three outcomes for every role', () => {
+    render(<Experience />);
+
+    for (const article of screen.getAllByRole('article')) {
+      const items = article.querySelectorAll('li');
+      expect(items.length).toBeGreaterThanOrEqual(2);
+      expect(items.length).toBeLessThanOrEqual(3);
+    }
   });
 
   it('draws the career as a git graph with one lane segment per role', () => {

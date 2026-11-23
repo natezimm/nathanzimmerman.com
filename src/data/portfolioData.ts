@@ -365,7 +365,10 @@ export type ExperienceItem = {
   period: string;
   title: string;
   company: string;
+  /** One line on the product and its scope. */
   summary: string;
+  /** Two or three outcomes: what was owned, and a number where there is one. Keep in step with public/resume.pdf. */
+  highlights: string[];
   tags: string[];
 };
 
@@ -375,23 +378,39 @@ export const experienceItems: ExperienceItem[] = [
     title: 'Software Engineer II',
     company: 'Nelnet',
     summary:
-      'Built payment-plan and billing workflows across .NET microservices and Angular UI.',
-    tags: ['C#', '.NET', 'Angular', 'Azure', 'AWS'],
+      'Building a greenfield Payment Plans & Billing domain for a multi-tenant SaaS platform that serves schools and their payers.',
+    highlights: [
+      'Designed plan setup and enrollment workflows across the admin and payer apps: payment rules, status derived at runtime in UTC, and automatic rollback of failed payments.',
+      'Built the payment schedule calculator as a shared Angular package, with a stateless admin preview that turns down payment, cadence, fee and end-date rules into installment scenarios.',
+      "Built two-step installment charging and event-driven returned-payment handling that applies each tenant's policy: reschedule, assess a fee, hold for a grace period or cancel the plan.",
+    ],
+    tags: ['C#', '.NET', 'Angular', 'MongoDB', 'Redis', 'Azure', 'AWS'],
   },
   {
     period: '2022 - 2023',
     title: 'Software Development Engineer',
     company: 'Amazon',
     summary:
-      'Worked on internal risk guidance applications, security hardening, and reliability-focused cloud migrations.',
+      'Risk-guidance services that screen third-party sellers against denied-party lists and financial crime signals.',
+    highlights: [
+      'Migrated 10+ applications and 100+ environments to new EC2 hosts across the IAD and PDX Availability Zones with zero downtime, verifying each cutover with alarms and dashboards.',
+      'Closed critical security findings by turning on KMS encryption for SQS, SNS and S3, narrowing IAM policies to least privilege and upgrading vulnerable dependencies.',
+      'Took on production support for the team, fixing pipeline failures, alarms and deployment errors.',
+    ],
     tags: ['Java', 'Spring', 'Scala', 'AWS'],
   },
   {
     period: '2019 - 2022',
     title: 'Software Developer',
     company: 'Radian Group, Inc.',
-    summary: 'Delivered customer-facing mortgage platform features.',
-    tags: ['Node.js', 'React', 'AWS'],
+    summary:
+      'Customer-facing mortgage platform work, from new features through production support.',
+    highlights: [
+      'Helped launch and maintain MyRadian, a React and Node.js suite for valuation and asset-management services.',
+      'Traced production and performance issues with CloudWatch, X-Ray, Splunk and SQL across modern and legacy C#/.NET and Java apps.',
+      'Replaced a recurring manual database reconciliation with Python scripts, improving data accuracy.',
+    ],
+    tags: ['Node.js', 'React', 'Python', 'AWS'],
   },
 ];
 

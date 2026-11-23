@@ -17,7 +17,7 @@ const Footer = () => {
             type="button"
             onClick={() => window.scrollTo({ top: 0 })}
             aria-label="Back to top"
-            className="group flex items-center justify-center w-11 h-11 rounded-full border border-slate-300 dark:border-white/15 bg-slate-100/70 dark:bg-white/5 text-muted-foreground hover:text-foreground hover:border-sky-500 dark:hover:border-sky-400/50 transition-all duration-300 shadow-sm"
+            className="group flex items-center justify-center w-11 h-11 rounded-full border border-edge-strong bg-surface text-muted-foreground hover:text-foreground hover:border-brand/60 transition-all duration-300 shadow-sm"
           >
             <ArrowUp className="w-5 h-5 transition-transform duration-300 group-hover:-translate-y-0.5" />
           </button>

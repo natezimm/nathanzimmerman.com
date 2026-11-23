@@ -151,7 +151,7 @@ const Contact = () => {
               </div>
 
               <SpotlightGroup className="space-y-6">
-                <Card className="spotlight-card glass-card rounded-2xl border border-slate-200/90 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 card-glow shadow-sm">
+                <Card className="spotlight-card hover:border-brand/40 transition-all duration-300 card-glow shadow-sm">
                   <CardContent className="flex items-center gap-4 p-6">
                     <div className="w-11 h-11 rounded-xl flex items-center justify-center border flex-shrink-0 text-sky-600 dark:text-sky-400 bg-sky-500/10 border-sky-500/20 shadow-[0_0_24px_-6px_rgba(56,189,248,0.55)]">
                       <Mail className="w-5 h-5" />
@@ -162,7 +162,7 @@ const Contact = () => {
                       </h4>
                       <a
                         href="mailto:nathan.a.zimmerman@gmail.com"
-                        className="inline-block py-3 -my-3 text-muted-foreground hover:text-sky-700 dark:hover:text-sky-400 transition-colors text-sm font-mono"
+                        className="inline-block py-3 -my-3 text-muted-foreground hover:text-brand transition-colors text-sm font-mono"
                       >
                         nathan.a.zimmerman@gmail.com
                       </a>
@@ -170,7 +170,7 @@ const Contact = () => {
                   </CardContent>
                 </Card>
 
-                <Card className="spotlight-card glass-card rounded-2xl border border-slate-200/90 dark:border-white/10 hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 card-glow shadow-sm">
+                <Card className="spotlight-card hover:border-brand/40 transition-all duration-300 card-glow shadow-sm">
                   <CardContent className="flex items-center gap-4 p-6">
                     <div className="w-11 h-11 rounded-xl flex items-center justify-center border flex-shrink-0 text-cyan-600 dark:text-cyan-400 bg-cyan-500/10 border-cyan-500/20 shadow-[0_0_24px_-6px_rgba(34,211,238,0.55)]">
                       <MapPin className="w-5 h-5" />
@@ -191,7 +191,7 @@ const Contact = () => {
             <ScrollReveal delay={0.1}>
               {/* Form card, edged by the same gradient as the hero portrait */}
               <div className="relative overflow-hidden rounded-2xl p-[1.5px] bg-gradient-to-br from-sky-400/60 via-slate-200/90 to-slate-200/90 dark:from-sky-400/50 dark:via-white/15 dark:to-white/10 shadow-sm">
-                <Card className="relative rounded-[calc(1rem-1.5px)] border-0 bg-card p-6 md:p-8 shadow-none">
+                <div className="relative rounded-[calc(1rem-1.5px)] bg-card text-card-foreground p-6 md:p-8">
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-2">
                       <label htmlFor="name" className="text-sm font-medium">
@@ -205,7 +205,7 @@ const Contact = () => {
                         placeholder="Your name"
                         required
                         maxLength={MAX_NAME_LENGTH}
-                        className="h-11 bg-background/60 border border-slate-300 dark:border-white/25 focus-visible:border-primary focus-visible:ring-primary/40 transition-colors"
+                        className="h-11 bg-background/60 border border-input focus-visible:border-primary focus-visible:ring-primary/40 transition-colors"
                       />
                     </div>
 
@@ -222,7 +222,7 @@ const Contact = () => {
                         placeholder="your.email@example.com"
                         required
                         maxLength={MAX_EMAIL_LENGTH}
-                        className="h-11 bg-background/60 border border-slate-300 dark:border-white/25 focus-visible:border-primary focus-visible:ring-primary/40 transition-colors"
+                        className="h-11 bg-background/60 border border-input focus-visible:border-primary focus-visible:ring-primary/40 transition-colors"
                       />
                     </div>
 
@@ -239,7 +239,7 @@ const Contact = () => {
                         rows={6}
                         required
                         maxLength={MAX_MESSAGE_LENGTH}
-                        className="bg-background/60 border border-slate-300 dark:border-white/25 focus-visible:border-primary focus-visible:ring-primary/40 transition-colors resize-none"
+                        className="bg-background/60 border border-input focus-visible:border-primary focus-visible:ring-primary/40 transition-colors resize-none"
                       />
                     </div>
 
@@ -253,7 +253,7 @@ const Contact = () => {
                       <Send className="w-4 h-4 ml-2 transition-transform duration-300 group-hover/send:translate-x-0.5 group-hover/send:-translate-y-0.5" />
                     </Button>
                   </form>
-                </Card>
+                </div>
               </div>
             </ScrollReveal>
           </div>

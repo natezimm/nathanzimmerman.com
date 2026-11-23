@@ -153,7 +153,7 @@ const Navigation = () => {
                       <span
                         aria-hidden="true"
                         className={cn(
-                          'absolute bottom-1 left-2.5 right-2.5 h-0.5 rounded-full bg-sky-500 dark:bg-sky-400 origin-left transition-transform duration-300',
+                          'absolute bottom-1 left-2.5 right-2.5 h-0.5 rounded-full bg-brand origin-left transition-transform duration-300',
                           isActive
                             ? 'scale-x-100'
                             : 'scale-x-0 group-hover:scale-x-100'
@@ -171,7 +171,7 @@ const Navigation = () => {
               href="/resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-9 items-center gap-1.5 rounded-full border border-slate-300 dark:border-white/15 bg-slate-100/70 dark:bg-white/5 hover:bg-slate-200/70 dark:hover:bg-white/10 text-xs font-medium text-foreground px-3.5 transition-colors shadow-sm"
+              className="inline-flex h-9 items-center gap-1.5 rounded-full border border-edge-strong bg-surface hover:bg-surface-hover text-xs font-medium text-foreground px-3.5 transition-colors shadow-sm"
             >
               <FileText className="w-3.5 h-3.5 text-sky-600 dark:text-sky-400" />
               <span>Resume</span>

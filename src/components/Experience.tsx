@@ -88,15 +88,15 @@ const Experience = () => {
                               <span className="relative inline-flex h-[18px] w-[18px] rounded-full bg-emerald-400 border-[3px] border-emerald-100 shadow-[0_0_16px_rgba(52,211,153,0.8)]" />
                             </span>
                           ) : (
-                            <span className="absolute h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-background border-[3px] border-sky-500 dark:border-sky-400 shadow-[0_0_12px_rgba(56,189,248,0.6)] transition-transform duration-300 group-hover:scale-125" />
+                            <span className="absolute h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-background border-[3px] border-brand shadow-[0_0_12px_rgba(56,189,248,0.6)] transition-transform duration-300 group-hover:scale-125" />
                           )}
                         </motion.span>
 
                         <ScrollReveal className="pl-9 md:pl-20" delay={0.1}>
                           {/* Experience Card */}
-                          <article className="spotlight-card glass-card rounded-2xl p-6 sm:p-8 border border-slate-200/90 dark:border-white/10 hover:border-sky-400/40 transition-all duration-300 card-glow shadow-sm">
+                          <article className="spotlight-card glass-card p-6 sm:p-8 hover:border-brand/40 transition-all duration-300 card-glow shadow-sm">
                             {isCurrent && (
-                              <span className="absolute -top-3 left-6 sm:left-8 inline-flex items-center rounded-full border border-emerald-500/50 dark:border-emerald-400/45 bg-emerald-50 dark:bg-emerald-950 px-2.5 py-0.5 font-mono text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">
+                              <span className="absolute -top-3 left-6 sm:left-8 inline-flex items-center rounded-full border border-emerald-500/50 dark:border-emerald-400/45 bg-emerald-50 dark:bg-emerald-950 px-2.5 py-0.5 font-mono text-xs font-semibold text-success">
                                 HEAD → main
                               </span>
                             )}
@@ -114,16 +114,30 @@ const Experience = () => {
                               </div>
 
                               {/* Period Badge */}
-                              <div className="inline-flex items-center gap-1.5 self-start sm:self-auto rounded-full bg-slate-100/90 dark:bg-secondary/60 border border-slate-200/80 dark:border-white/10 px-3 py-1 text-xs font-medium text-muted-foreground">
+                              <div className="inline-flex items-center gap-1.5 self-start sm:self-auto rounded-full bg-secondary/80 border border-edge px-3 py-1 text-xs font-medium text-muted-foreground">
                                 <Calendar className="w-3.5 h-3.5 text-sky-500 dark:text-sky-400" />
                                 <span>{item.period}</span>
                               </div>
                             </div>
 
-                            {/* Summary */}
-                            <p className="text-foreground/85 text-base leading-relaxed mb-6">
+                            {/* Scope, then what was owned and shipped */}
+                            <p className="text-foreground/85 text-base leading-relaxed">
                               {item.summary}
                             </p>
+                            <ul className="mt-4 mb-6 space-y-2.5">
+                              {item.highlights.map((highlight) => (
+                                <li
+                                  key={highlight}
+                                  className="relative pl-5 text-sm sm:text-[15px] leading-relaxed text-muted-foreground"
+                                >
+                                  <span
+                                    aria-hidden="true"
+                                    className="absolute left-0 top-[0.6em] h-1.5 w-1.5 rounded-full bg-brand/70"
+                                  />
+                                  {highlight}
+                                </li>
+                              ))}
+                            </ul>
 
                             {/* Tech Stack Tags */}
                             <div className="flex items-center gap-2 flex-wrap pt-2 border-t border-border/40">
@@ -133,7 +147,7 @@ const Experience = () => {
                               {item.tags.map((tag) => (
                                 <span
                                   key={tag}
-                                  className="px-2.5 py-0.5 text-xs font-medium rounded-md bg-slate-100/90 dark:bg-secondary/80 text-foreground/90 border border-slate-200/80 dark:border-white/10 transition-all duration-200 hover:border-sky-500/40 dark:hover:border-sky-400/40 hover:bg-sky-500/10"
+                                  className="px-2.5 py-0.5 text-xs font-medium rounded-md bg-secondary/80 text-foreground/90 border border-edge transition-all duration-200 hover:border-brand/40 hover:bg-sky-500/10"
                                 >
                                   {tag}
                                 </span>
@@ -182,7 +196,7 @@ const Experience = () => {
 
                 <span
                   aria-hidden="true"
-                  className="absolute top-5 left-14 md:left-20 font-mono text-[11px] text-muted-foreground"
+                  className="absolute top-5 left-14 md:left-20 font-mono text-xs text-muted-foreground"
                 >
                   git checkout -b engineering
                 </span>

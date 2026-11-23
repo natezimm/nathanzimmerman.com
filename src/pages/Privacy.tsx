@@ -132,8 +132,8 @@ const Privacy = () => {
                 local storage and never leaves it.
               </li>
               <li>
-                Fonts load from Google Fonts, so your browser asks Google&apos;s
-                servers for them.
+                Fonts are served from this site, so no font request goes to a
+                third party.
               </li>
               <li>
                 The web server keeps standard access logs (IP address, page and

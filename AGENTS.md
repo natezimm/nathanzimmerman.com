@@ -15,7 +15,7 @@ Preserve unrelated working-tree changes. `docs/architecture.md` has broader desi
 - `src/components/`: visible portfolio sections; `ui/` and `shared/` contain reusable elements.
 - `src/contexts/ThemeContext.tsx`: saves `light`/`dark` under the `theme` localStorage key and defaults to dark when no valid value is saved.
 - `src/lib/`: shared helpers, analytics, and skill metrics. The `@/` import alias resolves to `src/`.
-- `src/index.css`, `tailwind.config.ts`, and `src/assets/`: styling and bundled imagery; `public/` contains directly served assets and `_headers`.
+- `src/index.css`, `tailwind.config.ts`, and `src/assets/`: styling and bundled imagery; `public/` contains directly served assets and `_headers`. Colors go through semantic tokens defined for both themes in `src/index.css` (`border-edge`, `border-edge-strong`, `bg-surface`, `text-brand`, `text-success`), not raw `slate-*`/`sky-*` light and dark pairs. `Card` (`.glass-card`) is the one card surface. Fonts are self-hosted from `@fontsource-variable` and the Latin files are preloaded by a plugin in `vite.config.ts`; keep text at 12 px or larger.
 - `infra/`: Terraform for the GCP project every app runs in (the VM, its address and firewall, and uptime checks, alerts and SLOs for every app), run by hand; CI only runs `terraform fmt -check` and `validate`. Real project, VM, domain and email values live in its git-ignored `terraform.tfvars`, never in committed files. See `infra/README.md`.
 
 ## Commands
@@ -26,7 +26,7 @@ Run from this repository root. Node 26 LTS is specified by `.nvmrc`, `package.js
 
 - Install: `npm ci`.
 - Develop: `npm run dev` (configured port **8081**).
-- Build: `npm run build` produces `dist/`, then `scripts/prerender-routes.mjs` writes `dist/projects/<slug>/index.html` and `dist/privacy/index.html` (per-page title, canonical and preview tags) and `dist/sitemap.xml`; preview with `npm run preview`. Project URLs end in `/`, which is the canonical form.
+- Build: `npm run build` produces `dist/`, builds `src/entry-server.tsx` for the server into `dist-ssr/`, then `scripts/prerender-routes.mjs` renders the homepage body into `dist/index.html` (which `src/main.tsx` hydrates; it deletes `dist-ssr/` when done) and writes `dist/projects/<slug>/index.html` and `dist/privacy/index.html` (per-page title, canonical and preview tags) and `dist/sitemap.xml`; preview with `npm run preview`. Project URLs end in `/`, which is the canonical form.
 - Unit/component tests: `npm test`; target a file with `npm test -- src/components/Contact.test.tsx`.
 - Static checks: `npm run lint` and `npm run typecheck`.
 - Coverage: `npm run test:coverage` (Vitest/Testing Library).
@@ -40,6 +40,7 @@ Run from this repository root. Node 26 LTS is specified by `.nvmrc`, `package.js
 ## Behavior to preserve
 
 - Check desktop/mobile layouts, keyboard controls, accessible labels, and reduced-motion behavior when changing UI or animations. Reuse Tailwind tokens and existing UI primitives.
+- The homepage is prerendered and hydrated, so its first render must not read browser-only state: no `window`, `localStorage` or `matchMedia` during render. Read reduced motion with `usePrefersReducedMotion` (`src/lib/`), and style by theme with `dark:`/`[html.light_&]:` classes instead of `useTheme().theme`. `e2e/portfolio.spec.ts` fails on hydration errors.
 - The hero game must stay pausable, start paused under reduced motion, and stop when scrolled out of view.
 - Project recordings play on card hover only for a fine pointer without reduced motion, and the project page autoplays its recording only without reduced motion. Keep videos muted, `playsInline`, and `preload="none"` on cards.
 - Contact submission uses EmailJS in `src/components/Contact.tsx`. Configuration names are `VITE_EMAILJS_SERVICE_ID`, `VITE_EMAILJS_TEMPLATE_ID`, and `VITE_EMAILJS_PUBLIC_KEY`. Browser environment variables are public; do not place secrets in them. Preserve validation and submission cooldowns, and mock external delivery in tests.

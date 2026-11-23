@@ -3,14 +3,19 @@
 // to get the home page's HTML, including a canonical link back to "/", which
 // tells search engines each project page is a copy of the home page.
 //
+// It also renders the homepage body into dist/index.html with the server build
+// of src/entry-server.tsx (dist-ssr/), so text paints before the JavaScript
+// runs and the page reads without it; src/main.tsx hydrates that markup.
+//
 // This writes dist/projects/<slug>/index.html for each project, and
 // dist/privacy/index.html, each with its own title, description, canonical
 // link and Open Graph tags, and a sitemap that lists exactly those pages. Project URLs end in a slash: nginx's
 // `try_files $uri $uri/ /index.html` serves /projects/<slug>/index.html for
 // /projects/<slug>/ and redirects /projects/<slug> there, so the slash form is
 // the canonical one and the app links to it. The React app then takes over.
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { SITE_URL, loadProjects } from './site-data.mjs';
 
 const dist = path.resolve(import.meta.dirname, '../dist');
@@ -103,6 +108,33 @@ await writeFile(
   )
 );
 
+// Homepage last: the pages above are built from the shell with an empty root.
+const ssrDir = path.resolve(import.meta.dirname, '../dist-ssr');
+const { render } = await import(
+  pathToFileURL(path.join(ssrDir, 'entry-server.js')).href
+);
+const body = render('/');
+if (!body.includes('id="experience"')) {
+  throw new Error('Prerendered homepage is missing its sections');
+}
+// Scroll reveals start hidden until JavaScript sees them; without JavaScript
+// they would stay hidden, so show them.
+const noscriptReveal =
+  '<noscript><style>#root [style*="opacity:0"]{opacity:1!important;transform:none!important}</style></noscript>';
+await writeFile(
+  path.join(dist, 'index.html'),
+  replaceOnce(
+    replaceOnce(
+      shell,
+      /<div id="root"><\/div>/g,
+      `<div id="root">${body}</div>`
+    ),
+    /<\/head>/g,
+    `${noscriptReveal}</head>`
+  )
+);
+await rm(ssrDir, { recursive: true, force: true });
+
 const today = new Date().toISOString().slice(0, 10);
 const urls = [
   { loc: `${SITE_URL}/`, priority: '1.0' },
@@ -130,5 +162,5 @@ ${urls
 );
 
 console.log(
-  `Prerendered ${projects.length} project pages, the privacy page and the sitemap into dist/`
+  `Prerendered the homepage, ${projects.length} project pages, the privacy page and the sitemap into dist/`
 );

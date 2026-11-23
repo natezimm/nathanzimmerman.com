@@ -25,7 +25,7 @@ const CARD_IMAGE_SIZES =
   '(max-width: 768px) calc(100vw - 2rem), (max-width: 1280px) calc(50vw - 3rem), 600px';
 
 const tagClassName =
-  'px-2.5 py-0.5 text-xs font-medium bg-slate-100/90 dark:bg-secondary/80 text-foreground/90 border border-slate-200/80 dark:border-white/10 rounded-md';
+  'px-2.5 py-0.5 text-xs font-medium bg-secondary/80 text-foreground/90 border border-edge rounded-md';
 
 /** Hover previews are for mouse users who have not asked for less motion. */
 const canPreviewVideo = () =>
@@ -56,12 +56,12 @@ const ProjectCard = ({ project }: { project: ProjectEntry }) => {
 
   return (
     <Card
-      className="spotlight-card glass-card overflow-hidden group border border-slate-200/90 dark:border-white/10 rounded-2xl flex flex-col justify-between card-glow hover:border-sky-500/40 dark:hover:border-sky-400/30 transition-all duration-300 shadow-sm h-full"
+      className="spotlight-card overflow-hidden group flex flex-col justify-between card-glow hover:border-brand/40 transition-all duration-300 shadow-sm h-full"
       onMouseEnter={startPreview}
       onMouseLeave={stopPreview}
     >
       <div>
-        <div className="relative overflow-hidden border-b border-slate-200/80 dark:border-white/10 aspect-[16/9] w-full bg-slate-900">
+        <div className="relative overflow-hidden border-b border-edge aspect-[16/9] w-full bg-slate-900">
           <ProjectImage
             project={project}
             className="w-full h-full"
@@ -84,7 +84,7 @@ const ProjectCard = ({ project }: { project: ProjectEntry }) => {
             }`}
           />
 
-          <div className="absolute top-3 left-3 inline-flex items-center gap-2 rounded-full border border-white/20 bg-slate-950/70 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur-md">
+          <div className="absolute top-3 left-3 inline-flex items-center gap-2 rounded-full border border-white/20 bg-slate-950/70 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-md">
             <span
               aria-hidden="true"
               className="h-2 w-2 rounded-full bg-emerald-400"
@@ -141,7 +141,7 @@ const ProjectCard = ({ project }: { project: ProjectEntry }) => {
             <Button
               variant="outline"
               size="sm"
-              className="h-11 md:h-9 rounded-lg border-slate-300 dark:border-white/15 bg-slate-100/80 dark:bg-white/5 hover:bg-slate-200/80 dark:hover:bg-white/10 text-foreground hover:border-sky-500 dark:hover:border-sky-400/50 transition-all text-xs font-medium shadow-sm"
+              className="h-11 md:h-9 rounded-lg border-edge-strong bg-surface hover:bg-surface-hover text-foreground hover:border-brand/60 transition-all text-xs font-medium shadow-sm"
               asChild
             >
               <a
@@ -236,7 +236,7 @@ const Projects = () => (
             {earlierProjects.map((project) => (
               <li
                 key={project.title}
-                className="glass-card rounded-xl border border-slate-200/90 dark:border-white/10 p-5 flex flex-col gap-3"
+                className="glass-card p-5 flex flex-col gap-3"
               >
                 <div className="flex items-center justify-between gap-3">
                   <h4 className="font-semibold">{project.title}</h4>

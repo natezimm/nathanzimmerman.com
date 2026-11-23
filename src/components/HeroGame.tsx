@@ -255,7 +255,7 @@ const HeroGame = ({ reducedMotion }: HeroGameProps) => {
       </div>
 
       {/* Scoreboard & Controls */}
-      <div className="flex items-center justify-between gap-3 pt-2 sm:pt-2.5 pl-1 font-mono text-[10px] sm:text-[11px] text-muted-foreground">
+      <div className="flex items-center justify-between gap-3 pt-2 sm:pt-2.5 pl-1 font-mono text-xs text-muted-foreground">
         <span aria-hidden="true" className="shrink-0">
           SCORE{' '}
           <span className="font-semibold text-foreground tabular-nums">
@@ -269,7 +269,7 @@ const HeroGame = ({ reducedMotion }: HeroGameProps) => {
           type="button"
           onClick={() => setPaused((current) => !current)}
           aria-label={paused ? 'Play brick breaker' : 'Pause brick breaker'}
-          className="relative shrink-0 flex items-center justify-center w-8 h-8 rounded-full before:absolute before:-inset-1.5 before:content-[''] border border-slate-300 dark:border-white/15 bg-slate-100/70 dark:bg-white/5 text-muted-foreground hover:text-foreground hover:border-sky-500 dark:hover:border-sky-400/50 transition-colors"
+          className="relative shrink-0 flex items-center justify-center w-8 h-8 rounded-full before:absolute before:-inset-1.5 before:content-[''] border border-edge-strong bg-surface text-muted-foreground hover:text-foreground hover:border-brand/60 transition-colors"
         >
           {paused ? (
             <Play className="w-3.5 h-3.5" />

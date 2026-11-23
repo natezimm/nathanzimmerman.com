@@ -1,6 +1,35 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
+import type { Plugin } from 'vite';
+
+// Preloads the Latin variable font files so hero text does not wait on the
+// stylesheet to discover them. Other subsets load only if a page needs them.
+const preloadLatinFonts = (): Plugin => ({
+  name: 'preload-latin-fonts',
+  apply: 'build',
+  transformIndexHtml: {
+    order: 'post',
+    handler(_html, ctx) {
+      return Object.keys(ctx.bundle ?? {})
+        .filter((file) =>
+          /\/(inter|outfit)-latin-wght-normal-[^/]+\.woff2$/.test(file)
+        )
+        .map((file) => ({
+          tag: 'link',
+          attrs: {
+            rel: 'preload',
+            as: 'font',
+            type: 'font/woff2',
+            href: `/${file}`,
+            crossorigin: '',
+          },
+          injectTo: 'head' as const,
+        }));
+    },
+  },
+});
+
 export default defineConfig(({ mode }) => ({
   server: {
     host: '::',
@@ -12,7 +41,7 @@ export default defineConfig(({ mode }) => ({
   },
   // vite preview serves the built site to Playwright, which stubs /api itself.
   preview: { proxy: {} },
-  plugins: [react()],
+  plugins: [react(), preloadLatinFonts()],
   resolve: {
     alias: {
       '@': path.resolve(import.meta.dirname, './src'),

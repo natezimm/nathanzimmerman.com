@@ -40,7 +40,7 @@ const REPOS_AFTER: readonly AskProblem[] = ['paused', 'budget', 'unavailable'];
 type Exchange = { question: string; result: AskResult | null };
 
 const chipClassName =
-  'rounded-full border border-dashed border-slate-300 dark:border-white/15 px-3.5 py-1.5 text-left text-xs sm:text-sm text-foreground/75 transition-colors hover:border-sky-500/60 hover:text-primary disabled:cursor-not-allowed disabled:opacity-50';
+  'rounded-full border border-dashed border-edge-strong px-3.5 py-1.5 text-left text-xs sm:text-sm text-foreground/75 transition-colors hover:border-sky-500/60 hover:text-primary disabled:cursor-not-allowed disabled:opacity-50';
 
 const Ask = ({ meta }: { meta: AskMeta }) => {
   const [question, setQuestion] = useState('');
@@ -147,7 +147,7 @@ const Ask = ({ meta }: { meta: AskMeta }) => {
             />
           </ScrollReveal>
 
-          <div className="glass-card rounded-2xl border border-slate-200/90 dark:border-white/10 p-4 sm:p-6 shadow-sm space-y-6">
+          <div className="glass-card p-4 sm:p-6 shadow-sm space-y-6">
             <div aria-live="polite" aria-busy={loading} className="space-y-5">
               {exchange && (
                 <>
@@ -206,7 +206,7 @@ const Ask = ({ meta }: { meta: AskMeta }) => {
               <label htmlFor={inputId} className="sr-only">
                 Your question
               </label>
-              <div className="flex items-center gap-2 rounded-xl border border-slate-300 dark:border-white/15 bg-background/70 p-1.5 pl-3 focus-within:ring-2 focus-within:ring-ring">
+              <div className="flex items-center gap-2 rounded-xl border border-edge-strong bg-background/70 p-1.5 pl-3 focus-within:ring-2 focus-within:ring-ring">
                 <input
                   id={inputId}
                   type="text"
